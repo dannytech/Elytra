@@ -11,22 +11,22 @@ export class WritableBuffer {
         return new ReadableBuffer(this.Buffer);
     }
 
-    public WriteByte(value: number, prepend: boolean = true) : void {
+    public WriteByte(value: number, prepend: boolean = false) : void {
         this.Write(Buffer.from([ value ]), prepend);
     }
 
-    public Write(value: Buffer, prepend: boolean = true) : void {
+    public Write(value: Buffer, prepend: boolean = false) : void {
         if (prepend)
             this.Buffer = Buffer.concat([ value, this.Buffer ]);
         else
             this.Buffer = Buffer.concat([ this.Buffer, value ]);
     }
 
-    public WriteBool(value: boolean, prepend: boolean = true) : void {
+    public WriteBool(value: boolean, prepend: boolean = false) : void {
         this.WriteByte(value ? 0x1 : 0x0, prepend);
     }
 
-    public WriteVarInt(value: number, prepend: boolean = true) : void {
+    public WriteVarInt(value: number, prepend: boolean = false) : void {
         const temp: WritableBuffer = new WritableBuffer();
 
         do {
@@ -42,7 +42,7 @@ export class WritableBuffer {
         this.Write(temp.Buffer, prepend);
     }
     
-    public WriteVarChar(value: string, prepend: boolean = true) : void {
+    public WriteVarChar(value: string, prepend: boolean = false) : void {
         const temp: WritableBuffer = new WritableBuffer();
         temp.WriteVarInt(value.length);
         temp.Write(Buffer.from(value));
@@ -50,64 +50,64 @@ export class WritableBuffer {
         this.Write(temp.Buffer, prepend);
     }
     
-    public WriteChar(value: string, prepend: boolean = true) : void {
+    public WriteChar(value: string, prepend: boolean = false) : void {
         this.WriteByte(value.charCodeAt(0), prepend);
     }
 
-    public WriteJSON(value: object, prepend: boolean = true) : void {
+    public WriteJSON(value: object, prepend: boolean = false) : void {
         this.WriteVarChar(JSON.stringify(value), prepend);
     }
 
-    public WriteUint16(value: number, prepend: boolean = true) : void {
+    public WriteUint16(value: number, prepend: boolean = false) : void {
         let buf: Buffer = Buffer.alloc(2);
         buf.writeUInt16BE(value);
 
         this.Write(buf, prepend);
     }
 
-    public WriteUint32(value: number, prepend: boolean = true) : void {
+    public WriteUint32(value: number, prepend: boolean = false) : void {
         let buf: Buffer = Buffer.alloc(4);
         buf.writeUInt32BE(value);
 
         this.Write(buf, prepend);
     }
 
-    public WriteUint64(value: bigint, prepend: boolean = true) : void {
+    public WriteUint64(value: bigint, prepend: boolean = false) : void {
         let buf: Buffer = Buffer.alloc(8);
         buf.writeBigUInt64BE(value);
 
         this.Write(buf, prepend);
     }
 
-    public WriteInt16(value: number, prepend: boolean = true) : void {
+    public WriteInt16(value: number, prepend: boolean = false) : void {
         let buf: Buffer = Buffer.alloc(2);
         buf.writeInt16BE(value);
 
         this.Write(buf, prepend);
     }
 
-    public WriteInt32(value: number, prepend: boolean = true) : void {
+    public WriteInt32(value: number, prepend: boolean = false) : void {
         let buf: Buffer = Buffer.alloc(4);
         buf.writeInt32BE(value);
 
         this.Write(buf, prepend);
     }
 
-    public WriteInt64(value: bigint, prepend: boolean = true) : void {
+    public WriteInt64(value: bigint, prepend: boolean = false) : void {
         let buf: Buffer = Buffer.alloc(8);
         buf.writeBigInt64BE(value);
 
         this.Write(buf, prepend);
     }
 
-    public WriteSingle(value: number, prepend: boolean = true) : void {
+    public WriteSingle(value: number, prepend: boolean = false) : void {
         let buf: Buffer = Buffer.alloc(4);
         buf.writeFloatBE(value);
 
         this.Write(buf, prepend);
     }
 
-    public WriteDouble(value: number, prepend: boolean = true) : void {
+    public WriteDouble(value: number, prepend: boolean = false) : void {
         let buf: Buffer = Buffer.alloc(8);
         buf.writeDoubleBE(value);
 
