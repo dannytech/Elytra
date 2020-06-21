@@ -17,9 +17,9 @@ export class WritableBuffer {
 
     public Write(value: Buffer, prepend: boolean = true) : void {
         if (prepend)
-            Buffer.concat([ value, this.Buffer ]);
+            this.Buffer = Buffer.concat([ value, this.Buffer ]);
         else
-            Buffer.concat([ this.Buffer, value ]);
+            this.Buffer = Buffer.concat([ this.Buffer, value ]);
     }
 
     public WriteBool(value: boolean, prepend: boolean = true) : void {

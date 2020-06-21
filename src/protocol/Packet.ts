@@ -43,5 +43,8 @@ export class PacketFactory {
 
         // Process the packet and allow it to generate a response
         if (packet) packet.Parse(buf);
+
+        // Dispatch the queued packets
+        client.Send();
     }
 }
