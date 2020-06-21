@@ -8,7 +8,7 @@ export class ResponsePacket implements ClientboundPacket {
         // Echo back the contents of the ping
         buf.WriteJSON({
             "version": {
-                "name": "1.15.2",
+                "name": "Elytra 1.15.2",
                 "protocol": 578
             },
             "players": {
