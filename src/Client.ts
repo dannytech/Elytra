@@ -96,7 +96,13 @@ export class Client {
             payload.WriteVarInt(payload.Buffer.length, true);
 
             // Send the packet to the client
-            this._Socket.write(payload.Buffer);
+            await new Promise((resolve, reject) => {
+                this._Socket.write(payload.Buffer, (err) => {
+                    if (err) reject(err);
+
+                    return resolve();
+                });
+            });
         }
     }
 
