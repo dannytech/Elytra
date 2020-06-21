@@ -4,7 +4,7 @@ import { Client, ClientState } from "../Client";
 import { HandshakePacket } from "./states/handshaking/HandshakePacket";
 
 export interface ServerboundPacket {
-    Parse() : Promise<void>;
+    Parse(buf: ReadableBuffer) : Promise<void>;
 }
 
 export interface ClientboundPacket {
@@ -30,6 +30,6 @@ export class PacketFactory {
         }
 
         // Process the packet and allow it to generate a response
-        if (packet) packet.Parse();
+        if (packet) packet.Parse(buf);
     }
 }

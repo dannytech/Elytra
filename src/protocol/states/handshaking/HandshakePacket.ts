@@ -3,28 +3,24 @@ import { ReadableBuffer } from "../../ReadableBuffer";
 import { Client, ClientState } from "../../../Client";
 
 export class HandshakePacket implements ServerboundPacket {
-    private _Buffer: ReadableBuffer;
     private _Client: Client;
-
-    public PacketID: number;
     
-    constructor(buf: ReadableBuffer, client: Client) {
-        this._Buffer = buf;
+    constructor(client: Client) {
         this._Client = client;
     }
     
-    public async Parse() : Promise<void> {
+    public async Parse(buf: ReadableBuffer) : Promise<void> {
         // First, read the protocol version
-        this._Buffer.ReadVarInt();
+        buf.ReadVarInt();
 
         // Then, the hostname
-        this._Buffer.ReadVarChar();
+        buf.ReadVarChar();
         
         // Then, the port
-        this._Buffer.ReadUint16();
+        buf.ReadUint16();
 
         // Switch to the requested state
-        switch (this._Buffer.ReadVarInt()) {
+        switch (buf.ReadVarInt()) {
             case 1:
                 this._Client.State = ClientState.Status;
                 break;
