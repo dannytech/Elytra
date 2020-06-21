@@ -1,12 +1,13 @@
 import { Server } from "net";
 import { ClientBus } from "./src/ClientBus";
-import { Settings } from "./src/Settings";
+import { Settings } from "./src/Configuration";
+import * as nconf from "nconf";
 
 async function startListener() {
     const server = new Server();
     const bus = new ClientBus();
     
-    server.listen(Settings.Config.server.port || 25565, Settings.Config.server.ip || "0.0.0.0", () => {
+    server.listen(nconf.get("server:port"), nconf.get("server:ip"), () => {
         console.log("Server started");
     });
 
@@ -18,7 +19,7 @@ async function startConsole() {
 }
 
 (async () => {
-    await Settings.Load();
+    Settings.Load();
 
     await startListener();
 

@@ -4,7 +4,7 @@ import { ReadableBuffer } from "./protocol/ReadableBuffer";
 import { WritableBuffer } from "./protocol/WritableBuffer";
 import { Zlib } from "./protocol/Zlib";
 import { SetCompressionPacket } from "./protocol/states/login/SetCompressionPacket";
-import { Constants } from "./Settings";
+import { Constants } from "./Configuration";
 
 export enum ClientState {
     Handshaking,

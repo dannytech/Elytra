@@ -1,12 +1,12 @@
 import { ClientboundPacket } from "../../Packet";
 import { WritableBuffer } from "../../WritableBuffer";
-import { Settings } from "../../../Settings";
+import * as nconf from "nconf";
 
 export class ResponsePacket implements ClientboundPacket {
     public PacketID: number = 0x00;
 
     public Write(buf: WritableBuffer) : void {
-        // Echo back the contents of the ping
+        // Send back server information
         buf.WriteJSON({
             "version": {
                 "name": "Elytra 1.15.2",
@@ -23,7 +23,7 @@ export class ResponsePacket implements ClientboundPacket {
                 ]
             },
             "description": {
-                "text": Settings.Config.motd || "An Elytra server"
+                "text": nconf.get("motd")
             }
         });
     }
