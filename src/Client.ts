@@ -1,10 +1,11 @@
 import { Socket } from "net";
+import { Constants } from "./Configuration";
 import { ClientboundPacket, PacketFactory } from "./protocol/Packet";
 import { ReadableBuffer } from "./protocol/ReadableBuffer";
 import { WritableBuffer } from "./protocol/WritableBuffer";
 import { Zlib } from "./protocol/Zlib";
 import { SetCompressionPacket } from "./protocol/states/login/SetCompressionPacket";
-import { Constants } from "./Configuration";
+import { Player } from "./game/Player";
 
 export enum ClientState {
     Handshaking,
@@ -26,6 +27,7 @@ export class Client {
     public ClientId: number;
     public State: ClientState;
     public Compression: CompressionState;
+    public Player: Player;
 
     constructor(socket: Socket, id: number) {
         this._Socket = socket;
