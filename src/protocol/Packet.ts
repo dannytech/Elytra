@@ -12,7 +12,7 @@ export interface ServerboundPacket {
 export interface ClientboundPacket {
     PacketID: number;
 
-    Write() : WritableBuffer;
+    Write(buf: WritableBuffer) : void;
 }
 
 export class PacketFactory {

@@ -1,13 +1,11 @@
 import { ClientboundPacket } from "../../Packet";
 import { WritableBuffer } from "../../WritableBuffer";
 
-export class ResponsePacket implements ClientboundPacket{
+export class ResponsePacket implements ClientboundPacket {
     public PacketID: number = 0x00;
 
-    public Write(): WritableBuffer {
+    public Write(buf: WritableBuffer) : void {
         // Echo back the contents of the ping
-        const buf: WritableBuffer = new WritableBuffer();
-
         buf.WriteJSON({
             "version": {
                 "name": "1.15.2",
@@ -28,7 +26,5 @@ export class ResponsePacket implements ClientboundPacket{
             }
             // "favicon": "data:image/png;base64,<data>"
         });
-        
-        return buf;
     }
 }

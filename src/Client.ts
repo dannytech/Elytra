@@ -72,7 +72,8 @@ export class Client {
             let packet: ClientboundPacket = this._ClientboundQueue.pop();
             
             // Export the fields to the completed packet
-            let payload: WritableBuffer = packet.Write();
+            let payload: WritableBuffer = new WritableBuffer();
+            packet.Write(payload);
 
             // Prepend the packet ID
             payload.WriteVarInt(packet.PacketID, true);
