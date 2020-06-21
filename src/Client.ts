@@ -3,6 +3,7 @@ import { ClientboundPacket, PacketFactory } from "./protocol/Packet";
 import { ReadableBuffer } from "./protocol/ReadableBuffer";
 import { WritableBuffer } from "./protocol/WritableBuffer";
 import { Zlib } from "./protocol/Zlib";
+import { SetCompressionPacket } from "./protocol/states/login/SetCompressionPacket";
 
 export enum ClientState {
     Handshaking,
@@ -12,9 +13,9 @@ export enum ClientState {
 }
 
 export enum CompressionState {
-    Enabled,
+    Disabled,
     Enabling,
-    Disabled
+    Enabled
 }
 
 export class Client {
@@ -103,6 +104,10 @@ export class Client {
                     return resolve();
                 });
             });
+
+            // Enable compression after telling the client it will be enabled
+            if (this.Compression === CompressionState.Enabling && packet instanceof SetCompressionPacket)
+                this.Compression = CompressionState.Enabled
         }
     }
 
