@@ -11,13 +11,19 @@ export enum ClientState {
     Play
 }
 
+export enum CompressionState {
+    Enabled,
+    Enabling,
+    Disabled
+}
+
 export class Client {
     private _Socket: Socket;
     private _ClientboundQueue: Array<ClientboundPacket>;
     
     public ClientId: number;
     public State: ClientState;
-    public Compression: boolean;
+    public Compression: CompressionState;
 
     constructor(socket: Socket, id: number) {
         this._Socket = socket;
@@ -25,7 +31,11 @@ export class Client {
 
         this.ClientId = id;
         this.State = ClientState.Handshaking;
-        this.Compression = false;
+        this.Compression = CompressionState.Disabled;
+    }
+
+    public Queue(packet: ClientboundPacket) {
+        this._ClientboundQueue.push(packet);
     }
 
     public async Receive(packetStream: ReadableBuffer) : Promise<void> {
@@ -39,7 +49,7 @@ export class Client {
             
             let packet: ReadableBuffer = new ReadableBuffer(packetStream.Read(packetLength));
 
-            if (this.Compression) {
+            if (this.Compression === CompressionState.Enabled) {
                 // Check that the packet met the compression threshold
                 const compressedLength: number = packet.ReadVarInt();
                 
@@ -67,7 +77,7 @@ export class Client {
             payload.WriteVarInt(packet.PacketID, true);
 
             // Compress the payload
-            if (this.Compression) {
+            if (this.Compression === CompressionState.Enabled) {
                 let uncompressedLength: number = payload.Buffer.length;
 
                 // Only compress over the threshold
