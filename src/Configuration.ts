@@ -20,5 +20,8 @@ export class Settings {
 }
 
 export class Constants {
+    public static ServerName = "Elytra";
+    public static MinecraftVersion = "1.15.2";
+    public static ProtocolVersion = 578;
     public static CompressionThreshold: number = 64;
 }

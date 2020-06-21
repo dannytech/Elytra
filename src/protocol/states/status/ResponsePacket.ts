@@ -1,6 +1,7 @@
+import * as nconf from "nconf";
 import { ClientboundPacket } from "../../Packet";
 import { WritableBuffer } from "../../WritableBuffer";
-import * as nconf from "nconf";
+import { Constants } from "../../../Configuration";
 
 export class ResponsePacket implements ClientboundPacket {
     public PacketID: number = 0x00;
@@ -9,8 +10,8 @@ export class ResponsePacket implements ClientboundPacket {
         // Send back server information
         buf.WriteJSON({
             "version": {
-                "name": "Elytra 1.15.2",
-                "protocol": 578
+                "name": `${Constants.ServerName} ${Constants.MinecraftVersion}`,
+                "protocol": Constants.ProtocolVersion
             },
             "players": {
                 "max": 100,
