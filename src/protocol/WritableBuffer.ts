@@ -54,6 +54,10 @@ export class WritableBuffer {
         this.WriteByte(value.charCodeAt(0), prepend);
     }
 
+    public WriteJSON(value: object, prepend: boolean = true) : void {
+        this.WriteVarChar(JSON.stringify(value), prepend);
+    }
+
     public WriteUint16(value: number, prepend: boolean = true) : void {
         let buf: Buffer = Buffer.alloc(2);
         buf.writeUInt16BE(value);

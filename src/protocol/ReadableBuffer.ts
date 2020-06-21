@@ -53,6 +53,10 @@ export class ReadableBuffer {
         return String.fromCharCode(this.ReadByte());
     }
 
+    public ReadJSON() : object {
+        return JSON.parse(this.ReadVarChar());
+    }
+
     public ReadUint16() : number {
         return this.Read(2).readUInt16BE();
     }
