@@ -4,6 +4,7 @@ import { ReadableBuffer } from "./protocol/ReadableBuffer";
 import { WritableBuffer } from "./protocol/WritableBuffer";
 import { Zlib } from "./protocol/Zlib";
 import { SetCompressionPacket } from "./protocol/states/login/SetCompressionPacket";
+import { Constants } from "./Settings";
 
 export enum ClientState {
     Handshaking,
@@ -83,7 +84,7 @@ export class Client {
                 let uncompressedLength: number = payload.Buffer.length;
 
                 // Only compress over the threshold
-                if (uncompressedLength > 64) {
+                if (uncompressedLength > Constants.CompressionThreshold) {
                     const compressed: ReadableBuffer = await Zlib.Deflate(payload.GetReadable());
                     payload = compressed.GetWritable();
                 } else {

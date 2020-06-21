@@ -1,6 +1,7 @@
 import { ClientboundPacket } from "../../Packet";
 import { WritableBuffer } from "../../WritableBuffer";
 import { Client, CompressionState } from "../../../Client";
+import { Constants } from "../../../Settings";
 
 export class SetCompressionPacket implements ClientboundPacket {
     private _Client: Client;
@@ -16,6 +17,6 @@ export class SetCompressionPacket implements ClientboundPacket {
         this._Client.Compression = CompressionState.Enabling;
 
         // Threshold to compress packets
-        buf.WriteVarInt(64);
+        buf.WriteVarInt(Constants.CompressionThreshold);
     }
 }

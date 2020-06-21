@@ -1,5 +1,6 @@
 import { ClientboundPacket } from "../../Packet";
 import { WritableBuffer } from "../../WritableBuffer";
+import { Settings } from "../../../Settings";
 
 export class ResponsePacket implements ClientboundPacket {
     public PacketID: number = 0x00;
