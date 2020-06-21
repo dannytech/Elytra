@@ -9,9 +9,8 @@ export class Zlib {
         let output = new WritableBuffer();
         
         const compressed: Buffer = await new Promise((resolve, reject) => {
-            deflate(uncompressed.Buffer, (err: Error, buf: Buffer) => {
-                if (err)
-                    return reject(err);
+            deflate(uncompressed.Buffer, (err, buf: Buffer) => {
+                if (err) return reject(err);
                 
                 return resolve(buf);
             })
@@ -38,9 +37,8 @@ export class Zlib {
             const checksum = compressed.ReadUint32();
 
             const decompressed: Buffer = await new Promise((resolve, reject) => {
-                inflate(compressed.Read(), (err: Error, buf: Buffer) => {
-                    if (err)
-                        return reject(err);
+                inflate(compressed.Read(), (err, buf: Buffer) => {
+                    if (err) return reject(err);
                     
                     return resolve(buf);
                 })
