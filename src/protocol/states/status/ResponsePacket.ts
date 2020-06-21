@@ -14,7 +14,7 @@ export class ResponsePacket implements ClientboundPacket {
                 "protocol": Constants.ProtocolVersion
             },
             "players": {
-                "max": 100,
+                "max": nconf.get("maximumPlayers"),
                 "online": 5,
                 "sample": [
                     {

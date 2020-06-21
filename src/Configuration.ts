@@ -14,6 +14,7 @@ export class Settings {
                     port: 25575
                 },
                 online: true,
+                maximumPlayers: 20,
                 motd: "An Elytra server"
             });
     }
