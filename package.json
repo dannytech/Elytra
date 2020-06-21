@@ -1,9 +1,9 @@
 {
-  "name": "bamboo",
+  "name": "elytra",
   "version": "0.0.1",
   "description": "Efficient Minecraft server software",
   "main": "index.js",
-  "repository": "git@github.com:dannytech/bamboo.git",
+  "repository": "git@github.com:dannytech/Elytra.git",
   "author": "Daniel Hellstern <dhellstern@outlook.com>",
   "license": "GPL-3.0-or-later",
   "scripts": {
