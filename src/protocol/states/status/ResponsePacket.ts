@@ -11,7 +11,7 @@ export class ResponsePacket implements ClientboundPacket{
         buf.WriteJSON({
             "version": {
                 "name": "1.15.2",
-                "protocol": 573
+                "protocol": 578
             },
             "players": {
                 "max": 100,
