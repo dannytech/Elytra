@@ -23,9 +23,8 @@ export class ResponsePacket implements ClientboundPacket {
                 ]
             },
             "description": {
-                "text": "Hello world"
+                "text": Settings.Config.motd || "An Elytra server"
             }
-            // "favicon": "data:image/png;base64,<data>"
         });
     }
 }
