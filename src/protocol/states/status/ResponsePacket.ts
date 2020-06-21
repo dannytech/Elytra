@@ -1,7 +1,7 @@
 import * as nconf from "nconf";
+import { Constants } from "../../../Configuration";
 import { ClientboundPacket } from "../../Packet";
 import { WritableBuffer } from "../../WritableBuffer";
-import { Constants } from "../../../Configuration";
 
 export class ResponsePacket implements ClientboundPacket {
     public PacketID: number = 0x00;

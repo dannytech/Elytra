@@ -1,7 +1,7 @@
 {
     "watch": [
         "index.ts",
-        "config.yml",
+        "config.json",
         "src/"
     ],
     "ext": "ts",

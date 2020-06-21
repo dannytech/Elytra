@@ -72,7 +72,7 @@ export class Client {
 
     public async Send() : Promise<void> {
         while (this._ClientboundQueue.length > 0) {
-            let packet: ClientboundPacket = this._ClientboundQueue.pop();
+            let packet: ClientboundPacket = this._ClientboundQueue.shift();
             
             // Export the fields to the completed packet
             let payload: WritableBuffer = new WritableBuffer();

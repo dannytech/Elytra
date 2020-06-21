@@ -1,6 +1,6 @@
 import { Server } from "net";
-import { ClientBus } from "./src/ClientBus";
 import { Settings } from "./src/Configuration";
+import { ClientBus } from "./src/ClientBus";
 import * as nconf from "nconf";
 
 async function startListener() {
