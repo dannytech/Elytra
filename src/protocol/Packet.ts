@@ -4,6 +4,7 @@ import { Client, ClientState } from "../Client";
 import { HandshakePacket } from "./states/handshaking/HandshakePacket";
 import { PingPacket } from "./states/status/PingPacket";
 import { RequestPacket } from "./states/status/RequestPacket";
+import { LoginStartPacket } from "./states/login/LoginStartPacket";
 
 export interface ServerboundPacket {
     Parse(buf: ReadableBuffer) : Promise<void>;
@@ -39,6 +40,12 @@ export class PacketFactory {
                         break;
                 }
                 break;
+            case ClientState.Login:
+                switch (packetId) {
+                    case 0x00:
+                        packet = new LoginStartPacket(client);
+                        break;
+                }
         }
 
         // Process the packet and allow it to generate a response
