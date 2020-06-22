@@ -17,7 +17,7 @@ export interface ClientboundPacket {
 }
 
 export class PacketFactory {
-    static Parse(buf: ReadableBuffer, client: Client) {
+    static async Parse(buf: ReadableBuffer, client: Client) {
         const packetId = buf.ReadVarInt();
 
         // Determine the incoming packet identity based on current state and the packet ID
@@ -49,7 +49,7 @@ export class PacketFactory {
         }
 
         // Process the packet and allow it to generate a response
-        if (packet) packet.Parse(buf);
+        if (packet) await packet.Parse(buf);
 
         // Dispatch the queued packets
         client.Send();
