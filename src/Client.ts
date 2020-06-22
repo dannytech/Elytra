@@ -39,6 +39,7 @@ export class Client {
     public Compression: CompressionState;
     public Encryption: EncryptionState;
     public Player: Player;
+    public IP: string;
 
     constructor(socket: Socket, id: number) {
         this._Socket = socket;
@@ -50,6 +51,7 @@ export class Client {
         this.Encryption = {
             Enabled: false
         };
+        this.IP = this._Socket.remoteAddress
     }
 
     public Queue(packet: ClientboundPacket) {

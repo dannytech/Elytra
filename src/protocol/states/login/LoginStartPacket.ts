@@ -21,20 +21,9 @@ export class LoginStartPacket implements ServerboundPacket {
         const username: string = buf.ReadVarChar();
         
         // Create a player object to represent the client's user account
-        if (nconf.get("online")) {
-            // Resolve the player UUID
-            const uuid: AxiosResponse = await axios.get(`https://api.mojang.com/users/profiles/minecraft/${username}`);
-            if (uuid.status === 200)
-                this._Client.Player = new Player(username, uuid.data["id"]);
-
-            // TODO Handle invalid usernames
-            // Begin the encryption process
+        if (nconf.get("server:online")) {
+            // Begin the encryption/authentication process
             this._Client.Queue(new EncryptionRequestPacket(this._Client));
-
-            // TODO Begin server authentication
-
-            // For now, we just tell the client they cannot play
-            this._Client.Queue(new DisconnectPacket("Online mode is not supported"));
         } else {
             this._Client.Player = new Player(username, uuidv4());
 
