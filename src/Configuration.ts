@@ -8,15 +8,16 @@ export class Settings {
             .defaults({
                 server: {
                     ip: "0.0.0.0",
-                    port: 25565
+                    port: 25565,
+                    online: true,
+                    preventProxy: true,
+                    maximumPlayers: 20,
+                    motd: "An Elytra server"
                 },
                 api: {
                     ip: "127.0.0.1",
                     port: 25575
-                },
-                online: true,
-                maximumPlayers: 20,
-                motd: "An Elytra server"
+                }
             });
     }
 }

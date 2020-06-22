@@ -14,7 +14,7 @@ export class ResponsePacket implements ClientboundPacket {
                 "protocol": Constants.ProtocolVersion
             },
             "players": {
-                "max": nconf.get("maximumPlayers"),
+                "max": nconf.get("server:maximumPlayers"),
                 "online": 5,
                 "sample": [
                     {
@@ -24,7 +24,7 @@ export class ResponsePacket implements ClientboundPacket {
                 ]
             },
             "description": {
-                "text": nconf.get("motd")
+                "text": nconf.get("server:motd")
             }
         });
     }
