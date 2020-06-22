@@ -13,7 +13,8 @@ export class LoginSuccessPacket implements ClientboundPacket {
 
     public async Write(buf: WritableBuffer) {
         // Write the player UUID
-        buf.WriteVarChar(this._Client.Player.UUID);
+        const hyphenated: string = this._Client.Player.UUID.replace(/^(.{8})(.{4})(.{4})(.{4})(.{12})$/, "$1-$2-$3-$4-$5");
+        buf.WriteVarChar(hyphenated);
 
         // Write the username
         buf.WriteVarChar(this._Client.Player.Username);
