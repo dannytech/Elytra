@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 import * as nconf from "nconf";
 import { v4 as uuidv4 } from "uuid";
 import { Client } from "../../../Client";
@@ -22,8 +22,9 @@ export class LoginStartPacket implements ServerboundPacket {
         // Create a player object to represent the client's user account
         if (nconf.get("online")) {
             // Resolve the player UUID
-            const uuid: string = await axios.get(`https://api.mojang.com/users/profiles/minecraft/${username}`);
-            this._Client.Player = new Player(username, uuid);
+            const uuid: AxiosResponse = await axios.get(`https://api.mojang.com/users/profiles/minecraft/${username}`);
+            if (uuid.status === 200)
+                this._Client.Player = new Player(username, uuid.data["id"]);
 
             // TODO Handle invalid usernames
             // TODO Begin the encryption process
