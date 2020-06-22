@@ -52,7 +52,7 @@ export class Client {
         this._ClientboundQueue.push(packet);
     }
 
-    public async Receive(packetStream: ReadableBuffer) : Promise<void> {
+    public async Receive(packetStream: ReadableBuffer) {
         // Loop until no more packets exist
         while (packetStream.Cursor < packetStream.Buffer.length - 1) {
             const packetLength: number = packetStream.ReadVarInt();
@@ -80,7 +80,7 @@ export class Client {
         }
     }
 
-    public async Send() : Promise<void> {
+    public async Send() {
         while (this._ClientboundQueue.length > 0) {
             let packet: ClientboundPacket = this._ClientboundQueue.shift();
             

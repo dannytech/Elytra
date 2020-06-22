@@ -17,7 +17,7 @@ export class LoginStartPacket implements ServerboundPacket {
         this._Client = client;
     }
     
-    public async Parse(buf: ReadableBuffer) : Promise<void> {
+    public async Parse(buf: ReadableBuffer) {
         const username: string = buf.ReadVarChar();
         
         // Create a player object to represent the client's user account

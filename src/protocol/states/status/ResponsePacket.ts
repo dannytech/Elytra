@@ -6,7 +6,7 @@ import { WritableBuffer } from "../../WritableBuffer";
 export class ResponsePacket implements ClientboundPacket {
     public PacketID: number = 0x00;
 
-    public Write(buf: WritableBuffer) : void {
+    public async Write(buf: WritableBuffer) {
         // Send back server information
         buf.WriteJSON({
             "version": {

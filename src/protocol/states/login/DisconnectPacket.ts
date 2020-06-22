@@ -10,7 +10,7 @@ export class DisconnectPacket implements ClientboundPacket {
         this._Reason = reason;
     }
 
-    public Write(buf: WritableBuffer) : void {
+    public async Write(buf: WritableBuffer) {
         // Chat component containing reason for disconnect
         buf.WriteJSON({ "text": this._Reason });
     }

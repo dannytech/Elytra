@@ -9,7 +9,7 @@ export class HandshakePacket implements ServerboundPacket {
         this._Client = client;
     }
     
-    public async Parse(buf: ReadableBuffer) : Promise<void> {
+    public async Parse(buf: ReadableBuffer) {
         // First, read the protocol version
         buf.ReadVarInt();
 

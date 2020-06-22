@@ -10,7 +10,7 @@ export class PongPacket implements ClientboundPacket {
         this._Payload = payload;
     }
 
-    public Write(buf: WritableBuffer) : void {
+    public async Write(buf: WritableBuffer) {
         // Echo back the contents of the ping
         buf.WriteInt64(this._Payload);
     }

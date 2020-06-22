@@ -11,7 +11,7 @@ export class LoginSuccessPacket implements ClientboundPacket {
         this._Client = client;
     }
 
-    public Write(buf: WritableBuffer) : void {
+    public async Write(buf: WritableBuffer) {
         // Write the player UUID
         buf.WriteVarChar(this._Client.Player.UUID);
 

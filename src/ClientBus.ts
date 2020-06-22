@@ -11,7 +11,7 @@ export class ClientBus {
         this._Counter += 1;
     }
 
-    public async HandleConnections(server: Server) : Promise<void> {
+    public async HandleConnections(server: Server) {
         server.on("connection", (socket: Socket) => {
             const client: Client = this.Connect(socket);
 

@@ -12,7 +12,7 @@ export class SetCompressionPacket implements ClientboundPacket {
         this._Client = client;
     }
 
-    public Write(buf: WritableBuffer) : void {
+    public async Write(buf: WritableBuffer) {
         // Tell the socket to enable compression after this packet is sent
         this._Client.Compression = CompressionState.Enabling;
 
