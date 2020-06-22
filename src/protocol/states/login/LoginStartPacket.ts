@@ -7,7 +7,6 @@ import { ReadableBuffer } from "../../ReadableBuffer";
 import { SetCompressionPacket } from "./SetCompressionPacket";
 import { Player } from "../../../game/Player";
 import { LoginSuccessPacket } from "./LoginSuccessPacket";
-import { DisconnectPacket } from "./DisconnectPacket";
 import { EncryptionRequestPacket } from "./EncryptionRequestPacket";
 
 export class LoginStartPacket implements ServerboundPacket {
@@ -22,6 +21,8 @@ export class LoginStartPacket implements ServerboundPacket {
         
         // Create a player object to represent the client's user account
         if (nconf.get("server:online")) {
+            this._Client.Player = new Player(username);
+
             // Begin the encryption/authentication process
             this._Client.Queue(new EncryptionRequestPacket(this._Client));
         } else {
