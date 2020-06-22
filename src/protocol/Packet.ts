@@ -5,6 +5,7 @@ import { HandshakePacket } from "./states/handshaking/HandshakePacket";
 import { PingPacket } from "./states/status/PingPacket";
 import { RequestPacket } from "./states/status/RequestPacket";
 import { LoginStartPacket } from "./states/login/LoginStartPacket";
+import { EncryptionResponsePacket } from "./states/login/EncryptionResponsePacket";
 
 export interface ServerboundPacket {
     Parse(buf: ReadableBuffer) : Promise<void>;
@@ -44,6 +45,9 @@ export class PacketFactory {
                 switch (packetId) {
                     case 0x00:
                         packet = new LoginStartPacket(client);
+                        break;
+                    case 0x01:
+                        packet = new EncryptionResponsePacket(client);
                         break;
                 }
         }

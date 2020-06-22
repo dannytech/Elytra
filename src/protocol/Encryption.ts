@@ -1,5 +1,6 @@
 import { promisify } from "util";
-import { generateKeyPair, KeyObject } from "crypto";
+import * as crypto from "crypto";
+import { generateKeyPair, privateDecrypt, KeyObject } from "crypto";
 import { Constants } from "../Configuration";
 
 const generateKeyPairAsync = promisify(generateKeyPair);
@@ -20,5 +21,12 @@ export class Keypair {
         });
 
         return new Keypair(publicKey, privateKey);
+    }
+
+    public Decrypt(buf: Buffer) : Buffer {
+        return privateDecrypt({
+            key: this.PrivateKey,
+            padding: crypto.constants.RSA_PKCS1_PADDING
+        }, buf);
     }
 }
