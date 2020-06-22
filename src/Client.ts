@@ -1,4 +1,6 @@
 import { Socket } from "net";
+import * as crypto from "crypto";
+import { Decipher, Cipher } from "crypto";
 import { Constants } from "./Configuration";
 import { ClientboundPacket, PacketFactory } from "./protocol/Packet";
 import { ReadableBuffer } from "./protocol/ReadableBuffer";
@@ -29,6 +31,8 @@ export interface EncryptionState {
 export class Client {
     private _Socket: Socket;
     private _ClientboundQueue: Array<ClientboundPacket>;
+    private _Decipher: Decipher;
+    private _Cipher: Cipher;
     
     public ClientId: number;
     public State: ClientState;
@@ -63,6 +67,17 @@ export class Client {
             
             let packet: ReadableBuffer = new ReadableBuffer(packetStream.Read(packetLength));
 
+            // Decrypt the packet
+            if (this.Encryption.Enabled) {
+                if (this._Decipher == null)
+                    this._Decipher = crypto.createDecipheriv("aes-128-cfb8", this.Encryption.SharedSecret, this.Encryption.SharedSecret);
+
+                // Decrypt the entire packet (no headers need to be stripped)
+                let decrypted: Buffer = this._Decipher.update(packet.Buffer);
+                packet = new ReadableBuffer(decrypted);
+            }
+
+            // Decompress the packet
             if (this.Compression === CompressionState.Enabled) {
                 // Check that the packet met the compression threshold
                 const compressedLength: number = packet.ReadVarInt();
@@ -91,7 +106,7 @@ export class Client {
             // Prepend the packet ID
             payload.WriteVarInt(packet.PacketID, true);
 
-            // Compress the payload
+            // Compress the packet
             if (this.Compression === CompressionState.Enabled) {
                 let uncompressedLength: number = payload.Buffer.length;
 
@@ -109,6 +124,16 @@ export class Client {
 
             // Prepend the length
             payload.WriteVarInt(payload.Buffer.length, true);
+
+            // Encrypt the packet
+            if (this.Encryption.Enabled) {
+                if (this._Cipher == null)
+                    this._Cipher = crypto.createCipheriv("aes-128-cfb8", this.Encryption.SharedSecret, this.Encryption.SharedSecret);
+
+                // Encrypt the entire packet, including headers
+                let encrypted: Buffer = this._Cipher.update(payload.Buffer);
+                payload = new WritableBuffer(encrypted);
+            }
 
             // Send the packet to the client
             await new Promise((resolve, reject) => {
