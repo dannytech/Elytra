@@ -8,6 +8,7 @@ import { SetCompressionPacket } from "./SetCompressionPacket";
 import { Player } from "../../../game/Player";
 import { LoginSuccessPacket } from "./LoginSuccessPacket";
 import { DisconnectPacket } from "./DisconnectPacket";
+import { EncryptionRequestPacket } from "./EncryptionRequestPacket";
 
 export class LoginStartPacket implements ServerboundPacket {
     private _Client: Client;
@@ -27,7 +28,10 @@ export class LoginStartPacket implements ServerboundPacket {
                 this._Client.Player = new Player(username, uuid.data["id"]);
 
             // TODO Handle invalid usernames
-            // TODO Begin the encryption process
+            // Begin the encryption process
+            this._Client.Queue(new EncryptionRequestPacket(this._Client));
+
+            // TODO Begin server authentication
 
             // For now, we just tell the client they cannot play
             this._Client.Queue(new DisconnectPacket("Online mode is not supported"));

@@ -31,4 +31,5 @@ export class Constants {
     public static ProtocolVersion = 578;
     public static CompressionThreshold: number = 64;
     public static KeyLength: number = 1024;
+    public static VerificationTokenLength: number = 8;
 }

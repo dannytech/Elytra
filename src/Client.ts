@@ -20,6 +20,12 @@ export enum CompressionState {
     Enabled
 }
 
+export interface EncryptionState {
+    Enabled: boolean;
+    VerificationToken?: Buffer;
+    SharedSecret?: Buffer;
+}
+
 export class Client {
     private _Socket: Socket;
     private _ClientboundQueue: Array<ClientboundPacket>;
@@ -27,6 +33,7 @@ export class Client {
     public ClientId: number;
     public State: ClientState;
     public Compression: CompressionState;
+    public Encryption: EncryptionState;
     public Player: Player;
 
     constructor(socket: Socket, id: number) {
@@ -36,6 +43,9 @@ export class Client {
         this.ClientId = id;
         this.State = ClientState.Handshaking;
         this.Compression = CompressionState.Disabled;
+        this.Encryption = {
+            Enabled: false
+        };
     }
 
     public Queue(packet: ClientboundPacket) {
@@ -76,7 +86,7 @@ export class Client {
             
             // Export the fields to the completed packet
             let payload: WritableBuffer = new WritableBuffer();
-            packet.Write(payload);
+            await packet.Write(payload);
 
             // Prepend the packet ID
             payload.WriteVarInt(packet.PacketID, true);
