@@ -26,9 +26,9 @@ export class State {
 }
 
 export class Constants {
-    public static ServerName = "Elytra";
-    public static MinecraftVersion = "1.15.2";
-    public static ProtocolVersion = 578;
+    public static ServerName: string = "Elytra";
+    public static MinecraftVersion: string = "1.15.2";
+    public static ProtocolVersion: number = 578;
     public static CompressionThreshold: number = 64;
     public static KeyLength: number = 1024;
     public static VerificationTokenLength: number = 8;
