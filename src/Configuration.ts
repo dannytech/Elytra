@@ -1,4 +1,5 @@
 import * as nconf from "nconf";
+import { Keypair } from "./protocol/Encryption";
 
 export class Settings {
     public static Load() {
@@ -20,9 +21,14 @@ export class Settings {
     }
 }
 
+export class State {
+    public static Keypair: Keypair;
+}
+
 export class Constants {
     public static ServerName = "Elytra";
     public static MinecraftVersion = "1.15.2";
     public static ProtocolVersion = 578;
     public static CompressionThreshold: number = 64;
+    public static KeyLength: number = 1024;
 }

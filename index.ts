@@ -1,7 +1,12 @@
 import { Server } from "net";
-import { Settings } from "./src/Configuration";
+import { Settings, State } from "./src/Configuration";
 import { ClientBus } from "./src/ClientBus";
 import * as nconf from "nconf";
+import { Keypair } from "./src/protocol/Encryption";
+
+async function startConsole() {
+
+}
 
 async function startListener() {
     const server = new Server();
@@ -14,14 +19,23 @@ async function startListener() {
     bus.HandleConnections(server);
 }
 
-async function startConsole() {
+async function startAPI() {
 
 }
 
 (async () => {
+    // Load settings from the config file
     Settings.Load();
 
+    // Generate a keypair for protocol encryption
+    State.Keypair = await Keypair.Generate();
+
+    // Start the server console
+    await startConsole();
+
+    // Start the Minecraft server
     await startListener();
 
-    await startConsole();
+    // Start the API
+    await startAPI();
 })();
