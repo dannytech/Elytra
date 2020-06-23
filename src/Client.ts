@@ -56,21 +56,16 @@ export class Client extends EventEmitter {
             Enabled: false
         };
         this.IP = this._Socket.remoteAddress
-
-        // Bind event listeners
-        this.on("receive", this._Receive);
-        this.on("send", this._Send);
-        this.once("disconnect", this._Disconnect);
     }
 
-    private async _Receive(packetStream: ReadableBuffer) {
+    public async Receive(packetStream: ReadableBuffer) {
         // Loop until no more packets exist
         while (packetStream.Cursor < packetStream.Buffer.length - 1) {
             const packetLength: number = packetStream.ReadVarInt();
     
             // A zero-length packet indicates the end of a connection (a FIN)
             if (packetLength === 0)
-                return this.emit("disconnect");
+                return this.Disconnect();
 
             let packet: ReadableBuffer = new ReadableBuffer(packetStream.Read(packetLength));
 
@@ -102,7 +97,7 @@ export class Client extends EventEmitter {
         }
     }
 
-    private async _Send() {
+    public async Send() {
         while (this._ClientboundQueue.length > 0) {
             let packet: ClientboundPacket = this._ClientboundQueue.shift();
             
@@ -155,7 +150,7 @@ export class Client extends EventEmitter {
         }
     }
 
-    private _Disconnect() {
+    public Disconnect() {
         this._Socket.destroy();
 
         this.emit("disconnected");

@@ -51,7 +51,7 @@ export class ClientBus {
     public DisconnectAll() : void {
         // Loop in reverse, telling each client to disconnect and detach
         for (let i: number; i = this._Clients.length - 1; i--) {
-            this._Clients[i].emit("disconnect");
+            this._Clients[i].Disconnect();
         }
     }
 }

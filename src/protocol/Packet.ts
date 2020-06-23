@@ -57,7 +57,7 @@ export class PacketFactory {
             const queued: boolean = await packet.Parse(buf);
 
             // Dispatch packets if a send is requested
-            if (queued) client.emit("send");
+            if (queued) client.Send();
         }
     }
 }
