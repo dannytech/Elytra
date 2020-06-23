@@ -8,6 +8,7 @@ import { WritableBuffer } from "./protocol/WritableBuffer";
 import { Zlib } from "./protocol/Zlib";
 import { SetCompressionPacket } from "./protocol/states/login/SetCompressionPacket";
 import { Player } from "./game/Player";
+import { EventEmitter } from "events";
 
 export enum ClientState {
     Handshaking,
@@ -28,7 +29,7 @@ export interface EncryptionState {
     SharedSecret?: Buffer;
 }
 
-export class Client {
+export class Client extends EventEmitter {
     private _Socket: Socket;
     private _ClientboundQueue: Array<ClientboundPacket>;
     private _Decipher: Decipher;
@@ -42,6 +43,9 @@ export class Client {
     public IP: string;
 
     constructor(socket: Socket, id: number) {
+        super();
+
+        // Set initial values
         this._Socket = socket;
         this._ClientboundQueue = Array<ClientboundPacket>();
 
@@ -52,21 +56,22 @@ export class Client {
             Enabled: false
         };
         this.IP = this._Socket.remoteAddress
+
+        // Bind event listeners
+        this.on("receive", this._Receive);
+        this.on("send", this._Send);
+        this.once("disconnect", this._Disconnect);
     }
 
-    public Queue(packet: ClientboundPacket) {
-        this._ClientboundQueue.push(packet);
-    }
-
-    public async Receive(packetStream: ReadableBuffer) {
+    private async _Receive(packetStream: ReadableBuffer) {
         // Loop until no more packets exist
         while (packetStream.Cursor < packetStream.Buffer.length - 1) {
             const packetLength: number = packetStream.ReadVarInt();
     
             // A zero-length packet indicates the end of a connection (a FIN)
             if (packetLength === 0)
-                return this.Disconnect();
-            
+                return this.emit("disconnect");
+
             let packet: ReadableBuffer = new ReadableBuffer(packetStream.Read(packetLength));
 
             // Decrypt the packet
@@ -87,7 +92,7 @@ export class Client {
                 // If the threshold is met, then decompress the packet, otherwise assume the rest is uncompressed
                 if (compressedLength > 0) {
                     const compressed: Buffer = packet.Read(compressedLength);
-    
+
                     packet = await Zlib.Inflate(new ReadableBuffer(compressed));
                 }
             }
@@ -97,7 +102,7 @@ export class Client {
         }
     }
 
-    public async Send() {
+    private async _Send() {
         while (this._ClientboundQueue.length > 0) {
             let packet: ClientboundPacket = this._ClientboundQueue.shift();
             
@@ -150,7 +155,13 @@ export class Client {
         }
     }
 
-    public Disconnect() : void {
+    private _Disconnect() {
         this._Socket.destroy();
+
+        this.emit("disconnected");
+    }
+
+    public Queue(packet: ClientboundPacket) {
+        this._ClientboundQueue.push(packet);
     }
 }

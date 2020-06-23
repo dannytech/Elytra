@@ -8,26 +8,29 @@ export class ClientBus {
     
     constructor() {
         this._Clients = new Array<Client>();
-        this._Counter += 1;
+        this._Counter = 0;
     }
 
     public async HandleConnections(server: Server) {
         server.on("connection", (socket: Socket) => {
             const client: Client = this.Connect(socket);
 
+            // On a disconnection, purge the client object from the bus
+            client.once("disconnected", () => this.Remove(client));
+
             // Process incoming packets
-            socket.on("data", async (chunk: Buffer) => {
+            socket.on("data", (chunk: Buffer) => {
                 const buf: ReadableBuffer = new ReadableBuffer(chunk);
 
-                await client.Receive(buf);
+                client.emit("receive", buf);
             });
     
             // Handle errors and disconnects
-            socket.on("end", () => {
-                this.Disconnect(client);
+            socket.once("end", () => {
+                client.emit("disconnect");
             });
             socket.on("error", () => {
-                this.Disconnect(client);
+                client.emit("disconnect");
             });
         });
     }
@@ -40,13 +43,15 @@ export class ClientBus {
         return client;
     }
 
-    public Disconnect(client: Client) : void {
-        this._Clients.filter(cur => cur.ClientId !== client.ClientId); // Remove the client from the server state
-
-        client.Disconnect(); // Terminate the connection
+    public Remove(client: Client) : void {
+        // Remove the client from the server state
+        this._Clients.splice(this._Clients.indexOf(client), 1);
     }
 
     public DisconnectAll() : void {
-        this._Clients.forEach((client: Client) => this.Disconnect(client));
+        // Loop in reverse, telling each client to disconnect and detach
+        for (let i: number; i = this._Clients.length - 1; i--) {
+            this._Clients[i].emit("disconnect");
+        }
     }
 }
