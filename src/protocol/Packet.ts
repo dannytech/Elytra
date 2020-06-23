@@ -8,7 +8,7 @@ import { LoginStartPacket } from "./states/login/LoginStartPacket";
 import { EncryptionResponsePacket } from "./states/login/EncryptionResponsePacket";
 
 export interface ServerboundPacket {
-    Parse(buf: ReadableBuffer) : Promise<void>;
+    Parse(buf: ReadableBuffer) : Promise<boolean>;
 }
 
 export interface ClientboundPacket {
@@ -53,9 +53,11 @@ export class PacketFactory {
         }
 
         // Process the packet and allow it to generate a response
-        if (packet) await packet.Parse(buf);
+        if (packet) {
+            const queued: boolean = await packet.Parse(buf);
 
-        // Dispatch the queued packets
-        client.Send();
+            // Dispatch packets if a send is requested
+            if (queued) client.Send();
+        }
     }
 }

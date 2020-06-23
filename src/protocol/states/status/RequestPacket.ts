@@ -9,8 +9,10 @@ export class RequestPacket implements ServerboundPacket {
         this._Client = client;
     }
     
-    public async Parse() {
+    public async Parse() : Promise<boolean> {
         // Generate a response containing server information
         this._Client.Queue(new ResponsePacket());
+
+        return true;
     }
 }

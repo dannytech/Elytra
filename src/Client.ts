@@ -116,9 +116,7 @@ export class Client {
                 if (uncompressedLength > Constants.CompressionThreshold) {
                     const compressed: ReadableBuffer = await Zlib.Deflate(payload.GetReadable());
                     payload = compressed.GetWritable();
-                } else {
-                    uncompressedLength = 0;
-                }
+                } else uncompressedLength = 0;
 
                 // Prepend the uncompressed length
                 payload.WriteVarInt(uncompressedLength, true);
@@ -148,7 +146,7 @@ export class Client {
 
             // Enable compression after telling the client it will be enabled
             if (this.Compression === CompressionState.Enabling && packet instanceof SetCompressionPacket)
-                this.Compression = CompressionState.Enabled
+                this.Compression = CompressionState.Enabled;
         }
     }
 

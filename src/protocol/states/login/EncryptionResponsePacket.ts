@@ -22,7 +22,7 @@ export class EncryptionResponsePacket implements ServerboundPacket {
         this._Client = client;
     }
     
-    public async Parse(buf: ReadableBuffer) {
+    public async Parse(buf: ReadableBuffer) : Promise<boolean> {
         // Read the client-generate shared secret
         const sharedSecretLength: number = buf.ReadVarInt();
         const sharedSecret: Buffer = buf.Read(sharedSecretLength);
@@ -36,42 +36,48 @@ export class EncryptionResponsePacket implements ServerboundPacket {
 
         // Verify the token can be decrypted successfully
         const decryptedToken: Buffer = State.Keypair.Decrypt(verifyToken);
-        if (!decryptedToken.equals(this._Client.Encryption.VerificationToken))
-            return this._Client.Queue(new DisconnectPacket("Failed to negotiate encrypted channel"));
+        if (decryptedToken.equals(this._Client.Encryption.VerificationToken)) {
+            // Tell the socket to use encryption
+            this._Client.Encryption.SharedSecret = decryptedSecret;
+            this._Client.Encryption.Enabled = true;
+            delete this._Client.Encryption.VerificationToken;
 
-        // Tell the socket to use encryption
-        this._Client.Encryption.SharedSecret = decryptedSecret;
-        this._Client.Encryption.Enabled = true;
-        delete this._Client.Encryption.VerificationToken;
+            // Generate the server hash for authentication
+            const serverHash: string = digest([
+                Buffer.alloc(0),
+                decryptedSecret,
+                State.Keypair.PublicKey.export({ format: "der", type: "spki" })
+            ]);
 
-        // Generate the server hash for authentication
-        const serverHash: string = digest([
-            Buffer.alloc(0),
-            decryptedSecret,
-            State.Keypair.PublicKey.export({ format: "der", type: "spki" })
-        ]);
+            // Prepare to authenticate the client
+            let params: AuthenticationRequestParams = {
+                username: this._Client.Player.Username,
+                serverId: serverHash
+            };
 
-        // Prepare to authenticate the client
-        let params: AuthenticationRequestParams = {
-            username: this._Client.Player.Username,
-            serverId: serverHash
-        };
-        
-        // Ensures the client authentication and joining client originate from the same source
-        if (nconf.get("server:preventProxy")) params["ip"] = this._Client.IP;
+            // Ensures the client authentication and joining client originate from the same source
+            if (nconf.get("server:preventProxy")) params["ip"] = this._Client.IP;
 
-        // Authenticate the client
-        let res: AxiosResponse = await axios.get("https://sessionserver.mojang.com/session/minecraft/hasJoined", {
-            params
-        });
+            // Authenticate the client
+            let res: AxiosResponse = await axios.get("https://sessionserver.mojang.com/session/minecraft/hasJoined", {
+                params
+            });
 
-        // Authenticate the joining client
-        if (res.status == 200)
-            this._Client.Player.UUID = res.data["id"];
-        else return this._Client.Queue(new DisconnectPacket("Invalid session"));
+            // Authenticate the joining client
+            if (res.status == 200) {
+                this._Client.Player.UUID = res.data["id"];
 
-        // Finish the handshake and proceed to the play state
-        this._Client.Queue(new SetCompressionPacket(this._Client));
-        this._Client.Queue(new LoginSuccessPacket(this._Client));
+                // Finish the handshake and proceed to the play state
+                this._Client.Queue(new SetCompressionPacket(this._Client));
+                this._Client.Queue(new LoginSuccessPacket(this._Client));
+                this._Client.Queue(new JoinGamePacket(this._Client));
+            } else {
+                this._Client.Queue(new DisconnectPacket("Invalid session"));
+            }
+        } else {
+            this._Client.Queue(new DisconnectPacket("Failed to negotiate encrypted channel"));
+        }
+
+        return true;
     }
 }

@@ -9,7 +9,7 @@ export class HandshakePacket implements ServerboundPacket {
         this._Client = client;
     }
     
-    public async Parse(buf: ReadableBuffer) {
+    public async Parse(buf: ReadableBuffer) : Promise<boolean> {
         // First, read the protocol version
         buf.ReadVarInt();
 
@@ -28,5 +28,7 @@ export class HandshakePacket implements ServerboundPacket {
                 this._Client.State = ClientState.Login;
                 break;
         }
+
+        return false;
     }
 }

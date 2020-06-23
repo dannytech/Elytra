@@ -16,7 +16,7 @@ export class LoginStartPacket implements ServerboundPacket {
         this._Client = client;
     }
     
-    public async Parse(buf: ReadableBuffer) {
+    public async Parse(buf: ReadableBuffer) : Promise<boolean> {
         const username: string = buf.ReadVarChar();
         
         // Create a player object to represent the client's user account
@@ -32,5 +32,7 @@ export class LoginStartPacket implements ServerboundPacket {
             this._Client.Queue(new SetCompressionPacket(this._Client));
             this._Client.Queue(new LoginSuccessPacket(this._Client));
         }
+
+        return true;
     }
 }
