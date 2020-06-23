@@ -1,7 +1,7 @@
 import { Server } from "net";
+import * as nconf from "nconf";
 import { Settings, State } from "./src/Configuration";
 import { ClientBus } from "./src/ClientBus";
-import * as nconf from "nconf";
 import { Keypair } from "./src/protocol/Encryption";
 
 async function startConsole() {

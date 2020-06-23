@@ -3,8 +3,7 @@ import { Keypair } from "./protocol/Encryption";
 
 export class Settings {
     public static Load() {
-        nconf.env()
-            .file("config.json")
+        nconf.file("config.json")
             .defaults({
                 server: {
                     ip: "0.0.0.0",
