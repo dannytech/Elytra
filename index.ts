@@ -10,13 +10,11 @@ async function startConsole() {
 
 async function startListener() {
     const server = new Server();
-    const bus = new ClientBus();
+    const bus = new ClientBus(server);
     
     server.listen(nconf.get("server:port"), nconf.get("server:ip"), () => {
         console.log("Server started");
     });
-
-    bus.HandleConnections(server);
 }
 
 async function startAPI() {
