@@ -1,4 +1,5 @@
 import * as nconf from "nconf";
+import { Database } from "./Database";
 import { Keypair } from "./protocol/Encryption";
 
 export class Settings {
@@ -17,12 +18,16 @@ export class Settings {
                     ip: "127.0.0.1",
                     port: 25575
                 }
-            });
+            })
+            .required([
+                "database"
+            ]);
     }
 }
 
 export class State {
     public static Keypair: Keypair;
+    public static Database: Database;
 }
 
 export class Constants {
