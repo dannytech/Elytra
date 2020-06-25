@@ -1,6 +1,6 @@
 import { ClientboundPacket } from "../../Packet";
 import { WritableBuffer } from "../../WritableBuffer";
-import { Client } from "../../../Client";
+import { Client } from "../../Client";
 
 export class LoginSuccessPacket implements ClientboundPacket {
     private _Client: Client;

@@ -1,6 +1,6 @@
 import { Socket, Server } from "net";
 import { Client } from "./Client";
-import { ReadableBuffer } from "./protocol/ReadableBuffer";
+import { ReadableBuffer } from "./ReadableBuffer";
 
 export class ClientBus {
     private _Server: Server;

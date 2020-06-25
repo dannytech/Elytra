@@ -1,6 +1,6 @@
 import { ReadableBuffer } from "./ReadableBuffer";
 import { WritableBuffer } from "./WritableBuffer";
-import { Client, ClientState } from "../Client";
+import { Client, ClientState } from "./Client";
 import { HandshakePacket } from "./states/handshaking/HandshakePacket";
 import { PingPacket } from "./states/status/PingPacket";
 import { RequestPacket } from "./states/status/RequestPacket";

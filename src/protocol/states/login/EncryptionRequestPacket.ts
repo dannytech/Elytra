@@ -2,7 +2,7 @@ import { promisify } from "util";
 import * as crypto from "crypto";
 import { ClientboundPacket } from "../../Packet";
 import { WritableBuffer } from "../../WritableBuffer";
-import { Client } from "../../../Client";
+import { Client } from "../../Client";
 import { State, Constants } from "../../../Configuration";
 
 const randomBytesAsync = promisify(crypto.randomBytes);

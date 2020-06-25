@@ -1,6 +1,6 @@
 import { ServerboundPacket } from "../../Packet";
 import { ReadableBuffer } from "../../ReadableBuffer";
-import { Client, ClientState } from "../../../Client";
+import { Client, ClientState } from "../../Client";
 
 export class HandshakePacket implements ServerboundPacket {
     private _Client: Client;

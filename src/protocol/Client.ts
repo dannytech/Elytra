@@ -1,14 +1,14 @@
 import { Socket } from "net";
 import * as crypto from "crypto";
 import { Decipher, Cipher } from "crypto";
-import { Constants } from "./Configuration";
-import { ClientboundPacket, PacketFactory } from "./protocol/Packet";
-import { ReadableBuffer } from "./protocol/ReadableBuffer";
-import { WritableBuffer } from "./protocol/WritableBuffer";
-import { Zlib } from "./protocol/Zlib";
-import { SetCompressionPacket } from "./protocol/states/login/SetCompressionPacket";
-import { Player } from "./game/Player";
 import { EventEmitter } from "events";
+import { Constants } from "../Configuration";
+import { ClientboundPacket, PacketFactory } from "./Packet";
+import { ReadableBuffer } from "./ReadableBuffer";
+import { WritableBuffer } from "./WritableBuffer";
+import { Zlib } from "./Zlib";
+import { SetCompressionPacket } from "./states/login/SetCompressionPacket";
+import { Player } from "../game/Player";
 
 export enum ClientState {
     Handshaking,
