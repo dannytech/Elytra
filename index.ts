@@ -51,9 +51,6 @@ async function startAPI() {
 (async () => {
     await bootstrap();
 
-    // Connect to the database
-    State.Database = await Database.Connect(nconf.get("database"));
-
     // Start the server console
     await startConsole();
 
