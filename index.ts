@@ -24,7 +24,7 @@ async function bootstrap() {
 
     // Connect to the database
     const databaseUri: string = nconf.get("database");
-    State.Database = await Database.Connect(databaseUri);
+    await Database.Connect(databaseUri);
     console.log(`Connected to database with URI ${databaseUri}`);
 }
 
