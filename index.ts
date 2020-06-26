@@ -1,6 +1,7 @@
 import { Server } from "net";
 import * as nconf from "nconf";
 import { Settings, State } from "./src/Configuration";
+import { Database } from "./src/Database";
 import { ClientBus } from "./src/protocol/ClientBus";
 import { Keypair } from "./src/protocol/Encryption";
 
@@ -37,6 +38,9 @@ async function startAPI() {
 
 (async () => {
     await bootstrap();
+
+    // Connect to the database
+    State.Database = await Database.Connect(nconf.get("database"));
 
     // Start the server console
     await startConsole();
