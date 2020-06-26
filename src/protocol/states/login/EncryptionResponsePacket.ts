@@ -23,7 +23,7 @@ export class EncryptionResponsePacket implements ServerboundPacket {
     }
     
     public async Parse(buf: ReadableBuffer) : Promise<boolean> {
-        // Read the client-generate shared secret
+        // Read the client-generated shared secret
         const sharedSecretLength: number = buf.ReadVarInt();
         const sharedSecret: Buffer = buf.Read(sharedSecretLength);
 
@@ -63,9 +63,11 @@ export class EncryptionResponsePacket implements ServerboundPacket {
                 params
             });
 
-            // Authenticate the joining client
+            // Confirm client authentication succeeded
             if (res.status == 200) {
                 this._Client.Player.UUID = res.data["id"];
+
+                console.log(`Player ${this._Client.Player.Username} with UUID ${this._Client.Player.UUID} authenticated successfully`);
 
                 // Finish the handshake and proceed to the play state
                 this._Client.Queue(new SetCompressionPacket(this._Client));
@@ -73,9 +75,11 @@ export class EncryptionResponsePacket implements ServerboundPacket {
                 this._Client.Queue(new JoinGamePacket(this._Client));
             } else {
                 this._Client.Queue(new DisconnectPacket("Invalid session"));
+                console.log(`Player ${this._Client.Player.Username} has invalid session`);
             }
         } else {
             this._Client.Queue(new DisconnectPacket("Failed to negotiate encrypted channel"));
+            console.log(`Player ${this._Client.Player.Username} failed to negotiate encrypted channel`);
         }
 
         return true;

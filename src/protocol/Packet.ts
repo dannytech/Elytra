@@ -50,6 +50,7 @@ export class PacketFactory {
                         packet = new EncryptionResponsePacket(client);
                         break;
                 }
+                break;
         }
 
         // Process the packet and allow it to generate a response
@@ -58,6 +59,8 @@ export class PacketFactory {
 
             // Dispatch packets if a send is requested
             if (queued) client.Send();
+        } else {
+            console.log(`Unrecognized packet with ID 0x${packetId.toString(16).padStart(2, "0")}:`, buf.Buffer);
         }
     }
 }
