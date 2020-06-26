@@ -55,7 +55,7 @@ export class Client extends EventEmitter {
         this.Encryption = {
             Enabled: false
         };
-        this.IP = this._Socket.remoteAddress
+        this.IP = this._Socket.remoteAddress;
     }
 
     public async Receive(packetStream: ReadableBuffer) {

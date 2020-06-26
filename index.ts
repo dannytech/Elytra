@@ -1,4 +1,5 @@
 import { Server } from "net";
+import * as crypto from "crypto";
 import * as nconf from "nconf";
 import { Settings, State } from "./src/Configuration";
 import { Database } from "./src/Database";
@@ -8,16 +9,27 @@ import { Keypair } from "./src/protocol/Encryption";
 async function bootstrap() {
     // Load settings from the config file
     Settings.Load();
+    console.log("Loaded server configuration");
 
     // Generate a keypair for protocol encryption
     State.Keypair = await Keypair.Generate();
 
+    // Print out the key fingerprint for debugging purposes
+    const publicKey: Buffer = State.Keypair.PublicKey.export({ format: "der", type: "spki" });
+    const fingerprint: string = crypto.createHash("md5")
+        .update(publicKey)
+        .digest("hex")
+        .replace(/(\w{2})(?!$)/g, "$1:");
+    console.log(`Server public key has fingerprint ${fingerprint}`);
+
     // Connect to the database
-    State.Database = await Database.Connect(nconf.get("database"));
+    const databaseUri: string = nconf.get("database");
+    State.Database = await Database.Connect(databaseUri);
+    console.log(`Connected to database with URI ${databaseUri}`);
 }
 
 async function startConsole() {
-
+    console.log("Starting interactive console");
 }
 
 async function startListener() {
@@ -33,7 +45,7 @@ async function startListener() {
 }
 
 async function startAPI() {
-
+    console.log(`Starting REST API on port ${nconf.get("api:port")}`);
 }
 
 (async () => {

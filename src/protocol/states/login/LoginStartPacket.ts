@@ -18,7 +18,7 @@ export class LoginStartPacket implements ServerboundPacket {
     
     public async Parse(buf: ReadableBuffer) : Promise<boolean> {
         const username: string = buf.ReadVarChar();
-        
+
         // Create a player object to represent the client's user account
         if (nconf.get("server:online")) {
             this._Client.Player = new Player(username);
@@ -27,6 +27,8 @@ export class LoginStartPacket implements ServerboundPacket {
             this._Client.Queue(new EncryptionRequestPacket(this._Client));
         } else {
             this._Client.Player = new Player(username, uuidv4());
+
+            console.log(`Online mode is off, allowing alleged player ${this._Client.Player.Username} to connect`);
 
             // Prepare the player to join
             this._Client.Queue(new SetCompressionPacket(this._Client));
