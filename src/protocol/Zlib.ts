@@ -29,10 +29,8 @@ export class Zlib {
     }
 
     public static async Inflate(compressed: ReadableBuffer) : Promise<ReadableBuffer> {
-        let output = new WritableBuffer();
-        
         // Verify the header is valid
-        if (compressed.Read(2) === this._Zlib) {
+        if (compressed.Read(this._Zlib.length).equals(this._Zlib)) {
             // Extract the checksum
             const checksum = compressed.ReadUint32();
 

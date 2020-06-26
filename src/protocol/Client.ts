@@ -59,6 +59,16 @@ export class Client extends EventEmitter {
     }
 
     public async Receive(packetStream: ReadableBuffer) {
+        // Decrypt the packet (since the cipher is never finalized, this decryption can safely process appended packets)
+        if (this.Encryption.Enabled) {
+            if (this._Decipher == null)
+                this._Decipher = crypto.createDecipheriv("aes-128-cfb8", this.Encryption.SharedSecret, this.Encryption.SharedSecret);
+
+            // Decrypt the entire packet (no headers need to be stripped)
+            let decrypted: Buffer = this._Decipher.update(packetStream.Buffer);
+            packetStream = new ReadableBuffer(decrypted);
+        }
+
         // Loop until no more packets exist
         while (packetStream.Cursor < packetStream.Buffer.length - 1) {
             const packetLength: number = packetStream.ReadVarInt();
@@ -68,16 +78,6 @@ export class Client extends EventEmitter {
                 return this.Disconnect();
 
             let packet: ReadableBuffer = new ReadableBuffer(packetStream.Read(packetLength));
-
-            // Decrypt the packet
-            if (this.Encryption.Enabled) {
-                if (this._Decipher == null)
-                    this._Decipher = crypto.createDecipheriv("aes-128-cfb8", this.Encryption.SharedSecret, this.Encryption.SharedSecret);
-
-                // Decrypt the entire packet (no headers need to be stripped)
-                let decrypted: Buffer = this._Decipher.update(packet.Buffer);
-                packet = new ReadableBuffer(decrypted);
-            }
 
             // Decompress the packet
             if (this.Compression === CompressionState.Enabled) {
