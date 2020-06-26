@@ -1,7 +1,7 @@
 import axios, { AxiosResponse } from "axios";
 import * as nconf from "nconf";
 import { v4 as uuidv4 } from "uuid";
-import { Client } from "../../../Client";
+import { Client } from "../../../protocol/Client";
 import { ServerboundPacket } from "../../Packet";
 import { ReadableBuffer } from "../../ReadableBuffer";
 import { SetCompressionPacket } from "./SetCompressionPacket";

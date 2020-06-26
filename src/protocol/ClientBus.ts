@@ -12,7 +12,8 @@ export class ClientBus {
         this._Clients = new Array<Client>();
         this._Counter = 0;
 
-        this._Server.on("connection", this._HandleConnection.bind(this)); // Attach a connection listener
+        // Attach a connection listener
+        this._Server.on("connection", this._HandleConnection.bind(this));
     }
 
     private async _HandleConnection(socket: Socket) {
