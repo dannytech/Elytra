@@ -1,6 +1,5 @@
 import axios, { AxiosResponse } from "axios";
 import * as nconf from "nconf";
-import { v4 as uuidv4 } from "uuid";
 import { Client } from "../../../protocol/Client";
 import { ServerboundPacket } from "../../Packet";
 import { ReadableBuffer } from "../../ReadableBuffer";
@@ -8,6 +7,7 @@ import { SetCompressionPacket } from "./SetCompressionPacket";
 import { Player } from "../../../game/Player";
 import { LoginSuccessPacket } from "./LoginSuccessPacket";
 import { EncryptionRequestPacket } from "./EncryptionRequestPacket";
+import { UUID } from "../../../game/UUID";
 
 export class LoginStartPacket implements ServerboundPacket {
     private _Client: Client;
@@ -26,7 +26,7 @@ export class LoginStartPacket implements ServerboundPacket {
             // Begin the encryption/authentication process
             this._Client.Queue(new EncryptionRequestPacket(this._Client));
         } else {
-            this._Client.Player = new Player(username, uuidv4());
+            this._Client.Player = new Player(username, UUID.Generate());
 
             console.log(`Online mode is off, allowing alleged player ${this._Client.Player.Username} to connect`);
 

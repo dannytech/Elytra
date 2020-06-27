@@ -8,6 +8,8 @@ import { SetCompressionPacket } from "./SetCompressionPacket";
 import { LoginSuccessPacket } from "./LoginSuccessPacket";
 import { DisconnectPacket } from "./DisconnectPacket";
 import { digest } from "../../Encryption";
+import { Player } from "../../../game/Player";
+import { UUID } from "../../../game/UUID";
 
 interface AuthenticationRequestParams {
     username: string,
@@ -67,7 +69,7 @@ export class EncryptionResponsePacket implements ServerboundPacket {
             if (res.status == 200) {
                 this._Client.Player.UUID = res.data["id"];
 
-                console.log(`Player ${this._Client.Player.Username} with UUID ${this._Client.Player.UUID} authenticated successfully`);
+                console.log(`Player ${this._Client.Player.Username} with UUID ${this._Client.Player.UUID.Format(true)} authenticated successfully`);
 
                 // Finish the handshake and proceed to the play state
                 this._Client.Queue(new SetCompressionPacket(this._Client));

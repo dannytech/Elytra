@@ -1,3 +1,5 @@
+import { UUID } from "./UUID";
+
 enum Gamemode {
     Survival = 0b000,
     Creative = 0b001,
@@ -8,10 +10,10 @@ enum Gamemode {
 
 export class Player {
     public Username: string;
-    public UUID: string;
-    public Gamemode: number
+    public UUID: UUID;
+    public Gamemode: number;
 
-    constructor(username: string, uuid?: string) {
+    constructor(username: string, uuid?: UUID) {
         this.Username = username;
         if (uuid) this.UUID = uuid;
     }
