@@ -1,8 +1,8 @@
 import { Client } from "../../Client";
-import { ServerboundPacket } from "../../Packet";
+import { IServerboundPacket } from "../../Packet";
 import { ResponsePacket } from "./ResponsePacket";
 
-export class RequestPacket implements ServerboundPacket {
+export class RequestPacket implements IServerboundPacket {
     private _Client: Client;
     
     constructor(client: Client) {

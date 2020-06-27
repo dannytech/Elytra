@@ -1,9 +1,9 @@
 import * as nconf from "nconf";
 import { Constants } from "../../../Configuration";
-import { ClientboundPacket } from "../../Packet";
+import { IClientboundPacket } from "../../Packet";
 import { WritableBuffer } from "../../WritableBuffer";
 
-export class ResponsePacket implements ClientboundPacket {
+export class ResponsePacket implements IClientboundPacket {
     public PacketID: number = 0x00;
 
     public async Write(buf: WritableBuffer) {

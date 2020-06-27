@@ -1,7 +1,6 @@
-import axios, { AxiosResponse } from "axios";
 import * as nconf from "nconf";
 import { Client } from "../../../protocol/Client";
-import { ServerboundPacket } from "../../Packet";
+import { IServerboundPacket } from "../../Packet";
 import { ReadableBuffer } from "../../ReadableBuffer";
 import { SetCompressionPacket } from "./SetCompressionPacket";
 import { Player } from "../../../game/Player";
@@ -9,7 +8,7 @@ import { LoginSuccessPacket } from "./LoginSuccessPacket";
 import { EncryptionRequestPacket } from "./EncryptionRequestPacket";
 import { UUID } from "../../../game/UUID";
 
-export class LoginStartPacket implements ServerboundPacket {
+export class LoginStartPacket implements IServerboundPacket {
     private _Client: Client;
     
     constructor(client: Client) {

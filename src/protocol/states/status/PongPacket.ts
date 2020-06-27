@@ -1,7 +1,7 @@
-import { ClientboundPacket } from "../../Packet";
+import { IClientboundPacket } from "../../Packet";
 import { WritableBuffer } from "../../WritableBuffer";
 
-export class PongPacket implements ClientboundPacket {
+export class PongPacket implements IClientboundPacket {
     private _Payload: bigint;
     
     public PacketID: number = 0x01;

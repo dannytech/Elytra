@@ -1,9 +1,9 @@
 import { Constants } from "../../../Configuration";
-import { ClientboundPacket } from "../../Packet";
+import { IClientboundPacket } from "../../Packet";
 import { WritableBuffer } from "../../WritableBuffer";
 import { Client, CompressionState } from "../../Client";
 
-export class SetCompressionPacket implements ClientboundPacket {
+export class SetCompressionPacket implements IClientboundPacket {
     private _Client: Client;
 
     public PacketID: number = 0x03;

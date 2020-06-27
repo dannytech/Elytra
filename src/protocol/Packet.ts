@@ -7,11 +7,11 @@ import { RequestPacket } from "./states/status/RequestPacket";
 import { LoginStartPacket } from "./states/login/LoginStartPacket";
 import { EncryptionResponsePacket } from "./states/login/EncryptionResponsePacket";
 
-export interface ServerboundPacket {
+export interface IServerboundPacket {
     Parse(buf: ReadableBuffer) : Promise<boolean>;
 }
 
-export interface ClientboundPacket {
+export interface IClientboundPacket {
     PacketID: number;
 
     Write(buf: WritableBuffer) : Promise<void>;
@@ -22,7 +22,7 @@ export class PacketFactory {
         const packetId = buf.ReadVarInt();
 
         // Determine the incoming packet identity based on current state and the packet ID
-        let packet: ServerboundPacket;
+        let packet: IServerboundPacket;
         switch (client.State) {
             case ClientState.Handshaking:
                 switch (packetId) {

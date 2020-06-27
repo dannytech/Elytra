@@ -2,7 +2,7 @@ import * as nconf from "nconf";
 import axios, { AxiosResponse } from "axios";
 import { State } from "../../../Configuration";
 import { Client } from "../../Client";
-import { ServerboundPacket } from "../../Packet";
+import { IServerboundPacket } from "../../Packet";
 import { ReadableBuffer } from "../../ReadableBuffer";
 import { SetCompressionPacket } from "./SetCompressionPacket";
 import { LoginSuccessPacket } from "./LoginSuccessPacket";
@@ -17,7 +17,7 @@ interface AuthenticationRequestParams {
     ip?: string
 }
 
-export class EncryptionResponsePacket implements ServerboundPacket {
+export class EncryptionResponsePacket implements IServerboundPacket {
     private _Client: Client;
     
     constructor(client: Client) {

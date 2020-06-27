@@ -1,8 +1,8 @@
-import { ClientboundPacket } from "../../Packet";
+import { IClientboundPacket } from "../../Packet";
 import { WritableBuffer } from "../../WritableBuffer";
 import { Client } from "../../Client";
 
-export class LoginSuccessPacket implements ClientboundPacket {
+export class LoginSuccessPacket implements IClientboundPacket {
     private _Client: Client;
 
     public PacketID: number = 0x02;

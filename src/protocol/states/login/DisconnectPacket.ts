@@ -1,7 +1,7 @@
-import { ClientboundPacket } from "../../Packet";
+import { IClientboundPacket } from "../../Packet";
 import { WritableBuffer } from "../../WritableBuffer";
 
-export class DisconnectPacket implements ClientboundPacket {
+export class DisconnectPacket implements IClientboundPacket {
     private _Reason: string;
 
     public PacketID: number = 0x00;

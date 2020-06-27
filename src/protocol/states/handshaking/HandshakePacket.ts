@@ -1,8 +1,8 @@
-import { ServerboundPacket } from "../../Packet";
+import { IServerboundPacket } from "../../Packet";
 import { ReadableBuffer } from "../../ReadableBuffer";
 import { Client, ClientState } from "../../Client";
 
-export class HandshakePacket implements ServerboundPacket {
+export class HandshakePacket implements IServerboundPacket {
     private _Client: Client;
     
     constructor(client: Client) {

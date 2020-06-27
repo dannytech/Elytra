@@ -1,9 +1,9 @@
 import { Client } from "../../Client";
-import { ServerboundPacket } from "../../Packet";
+import { IServerboundPacket } from "../../Packet";
 import { PongPacket } from "./PongPacket";
 import { ReadableBuffer } from "../../ReadableBuffer";
 
-export class PingPacket implements ServerboundPacket {
+export class PingPacket implements IServerboundPacket {
     private _Client: Client;
     
     constructor(client: Client) {

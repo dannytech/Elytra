@@ -3,7 +3,7 @@ import * as crypto from "crypto";
 import { Decipher, Cipher } from "crypto";
 import { EventEmitter } from "events";
 import { Constants } from "../Configuration";
-import { ClientboundPacket, PacketFactory } from "./Packet";
+import { IClientboundPacket, PacketFactory } from "./Packet";
 import { ReadableBuffer } from "./ReadableBuffer";
 import { WritableBuffer } from "./WritableBuffer";
 import { Zlib } from "./Zlib";
@@ -23,7 +23,7 @@ export enum CompressionState {
     Enabled
 }
 
-export interface EncryptionState {
+export interface IEncryptionState {
     Enabled: boolean;
     VerificationToken?: Buffer;
     SharedSecret?: Buffer;
@@ -31,14 +31,14 @@ export interface EncryptionState {
 
 export class Client extends EventEmitter {
     private _Socket: Socket;
-    private _ClientboundQueue: Array<ClientboundPacket>;
+    private _ClientboundQueue: Array<IClientboundPacket>;
     private _Decipher: Decipher;
     private _Cipher: Cipher;
     
     public ClientId: number;
     public State: ClientState;
     public Compression: CompressionState;
-    public Encryption: EncryptionState;
+    public Encryption: IEncryptionState;
     public Player: Player;
     public IP: string;
 
@@ -47,7 +47,7 @@ export class Client extends EventEmitter {
 
         // Set initial values
         this._Socket = socket;
-        this._ClientboundQueue = Array<ClientboundPacket>();
+        this._ClientboundQueue = Array<IClientboundPacket>();
 
         this.ClientId = id;
         this.State = ClientState.Handshaking;
@@ -99,7 +99,7 @@ export class Client extends EventEmitter {
 
     public async Send() {
         while (this._ClientboundQueue.length > 0) {
-            let packet: ClientboundPacket = this._ClientboundQueue.shift();
+            let packet: IClientboundPacket = this._ClientboundQueue.shift();
             
             // Export the fields to the completed packet
             let payload: WritableBuffer = new WritableBuffer();
@@ -156,7 +156,7 @@ export class Client extends EventEmitter {
         this.emit("disconnected");
     }
 
-    public Queue(packet: ClientboundPacket) {
+    public Queue(packet: IClientboundPacket) {
         this._ClientboundQueue.push(packet);
     }
 }
