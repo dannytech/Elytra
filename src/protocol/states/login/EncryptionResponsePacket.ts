@@ -67,7 +67,7 @@ export class EncryptionResponsePacket implements IServerboundPacket {
 
             // Confirm client authentication succeeded
             if (res.status == 200) {
-                this._Client.Player.UUID = res.data["id"];
+                this._Client.Player = await Player.Load(this._Client.Player.Username, new UUID(res.data["id"]));
 
                 console.log(`Player ${this._Client.Player.Username} with UUID ${this._Client.Player.UUID.Format(true)} authenticated successfully`);
 

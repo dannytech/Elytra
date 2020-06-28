@@ -153,6 +153,9 @@ export class Client extends EventEmitter {
     public Disconnect() {
         this._Socket.destroy();
 
+        // Save the player state before destroying the client
+        if (this.Player) this.Player.Save();
+
         this.emit("disconnected");
     }
 
