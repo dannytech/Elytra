@@ -23,13 +23,11 @@ async function bootstrap() {
     console.log(`Server public key has fingerprint ${fingerprint}`);
 
     // Connect to the database
-    const databaseUri: string = nconf.get("database");
-    await Database.Connect(databaseUri);
-    console.log(`Connected to database with URI ${databaseUri}`);
+    await Database.Connect(nconf.get("database"));
 }
 
 async function startConsole() {
-    console.log("Starting interactive console");
+
 }
 
 async function startListener() {
@@ -45,7 +43,7 @@ async function startListener() {
 }
 
 async function startAPI() {
-    console.log(`Starting REST API on port ${nconf.get("api:port")}`);
+
 }
 
 (async () => {

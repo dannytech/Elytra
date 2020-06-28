@@ -8,5 +8,7 @@ export class Database {
             useCreateIndex: true,
             useUnifiedTopology: true
         });
+
+        console.log(`Connected to database with URI ${uri}`);
     }
 }
