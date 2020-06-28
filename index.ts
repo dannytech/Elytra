@@ -34,7 +34,7 @@ async function startListener() {
     const server = new Server();
 
     // Attach a connection handler
-    new ClientBus(server);
+    State.ClientBus = new ClientBus(server);
     
     // Start the server
     server.listen(nconf.get("server:port"), nconf.get("server:ip"), () => {

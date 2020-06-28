@@ -1,5 +1,6 @@
 import * as nconf from "nconf";
 import { Keypair } from "./protocol/Encryption";
+import { ClientBus } from "./protocol/ClientBus";
 
 export class Settings {
     public static Load() {
@@ -26,6 +27,7 @@ export class Settings {
 
 export class State {
     public static Keypair: Keypair;
+    public static ClientBus: ClientBus;
 }
 
 export class Constants {

@@ -4,13 +4,15 @@ import { ReadableBuffer } from "./ReadableBuffer";
 
 export class ClientBus {
     private _Server: Server;
-    private _Clients: Array<Client>;
     private _Counter: number;
     
+    public Clients: Array<Client>;
+
     constructor(server: Server) {
         this._Server = server;
-        this._Clients = new Array<Client>();
         this._Counter = 0;
+
+        this.Clients = new Array<Client>();
 
         // Attach a connection listener
         this._Server.on("connection", this._HandleConnection.bind(this));
@@ -37,14 +39,14 @@ export class ClientBus {
     private _Connect(socket: Socket) : Client {
         // Create a new client wrapper and add it to the server state
         const client = new Client(socket, this._Counter++);
-        this._Clients.push(client);
+        this.Clients.push(client);
 
         return client;
     }
 
     private _Remove(client: Client) : void {
         // Remove the client from the server state
-        this._Clients.splice(this._Clients.indexOf(client), 1);
+        this.Clients.splice(this.Clients.indexOf(client), 1);
     }
 
     public Stop() : void {
@@ -52,8 +54,8 @@ export class ClientBus {
         this._Server.close();
 
         // Loop in reverse, telling each client to disconnect and detach
-        for (let i: number; i = this._Clients.length - 1; i--) {
-            this._Clients[i].Disconnect();
+        for (let i: number; i = this.Clients.length - 1; i--) {
+            this.Clients[i].Disconnect();
         }
     }
 }
