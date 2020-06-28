@@ -5,6 +5,7 @@ export enum Gamemode {
     Survival = 0b000,
     Creative = 0b001,
     Adventure = 0b010,
+    Spectator = 0b011,
 
     Hardcore = 0b100
 }
