@@ -106,7 +106,7 @@ export class Client extends EventEmitter {
             await packet.Write(payload);
 
             // Prepend the packet ID
-            payload.WriteVarInt(packet.PacketID, true);
+            payload.Prepend().WriteVarInt(packet.PacketID);
 
             // Compress the packet
             if (this.Compression === CompressionState.Enabled) {
@@ -119,11 +119,11 @@ export class Client extends EventEmitter {
                 } else uncompressedLength = 0;
 
                 // Prepend the uncompressed length
-                payload.WriteVarInt(uncompressedLength, true);
+                payload.Prepend().WriteVarInt(uncompressedLength);
             }
 
             // Prepend the length
-            payload.WriteVarInt(payload.Buffer.length, true);
+            payload.Prepend().WriteVarInt(payload.Buffer.length);
 
             // Encrypt the packet
             if (this.Encryption.Enabled) {
