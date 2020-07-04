@@ -41,13 +41,15 @@ export class Keypair {
     }
 }
 
-export function digest(buffers: Buffer[]) : string {
+/**
+ * Generates a Minecraft-style hex digest of the given buffer.
+ * @param {Buffer} buf The buffer to hash.
+ */
+export function digest(buf: Buffer) : string {
     // Generate a standard SHA-1 hash
-    const hash: Hash = crypto.createHash("sha1");
-
-    buffers.forEach((buf: Buffer) => hash.update(buf));
-
-    let digest = hash.digest();
+    let digest: Buffer = crypto.createHash("sha1")
+        .update(buf)
+        .digest();
 
     // Check if the MSB is 1 (which is interpreted as a signed integer with a negative value)
     const isNegative: boolean = digest.readInt8() < 0;

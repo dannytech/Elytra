@@ -45,11 +45,10 @@ export class EncryptionResponsePacket implements IServerboundPacket {
             delete this._Client.Encryption.VerificationToken;
 
             // Generate the server hash for authentication
-            const serverHash: string = digest([
-                Buffer.alloc(0),
+            const serverHash: string = digest(Buffer.concat([
                 decryptedSecret,
                 State.Keypair.PublicKey.export({ format: "der", type: "spki" })
-            ]);
+            ]));
 
             // Prepare to authenticate the client
             let params: AuthenticationRequestParams = {
