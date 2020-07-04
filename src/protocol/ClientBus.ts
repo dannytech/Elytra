@@ -24,10 +24,13 @@ export class ClientBus {
      * @async
      */
     private async _HandleConnection(socket: Socket) {
-        const client: Client = this._Connect(socket);
+        const client: Client = new Client(socket, this._Counter++);
+        this.Clients.push(client);
 
         // On a disconnection, purge the client object from the bus
-        client.once("disconnected", this._Remove.bind(this, client));
+        client.once("disconnected", () => {
+            this.Clients.splice(this.Clients.indexOf(client), 1);
+        });
 
         // Process incoming packets
         socket.on("data", (chunk: Buffer) => {
@@ -41,20 +44,10 @@ export class ClientBus {
         socket.once("error", client.Disconnect.bind(client));
     }
 
-    private _Connect(socket: Socket) : Client {
-        // Create a new client wrapper and add it to the server state
-        const client = new Client(socket, this._Counter++);
-        this.Clients.push(client);
-
-        return client;
-    }
-
-    private _Remove(client: Client) : void {
-        // Remove the client from the server state
-        this.Clients.splice(this.Clients.indexOf(client), 1);
-    }
-
-    public Stop() : void {
+    /**
+     * Close down the server, disconnecting clients and refusing incoming connections.
+     */
+    public Stop() {
         // Stop accepting new clients
         this._Server.close();
 
