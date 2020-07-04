@@ -9,6 +9,8 @@ export class Zlib {
      * Compresses data using the Deflate algorithm, and prepends the Zlib header and an Adler32 checksum.
      * @param {ReadableBuffer} uncompressed The buffer to compress.
      * @returns {ReadableBuffer} The compressed buffer, including header and checksum.
+     * @static
+     * @async
      */
     public static async Deflate(uncompressed: ReadableBuffer) : Promise<ReadableBuffer> {
         let output = new WritableBuffer();
@@ -39,6 +41,8 @@ export class Zlib {
      * @returns {ReadableBuffer} The decompressed buffer.
      * @throws If the checksum verification fails, an error will be thrown.
      * @throws If the Zlib header is missing, an error will be thrown.
+     * @static
+     * @async
      */
     public static async Inflate(compressed: ReadableBuffer) : Promise<ReadableBuffer> {
         // Verify the header is valid

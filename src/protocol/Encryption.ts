@@ -14,6 +14,23 @@ export class Keypair {
         this.PrivateKey = privateKey;
     }
     
+    /**
+     * Decrypt the given buffer using the keypair's private key.
+     * @param {Buffer} buf The buffer to decrypt.
+     */
+    public Decrypt(buf: Buffer) : Buffer {
+        return privateDecrypt({
+            key: this.PrivateKey,
+            padding: crypto.constants.RSA_PKCS1_PADDING
+        }, buf);
+    }
+
+    /**
+     * Generate a new RSA keypair.
+     * @returns {Keypair} The newly-generated keypair.
+     * @static
+     * @async
+     */
     public static async Generate() : Promise<Keypair> {
         // Minecraft uses a 1024-bit RSA key by default
         const { publicKey, privateKey } = await generateKeyPairAsync("rsa", {
@@ -21,13 +38,6 @@ export class Keypair {
         });
 
         return new Keypair(publicKey, privateKey);
-    }
-
-    public Decrypt(buf: Buffer) : Buffer {
-        return privateDecrypt({
-            key: this.PrivateKey,
-            padding: crypto.constants.RSA_PKCS1_PADDING
-        }, buf);
     }
 }
 

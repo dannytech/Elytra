@@ -18,6 +18,11 @@ export class ClientBus {
         this._Server.on("connection", this._HandleConnection.bind(this));
     }
 
+    /**
+     * Bootstrap a client to send and receive packets.
+     * @param {Socket} socket A reference to the TCP socket connection.
+     * @async
+     */
     private async _HandleConnection(socket: Socket) {
         const client: Client = this._Connect(socket);
 

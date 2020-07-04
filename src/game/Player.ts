@@ -23,6 +23,10 @@ export class Player {
         this.Gamemode = Gamemode.Survival;
     }
 
+    /**
+     * Save the player object to the database.
+     * @async
+     */
     public async Save() {
         // The Player object is used a placeholder during the encryption process, in which case we shouldn't save it
         if (this.UUID) {
@@ -39,6 +43,13 @@ export class Player {
         }
     }
 
+    /**
+     * Load a player object from the database.
+     * @param {string} username The username of the player (not used in database queries).
+     * @param {string} uuid The UUID of the player, used in the query.
+     * @static
+     * @async
+     */
     public static async Load(username: string, uuid: UUID) : Promise<Player> {
         // Retrieve all existing player data
         const playerDocument: IPlayerDocument = await PlayerModel.findOne({

@@ -18,7 +18,14 @@ export interface IClientboundPacket {
 }
 
 export class PacketFactory {
-    static async Parse(buf: ReadableBuffer, client: Client) {
+    /**
+     * Parse a packet, modifying game state and replying as necessary.
+     * @param {ReadableBuffer} buf A buffer containing a single packet to parse.
+     * @param {Client} client The client from which this packet was received.
+     * @static
+     * @async
+     */
+    public static async Parse(buf: ReadableBuffer, client: Client) {
         const packetId = buf.ReadVarInt();
 
         // Determine the incoming packet identity based on current state and the packet ID

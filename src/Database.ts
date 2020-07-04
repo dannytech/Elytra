@@ -4,6 +4,8 @@ export class Database {
     /**
      * Connect Mongoose to the database backend
      * @param {string} uri A MongoDB connection URI
+     * @static
+     * @async
      */
     public static async Connect(uri: string) {
         await mongoose.connect(uri, {

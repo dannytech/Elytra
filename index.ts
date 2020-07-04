@@ -7,7 +7,8 @@ import { ClientBus } from "./src/protocol/ClientBus";
 import { Keypair } from "./src/protocol/Encryption";
 
 /**
- * Prepare the server to accept players
+ * Prepare the server to accept players.
+ * @async
  */
 async function bootstrap() {
     // Load settings from the config file
@@ -30,15 +31,16 @@ async function bootstrap() {
 }
 
 /**
- * Start the local console and relevant pseudo-terminals that can be accessed from within the
- * game
+ * Start the local console and relevant pseudo-terminals that can be accessed from within the game.
+ * @async
  */
 async function startConsole() {
 
 }
 
 /**
- * Start listening for connections from Minecraft clients
+ * Start listening for connections from Minecraft clients.
+ * @async
  */
 async function startListener() {
     const server = new Server();
@@ -53,7 +55,8 @@ async function startListener() {
 }
 
 /**
- * Start the REST and Websocket APIs to allow for remote management and synchronization
+ * Start the REST and Websocket APIs to allow for remote management and synchronization.
+ * @async
  */
 async function startAPI() {
 
