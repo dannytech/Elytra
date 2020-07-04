@@ -6,6 +6,9 @@ import { Database } from "./src/Database";
 import { ClientBus } from "./src/protocol/ClientBus";
 import { Keypair } from "./src/protocol/Encryption";
 
+/**
+ * Prepare the server to accept players
+ */
 async function bootstrap() {
     // Load settings from the config file
     Settings.Load();
@@ -26,10 +29,17 @@ async function bootstrap() {
     await Database.Connect(nconf.get("database"));
 }
 
+/**
+ * Start the local console and relevant pseudo-terminals that can be accessed from within the
+ * game
+ */
 async function startConsole() {
 
 }
 
+/**
+ * Start listening for connections from Minecraft clients
+ */
 async function startListener() {
     const server = new Server();
 
@@ -42,6 +52,9 @@ async function startListener() {
     });
 }
 
+/**
+ * Start the REST and Websocket APIs to allow for remote management and synchronization
+ */
 async function startAPI() {
 
 }

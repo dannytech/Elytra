@@ -1,6 +1,10 @@
 import * as mongoose from "mongoose";
 
 export class Database {
+    /**
+     * Connect Mongoose to the database backend
+     * @param {string} uri A MongoDB connection URI
+     */
     public static async Connect(uri: string) {
         await mongoose.connect(uri, {
             useNewUrlParser: true,

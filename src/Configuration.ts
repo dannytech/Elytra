@@ -3,6 +3,9 @@ import { Keypair } from "./protocol/Encryption";
 import { ClientBus } from "./protocol/ClientBus";
 
 export class Settings {
+    /**
+     * Load configuration variables into nconf
+     */
     public static Load() {
         nconf.file("config.json")
             .defaults({

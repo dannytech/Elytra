@@ -58,6 +58,11 @@ export class Client extends EventEmitter {
         this.IP = this._Socket.remoteAddress;
     }
 
+    /**
+     * Parses and processes an incoming packet(s) from the given buffer.
+     * @param {ReadableBuffer} packetStream The incoming buffer of packet(s).
+     * @async
+     */
     public async Receive(packetStream: ReadableBuffer) {
         // Decrypt the packet (since the cipher is never finalized, this decryption can safely process appended packets)
         if (this.Encryption.Enabled) {
@@ -97,6 +102,10 @@ export class Client extends EventEmitter {
         }
     }
 
+    /**
+     * Dispatches queued clientbound packets to the client.
+     * @async
+     */
     public async Send() {
         while (this._ClientboundQueue.length > 0) {
             let packet: IClientboundPacket = this._ClientboundQueue.shift();
@@ -150,6 +159,10 @@ export class Client extends EventEmitter {
         }
     }
 
+    /**
+     * Cleans up and destroys the client connection.
+     * @fires Client#disconnected
+     */
     public Disconnect() {
         this._Socket.destroy();
 
@@ -159,6 +172,10 @@ export class Client extends EventEmitter {
         this.emit("disconnected");
     }
 
+    /**
+     * Appends a clientbound packet to the client queue.
+     * @param {IClientboundPacket} packet The packet to queue.
+     */
     public Queue(packet: IClientboundPacket) {
         this._ClientboundQueue.push(packet);
     }
