@@ -8,12 +8,23 @@ import { LoginStartPacket } from "./states/login/LoginStartPacket";
 import { EncryptionResponsePacket } from "./states/login/EncryptionResponsePacket";
 
 export interface IServerboundPacket {
+    /**
+     * Parses the packet, modifying game state and responding as needed.
+     * @param {ReadableBuffer} buf The packet contents to parse.
+     * @returns {boolean} Whether packets were queued and need to be dispatched to the client.
+     * @async
+     */
     Parse(buf: ReadableBuffer) : Promise<boolean>;
 }
 
 export interface IClientboundPacket {
     PacketID: number;
 
+    /**
+     * Writes the packet to a buffer.
+     * @param {WritableBuffer} buf The buffer to be sent to the client.
+     * @async
+     */
     Write(buf: WritableBuffer) : Promise<void>;
 }
 

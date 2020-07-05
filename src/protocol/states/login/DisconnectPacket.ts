@@ -10,6 +10,12 @@ export class DisconnectPacket implements IClientboundPacket {
         this._Reason = reason;
     }
 
+    /**
+     * Tell the client to disconnect, sending the reason as a Chat messagae.
+     * @param {WritableBuffer} buf The outgoing packet buffer.
+     * @property {string} Reason A JSON Chat object containing the reason for the disconnect.
+     * @async
+     */
     public async Write(buf: WritableBuffer) {
         // Chat component containing reason for disconnect
         buf.WriteJSON({ "text": this._Reason });

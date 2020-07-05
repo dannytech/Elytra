@@ -15,6 +15,12 @@ export class LoginStartPacket implements IServerboundPacket {
         this._Client = client;
     }
     
+    /**
+     * Parse requests to begin the login process.
+     * @param {ReadableBuffer} buf The incoming packet buffer.
+     * @property {string} Name The player's username.
+     * @async
+     */
     public async Parse(buf: ReadableBuffer) : Promise<boolean> {
         const username: string = buf.ReadVarChar();
 

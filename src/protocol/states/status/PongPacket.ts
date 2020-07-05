@@ -10,6 +10,12 @@ export class PongPacket implements IClientboundPacket {
         this._Payload = payload;
     }
 
+    /**
+     * Echo back a ping payload to the client.
+     * @param {WritableBuffer} buf The outgoing packet buffer.
+     * @property {bigint} Payload The ping payload, used to verify pong integrity.
+     * @async
+     */
     public async Write(buf: WritableBuffer) {
         // Echo back the contents of the ping
         buf.WriteInt64(this._Payload);

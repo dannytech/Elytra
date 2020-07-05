@@ -24,6 +24,15 @@ export class EncryptionResponsePacket implements IServerboundPacket {
         this._Client = client;
     }
     
+    /**
+     * Parse a response to the server's encryption request.
+     * @param {ReadableBuffer} buf The incoming packet buffer.
+     * @property {number} SharedSecretLength The length of the shared secret, in bytes.
+     * @property {Buffer} SharedSecret A byte array of the specified length, containing the shared secret.
+     * @property {number} VerifyTokenLength The length of the encrypted verification token, in bytes.
+     * @property {Buffer} VerifyToken A byte array of the specified length, containing the encrypted verification token.
+     * @async
+     */
     public async Parse(buf: ReadableBuffer) : Promise<boolean> {
         // Read the client-generated shared secret
         const sharedSecretLength: number = buf.ReadVarInt();

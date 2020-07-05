@@ -7,6 +7,12 @@ import { Client } from "../../Client";
 export class ResponsePacket implements IClientboundPacket {
     public PacketID: number = 0x00;
 
+    /**
+     * Send the client the server's current status.
+     * @param {WritableBuffer} buf The outgoing packet buffer.
+     * @property {string} JSONResponse A JSON object representing the current server status.
+     * @async
+     */
     public async Write(buf: WritableBuffer) {
         const onlinePlayers = State.ClientBus.Clients.filter((client: Client) => client.Player && client.Player.UUID);
 

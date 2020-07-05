@@ -12,6 +12,12 @@ export class SetCompressionPacket implements IClientboundPacket {
         this._Client = client;
     }
 
+    /**
+     * Tell the client to enable compression.
+     * @param {WritableBuffer} buf The outgoing packet buffer.
+     * @property {number} Threshold The threshold at which to use compression, in bytes.
+     * @async
+     */
     public async Write(buf: WritableBuffer) {
         // Tell the socket to enable compression after this packet is sent
         this._Client.Compression = CompressionState.Enabling;
