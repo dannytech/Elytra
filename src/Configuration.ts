@@ -1,6 +1,7 @@
 import * as nconf from "nconf";
 import { Keypair } from "./protocol/Encryption";
 import { ClientBus } from "./protocol/ClientBus";
+import { World } from "./game/World";
 
 export class Settings {
     /**
@@ -31,6 +32,7 @@ export class Settings {
 export class State {
     public static Keypair: Keypair;
     public static ClientBus: ClientBus;
+    public static World: World;
 }
 
 export class Constants {

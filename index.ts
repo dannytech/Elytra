@@ -5,6 +5,7 @@ import { Settings, State } from "./src/Configuration";
 import { Database } from "./src/Database";
 import { ClientBus } from "./src/protocol/ClientBus";
 import { Keypair } from "./src/protocol/Encryption";
+import { World } from "./src/game/World";
 
 /**
  * Prepare the server to accept players.
@@ -28,6 +29,9 @@ async function bootstrap() {
 
     // Connect to the database
     await Database.Connect(nconf.get("database"));
+
+    // Load world data
+    State.World = await World.Load();
 }
 
 /**

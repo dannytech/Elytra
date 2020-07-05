@@ -1,4 +1,5 @@
 import { PlayerModel, IPlayerDocument } from "../database/PlayerModel";
+import { Entity } from "./Entity";
 import { UUID } from "./UUID";
 
 export enum Gamemode {
@@ -10,12 +11,14 @@ export enum Gamemode {
     Hardcore = 0b100
 }
 
-export class Player {
+export class Player extends Entity {
     public Username: string;
     public UUID: UUID;
     public Gamemode: number;
 
     constructor(username: string, uuid?: UUID) {
+        super();
+
         this.Username = username;
         if (uuid) this.UUID = uuid;
 
