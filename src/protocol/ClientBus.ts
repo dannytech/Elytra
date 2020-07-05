@@ -4,13 +4,13 @@ import { ReadableBuffer } from "./ReadableBuffer";
 
 export class ClientBus {
     private _Server: Server;
-    private _Counter: number;
+    private _ClientCounter: number;
     
     public Clients: Array<Client>;
 
     constructor(server: Server) {
         this._Server = server;
-        this._Counter = 0;
+        this._ClientCounter = 0;
 
         this.Clients = new Array<Client>();
 
@@ -24,7 +24,7 @@ export class ClientBus {
      * @async
      */
     private async _HandleConnection(socket: Socket) {
-        const client: Client = new Client(socket, this._Counter++);
+        const client: Client = new Client(socket, this._ClientCounter++);
         this.Clients.push(client);
 
         // On a disconnection, purge the client object from the bus
