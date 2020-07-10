@@ -13,7 +13,9 @@ export class ResponsePacket implements IClientboundPacket {
      * @async
      */
     public async Write(buf: WritableBuffer) {
-        const onlinePlayers = State.ClientBus.Clients.filter((client: Client) => client.Player && client.Player.UUID);
+        const onlinePlayers: Client[] = State.ClientBus.Clients.filter((client: Client) => client.Player && client.Player.UUID);
+        const maximumPlayers: number = await Settings.Get("maximumPlayers", "minecraft");
+        const motd: string = await Settings.Get("motd", "minecraft");
 
         // Send back server information
         buf.WriteJSON({
@@ -22,7 +24,7 @@ export class ResponsePacket implements IClientboundPacket {
                 protocol: Constants.ProtocolVersion
             },
             players: {
-                max: Settings.Get("maximumPlayers", "minecraft"),
+                max: maximumPlayers,
                 online: onlinePlayers.length,
                 sample: onlinePlayers.slice(0, 5).map((client: Client) => {
                     return {
@@ -32,7 +34,7 @@ export class ResponsePacket implements IClientboundPacket {
                 })
             },
             description: {
-                text: nconf.get("server:motd")
+                text: motd
             }
         });
     }
