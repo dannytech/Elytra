@@ -1,4 +1,3 @@
-import * as nconf from "nconf";
 import { Client } from "../../../protocol/Client";
 import { IServerboundPacket } from "../../Packet";
 import { ReadableBuffer } from "../../ReadableBuffer";
@@ -7,6 +6,7 @@ import { Player } from "../../../game/Player";
 import { LoginSuccessPacket } from "./LoginSuccessPacket";
 import { EncryptionRequestPacket } from "./EncryptionRequestPacket";
 import { UUID } from "../../../game/UUID";
+import { Settings } from "../../../Configuration";
 
 export class LoginStartPacket implements IServerboundPacket {
     private _Client: Client;
@@ -25,7 +25,8 @@ export class LoginStartPacket implements IServerboundPacket {
         const username: string = buf.ReadVarChar();
 
         // Create a player object to represent the client's user account
-        if (nconf.get("server:online")) {
+        const online: boolean = await Settings.Get("online", "minecraft");
+        if (online) {
             this._Client.Player = new Player(username);
 
             // Begin the encryption/authentication process

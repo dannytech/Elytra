@@ -1,6 +1,5 @@
 import { Server } from "net";
 import * as crypto from "crypto";
-import * as nconf from "nconf";
 import { Settings, State } from "./src/Configuration";
 import { Database } from "./src/Database";
 import { ClientBus } from "./src/protocol/ClientBus";
@@ -14,7 +13,7 @@ import { World } from "./src/game/World";
 async function bootstrap() {
     // Load settings from the config file
     Settings.Load();
-    console.log("Loaded server configuration");
+    console.log("Loaded database configuration");
 
     // Generate a keypair for protocol encryption
     State.Keypair = await Keypair.Generate();
@@ -28,7 +27,7 @@ async function bootstrap() {
     console.log(`Server public key has fingerprint ${fingerprint}`);
 
     // Connect to the database
-    await Database.Connect(nconf.get("database"));
+    await Database.Connect(process.env.MONGO_URI);
 
     // Load world data
     State.World = await World.Load();
@@ -53,8 +52,10 @@ async function startListener() {
     State.ClientBus = new ClientBus(server);
     
     // Start the server
-    server.listen(nconf.get("server:port"), nconf.get("server:ip"), () => {
-        console.log(`Server listening on port ${nconf.get("server:port")}`);
+    const port: number = await Settings.Get("server_port", "minecraft");
+    const ip: number = await Settings.Get("server_ip", "minecraft");
+    server.listen(port, ip, () => {
+        console.log(`Server listening on port ${port}`);
     });
 }
 

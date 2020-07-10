@@ -1,6 +1,5 @@
-import * as nconf from "nconf";
 import axios, { AxiosResponse } from "axios";
-import { State } from "../../../Configuration";
+import { State, Settings } from "../../../Configuration";
 import { Client } from "../../Client";
 import { IServerboundPacket } from "../../Packet";
 import { ReadableBuffer } from "../../ReadableBuffer";
@@ -66,7 +65,8 @@ export class EncryptionResponsePacket implements IServerboundPacket {
             };
 
             // Ensures the client authentication and joining client originate from the same source
-            if (nconf.get("server:preventProxy")) params["ip"] = this._Client.IP;
+            const preventProxy: boolean = await Settings.Get("preventProxy", "minecraft");
+            if (preventProxy) params["ip"] = this._Client.IP;
 
             // Authenticate the client
             let res: AxiosResponse = await axios.get("https://sessionserver.mojang.com/session/minecraft/hasJoined", {

@@ -1,5 +1,4 @@
-import * as nconf from "nconf";
-import { Constants, State } from "../../../Configuration";
+import { Settings, Constants, State } from "../../../Configuration";
 import { IClientboundPacket } from "../../Packet";
 import { WritableBuffer } from "../../WritableBuffer";
 import { Client } from "../../Client";
@@ -23,7 +22,7 @@ export class ResponsePacket implements IClientboundPacket {
                 protocol: Constants.ProtocolVersion
             },
             players: {
-                max: nconf.get("server:maximumPlayers"),
+                max: Settings.Get("maximumPlayers", "minecraft"),
                 online: onlinePlayers.length,
                 sample: onlinePlayers.slice(0, 5).map((client: Client) => {
                     return {

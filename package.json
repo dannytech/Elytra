@@ -16,12 +16,11 @@
   },
   "dependencies": {
     "@types/mongoose": "^5.7.27",
-    "@types/nconf": "^0.10.0",
     "@types/node": "^14.0.13",
     "@types/uuid": "^8.0.0",
     "axios": "^0.19.2",
+    "dotenv-extended": "^2.8.0",
     "mongoose": "^5.9.20",
-    "nconf": "^0.10.0",
     "typescript": "^3.9.5",
     "uuid": "^8.1.0"
   },
