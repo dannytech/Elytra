@@ -7,6 +7,7 @@ import { SetCompressionPacket } from "./SetCompressionPacket";
 import { LoginSuccessPacket } from "./LoginSuccessPacket";
 import { DisconnectPacket } from "./DisconnectPacket";
 import { digest } from "../../Encryption";
+import { JoinGamePacket } from "../play/JoinGamePacket";
 import { Player } from "../../../game/Player";
 import { UUID } from "../../../game/UUID";
 

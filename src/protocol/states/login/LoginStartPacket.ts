@@ -5,6 +5,7 @@ import { SetCompressionPacket } from "./SetCompressionPacket";
 import { Player } from "../../../game/Player";
 import { LoginSuccessPacket } from "./LoginSuccessPacket";
 import { EncryptionRequestPacket } from "./EncryptionRequestPacket";
+import { JoinGamePacket } from "../play/JoinGamePacket";
 import { UUID } from "../../../game/UUID";
 import { Settings, MinecraftConfigs } from "../../../Configuration";
 
@@ -39,6 +40,7 @@ export class LoginStartPacket implements IServerboundPacket {
             // Prepare the player to join
             this._Client.Queue(new SetCompressionPacket(this._Client));
             this._Client.Queue(new LoginSuccessPacket(this._Client));
+            this._Client.Queue(new JoinGamePacket(this._Client));
         }
 
         return true;
