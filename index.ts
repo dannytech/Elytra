@@ -1,6 +1,6 @@
 import { Server } from "net";
 import * as crypto from "crypto";
-import { Settings, State } from "./src/Configuration";
+import { Settings, State, MinecraftConfigs } from "./src/Configuration";
 import { Database } from "./src/Database";
 import { ClientBus } from "./src/protocol/ClientBus";
 import { Keypair } from "./src/protocol/Encryption";
@@ -52,8 +52,8 @@ async function startListener() {
     State.ClientBus = new ClientBus(server);
     
     // Start the server
-    const port: number = await Settings.Get("server_port", "minecraft");
-    const ip: number = await Settings.Get("server_ip", "minecraft");
+    const port: number = await Settings.Get(MinecraftConfigs.ServerPort);
+    const ip: number = await Settings.Get(MinecraftConfigs.ServerIP);
     server.listen(port, ip, () => {
         console.log(`Server listening on port ${port}`);
     });

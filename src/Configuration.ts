@@ -4,6 +4,20 @@ import { Keypair } from "./protocol/Encryption";
 import { ClientBus } from "./protocol/ClientBus";
 import { World } from "./game/World";
 
+export enum MinecraftConfigs {
+    ServerIP = "serverIP",
+    ServerPort = "serverPort",
+    ApiIP = "apiIP",
+    ApiPort = "apiPort",
+    Online = "online",
+    PreventProxy = "preventProxy",
+    MaximumPlayers = "maximumPlayers",
+    RenderDistance = "renderDistance",
+    ReducedDebug = "reducedDebug",
+    RespawnScreen = "respawnScreen",
+    MOTD = "motd"
+}
+
 export class Settings {
     private static _Defaults: {
         [namespace: string]: {
@@ -11,15 +25,17 @@ export class Settings {
         }
     } = {
         minecraft: {
-            server_ip: "0.0.0.0",
-            server_port: 25565,
-            api_ip: "127.0.0.1",
-            api_port: 25575,
-            online: true,
-            preventProxy: true,
-            maximumPlayers: 20,
-            renderDistance: 20,
-            motd: "An Elytra server"
+            [MinecraftConfigs.ServerIP]: "0.0.0.0",
+            [MinecraftConfigs.ServerPort]: 25565,
+            [MinecraftConfigs.ApiIP]: "127.0.0.1",
+            [MinecraftConfigs.ApiPort]: 25575,
+            [MinecraftConfigs.Online]: true,
+            [MinecraftConfigs.PreventProxy]: true,
+            [MinecraftConfigs.MaximumPlayers]: 20,
+            [MinecraftConfigs.RenderDistance]: 20,
+            [MinecraftConfigs.ReducedDebug]: false,
+            [MinecraftConfigs.RespawnScreen]: true,
+            [MinecraftConfigs.MOTD]: "An Elytra server"
         }
     };
 
@@ -47,7 +63,7 @@ export class Settings {
         }, [ "value" ]);
 
         if (playerDocument) return playerDocument.value;
-        else return this._Defaults[namespace][name];
+        else if (namespace === "minecraft") return this._Defaults[namespace][name];
     }
 
     /**

@@ -6,7 +6,7 @@ import { Player } from "../../../game/Player";
 import { LoginSuccessPacket } from "./LoginSuccessPacket";
 import { EncryptionRequestPacket } from "./EncryptionRequestPacket";
 import { UUID } from "../../../game/UUID";
-import { Settings } from "../../../Configuration";
+import { Settings, MinecraftConfigs } from "../../../Configuration";
 
 export class LoginStartPacket implements IServerboundPacket {
     private _Client: Client;
@@ -25,7 +25,7 @@ export class LoginStartPacket implements IServerboundPacket {
         const username: string = buf.ReadVarChar();
 
         // Create a player object to represent the client's user account
-        const online: boolean = await Settings.Get("online", "minecraft");
+        const online: boolean = await Settings.Get(MinecraftConfigs.Online);
         if (online) {
             this._Client.Player = new Player(username);
 

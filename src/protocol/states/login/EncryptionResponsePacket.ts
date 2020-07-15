@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from "axios";
-import { State, Settings } from "../../../Configuration";
+import { State, Settings, MinecraftConfigs } from "../../../Configuration";
 import { Client } from "../../Client";
 import { IServerboundPacket } from "../../Packet";
 import { ReadableBuffer } from "../../ReadableBuffer";
@@ -65,7 +65,7 @@ export class EncryptionResponsePacket implements IServerboundPacket {
             };
 
             // Ensures the client authentication and joining client originate from the same source
-            const preventProxy: boolean = await Settings.Get("preventProxy", "minecraft");
+            const preventProxy: boolean = await Settings.Get(MinecraftConfigs.PreventProxy);
             if (preventProxy) params["ip"] = this._Client.IP;
 
             // Authenticate the client
