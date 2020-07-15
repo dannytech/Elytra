@@ -21,11 +21,11 @@
     "axios": "^0.19.2",
     "dotenv-extended": "^2.8.0",
     "mongoose": "^5.9.20",
-    "typescript": "^3.9.5",
     "uuid": "^8.1.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.4",
-    "ts-node": "^8.10.2"
+    "ts-node": "^8.10.2",
+    "typescript": "^3.9.6"
   }
 }
