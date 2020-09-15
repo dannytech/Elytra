@@ -5,7 +5,8 @@ import { IServerboundPacket } from "../../Packet";
 import { ReadableBuffer } from "../../ReadableBuffer";
 import { SetCompressionPacket } from "./SetCompressionPacket";
 import { LoginSuccessPacket } from "./LoginSuccessPacket";
-import { DisconnectPacket } from "./DisconnectPacket";
+import { DisconnectPacket as LoginDisconnectPacket } from "./DisconnectPacket";
+import { DisconnectPacket as PlayDisconnectPacket } from "../play/DisconnectPacket";
 import { digest } from "../../Encryption";
 import { JoinGamePacket } from "../play/JoinGamePacket";
 import { Player } from "../../../game/Player";
@@ -85,11 +86,11 @@ export class EncryptionResponsePacket implements IServerboundPacket {
                 this._Client.Queue(new LoginSuccessPacket(this._Client));
                 this._Client.Queue(new JoinGamePacket(this._Client));
             } else {
-                this._Client.Queue(new DisconnectPacket("Invalid session"));
+                this._Client.Queue(new LoginDisconnectPacket(ChatComponentFactory.FromFormattedString("Invalid session")), true);
                 console.log(`Player ${this._Client.Player.Username} has invalid session`);
             }
         } else {
-            this._Client.Queue(new DisconnectPacket("Failed to negotiate encrypted channel"));
+            this._Client.Queue(new LoginDisconnectPacket(ChatComponentFactory.FromFormattedString("Failed to negotiate encrypted channel")), true);
             console.log(`Player ${this._Client.Player.Username} failed to negotiate encrypted channel`);
         }
 

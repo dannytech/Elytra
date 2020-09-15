@@ -5,7 +5,7 @@ import { ChatComponent } from "../../../game/chat/ChatComponent";
 export class DisconnectPacket implements IClientboundPacket {
     private _Reason: ChatComponent;
 
-    public PacketID: number = 0x00;
+    public PacketID: number = 0x1b;
 
     constructor(reason: ChatComponent) {
         this._Reason = reason;
