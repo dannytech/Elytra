@@ -16,7 +16,8 @@ export enum MinecraftConfigs {
     ReducedDebug = "reducedDebug",
     RespawnScreen = "respawnScreen",
     MOTD = "motd",
-    EULA = "eula"
+    EULA = "eula",
+    Filter = "filter"
 }
 
 export class Settings {
@@ -37,7 +38,11 @@ export class Settings {
             [MinecraftConfigs.ReducedDebug]: false,
             [MinecraftConfigs.RespawnScreen]: true,
             [MinecraftConfigs.MOTD]: "An Elytra server",
-            [MinecraftConfigs.EULA]: false
+            [MinecraftConfigs.EULA]: false,
+            [MinecraftConfigs.Filter]: {
+                mode: "deny",
+                players: []
+            }
         }
     };
 

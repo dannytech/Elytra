@@ -11,11 +11,22 @@ import { digest } from "../../Encryption";
 import { JoinGamePacket } from "../play/JoinGamePacket";
 import { Player } from "../../../game/Player";
 import { UUID } from "../../../game/UUID";
+import { ChatComponentFactory } from "../../../game/chat/ChatComponentFactory";
 
 interface AuthenticationRequestParams {
     username: string,
     serverId: string,
     ip?: string
+}
+
+interface FilterList {
+    mode: string,
+    players: [
+        {
+            username?: string,
+            uuid: string
+        }
+    ]
 }
 
 export class EncryptionResponsePacket implements IServerboundPacket {
@@ -79,7 +90,7 @@ export class EncryptionResponsePacket implements IServerboundPacket {
             if (res.status == 200) {
                 this._Client.Player = await Player.Load(this._Client.Player.Username, new UUID(res.data["id"]));
 
-                console.log(`Player ${this._Client.Player.Username} with UUID ${this._Client.Player.UUID.Format(true)} authenticated successfully`);
+                console.log(`${this._Client.Player.Username} authenticated successfully with UUID ${this._Client.Player.UUID.Format(true)}`);
 
                 // Finish the handshake and proceed to the play state
                 this._Client.Queue(new SetCompressionPacket(this._Client));
@@ -87,11 +98,28 @@ export class EncryptionResponsePacket implements IServerboundPacket {
                 this._Client.Queue(new JoinGamePacket(this._Client));
             } else {
                 this._Client.Queue(new LoginDisconnectPacket(ChatComponentFactory.FromFormattedString("Invalid session")), true);
+
                 console.log(`Player ${this._Client.Player.Username} has invalid session`);
             }
         } else {
             this._Client.Queue(new LoginDisconnectPacket(ChatComponentFactory.FromFormattedString("Failed to negotiate encrypted channel")), true);
+
             console.log(`Player ${this._Client.Player.Username} failed to negotiate encrypted channel`);
+        }
+
+        // Load the player filter
+        const filter: FilterList = await Settings.Get(MinecraftConfigs.Filter);
+        const inFilter: boolean = filter?.players?.some(player => player.uuid == this._Client.Player.UUID.Format());
+        
+        // Determine whether the player is allowed to join
+        if (filter?.mode == "deny" && inFilter) {
+            this._Client.Queue(new PlayDisconnectPacket(ChatComponentFactory.FromFormattedString("You have been disallowed from this server")));
+            
+            console.log(`Player ${this._Client.Player.Username} is disallowed by filter, disconnecting`);
+        } else if (filter?.mode == "allow" && !inFilter) {
+            this._Client.Queue(new PlayDisconnectPacket(ChatComponentFactory.FromFormattedString("You have not been allowed on this server")));
+        
+            console.log(`Player ${this._Client.Player.Username} is not allowed by filter, disconnecting`);
         }
 
         return true;
