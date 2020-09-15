@@ -2,6 +2,7 @@ import { Settings, Constants, State, MinecraftConfigs } from "../../../Configura
 import { IClientboundPacket } from "../../Packet";
 import { WritableBuffer } from "../../WritableBuffer";
 import { Client } from "../../Client";
+import { ChatComponentFactory } from "../../../game/chat/ChatComponentFactory";
 
 export class ResponsePacket implements IClientboundPacket {
     public PacketID: number = 0x00;
@@ -33,9 +34,7 @@ export class ResponsePacket implements IClientboundPacket {
                     };
                 })
             },
-            description: {
-                text: motd
-            }
+            description: ChatComponentFactory.FromFormattedString(motd)
         });
     }
 }
