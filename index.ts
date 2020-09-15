@@ -73,9 +73,12 @@ async function startAPI() {
     // Start the server console
     await startConsole();
 
-    // Start the Minecraft server
-    await startListener();
-
     // Start the API
     await startAPI();
+
+    const eula: boolean = await Settings.Get(MinecraftConfigs.EULA);
+    if (eula)
+        // Start the Minecraft server
+        await startListener();
+    else console.error("You must accept the EULA first. Go to https://account.mojang.com/documents/minecraft_eula, then run \"set eula true\" to accept.");
 })();

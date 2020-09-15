@@ -15,7 +15,8 @@ export enum MinecraftConfigs {
     RenderDistance = "renderDistance",
     ReducedDebug = "reducedDebug",
     RespawnScreen = "respawnScreen",
-    MOTD = "motd"
+    MOTD = "motd",
+    EULA = "eula"
 }
 
 export class Settings {
@@ -35,7 +36,8 @@ export class Settings {
             [MinecraftConfigs.RenderDistance]: 20,
             [MinecraftConfigs.ReducedDebug]: false,
             [MinecraftConfigs.RespawnScreen]: true,
-            [MinecraftConfigs.MOTD]: "An Elytra server"
+            [MinecraftConfigs.MOTD]: "An Elytra server",
+            [MinecraftConfigs.EULA]: false
         }
     };
 
