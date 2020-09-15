@@ -9,6 +9,8 @@ import { WritableBuffer } from "./WritableBuffer";
 import { Zlib } from "./Zlib";
 import { SetCompressionPacket } from "./states/login/SetCompressionPacket";
 import { Player } from "../game/Player";
+import { DisconnectPacket as LoginDisconnectPacket } from "./states/login/DisconnectPacket";
+import { DisconnectPacket as PlayDisconnectPacket } from "./states/play/DisconnectPacket";
 
 export enum ClientState {
     Handshaking,
@@ -156,6 +158,13 @@ export class Client extends EventEmitter {
             // Enable compression after telling the client it will be enabled
             if (this.Compression === CompressionState.Enabling && packet instanceof SetCompressionPacket)
                 this.Compression = CompressionState.Enabled;
+            
+            // If the packet was a disconnection packet, stop accepting serverbound packets
+            if (packet instanceof LoginDisconnectPacket || packet instanceof PlayDisconnectPacket) {
+                this._ClientboundQueue.splice(0, this._ClientboundQueue.length); // Flush the clientbound queue
+
+                this.Disconnect(); // Destroy the socket and this client
+            }
         }
     }
 
