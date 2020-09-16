@@ -7,8 +7,6 @@ import { World } from "./game/World";
 export enum MinecraftConfigs {
     ServerIP = "serverIP",
     ServerPort = "serverPort",
-    ApiIP = "apiIP",
-    ApiPort = "apiPort",
     Online = "online",
     PreventProxy = "preventProxy",
     MaximumPlayers = "maximumPlayers",
@@ -20,6 +18,11 @@ export enum MinecraftConfigs {
     Filter = "filter"
 }
 
+export enum ElytraConfigs {
+    ApiIP = "apiIP",
+    ApiPort = "apiPort"
+}
+
 export class Settings {
     private static _Defaults: {
         [namespace: string]: {
@@ -29,8 +32,6 @@ export class Settings {
         minecraft: {
             [MinecraftConfigs.ServerIP]: "0.0.0.0",
             [MinecraftConfigs.ServerPort]: 25565,
-            [MinecraftConfigs.ApiIP]: "127.0.0.1",
-            [MinecraftConfigs.ApiPort]: 25575,
             [MinecraftConfigs.Online]: true,
             [MinecraftConfigs.PreventProxy]: true,
             [MinecraftConfigs.MaximumPlayers]: 20,
@@ -43,6 +44,10 @@ export class Settings {
                 mode: "deny",
                 players: []
             }
+        },
+        elytra: {
+            [ElytraConfigs.ApiIP]: "127.0.0.1",
+            [ElytraConfigs.ApiPort]: 25575
         }
     };
 
