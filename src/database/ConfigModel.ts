@@ -15,4 +15,5 @@ const ConfigSchema: Schema = new Schema({
     namespace: { type: String, required: true },
     value: { type: mongoose.SchemaTypes.Mixed, required: true }
 });
+ConfigSchema.index({ name: 1, namespace: 1}, { unique: true });
 export const ConfigModel: Model<IConfigDocument> = mongoose.model<IConfigDocument>("Config", ConfigSchema);

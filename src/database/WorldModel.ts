@@ -10,9 +10,9 @@ export interface IWorldDocument extends IWorldSchema, Document {}
 
 // Mongoose Schema for data validation and structuring
 const WorldSchema: Schema = new Schema({
-    seed: { type: Number, required: true },
     generator: {
         type: String,
+        seed: { type: Number },
         enum: [
             "default",
             "flat",
@@ -21,7 +21,6 @@ const WorldSchema: Schema = new Schema({
             "customized",
             "buffet"
         ],
-        required: true,
         default: "default"
     }
 });
