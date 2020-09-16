@@ -19,6 +19,18 @@ interface AuthenticationRequestParams {
     ip?: string
 }
 
+interface SessionResponse {
+    id: string,
+    name: string,
+    properties: [
+        {
+            name: string,
+            value: string,
+            signature: string
+        }
+    ]
+}
+
 interface FilterList {
     mode: string,
     players: [
@@ -82,13 +94,13 @@ export class EncryptionResponsePacket implements IServerboundPacket {
             if (preventProxy) params["ip"] = this._Client.IP;
 
             // Authenticate the client
-            let res: AxiosResponse = await axios.get("https://sessionserver.mojang.com/session/minecraft/hasJoined", {
+            let res: AxiosResponse<SessionResponse> = await axios.get("https://sessionserver.mojang.com/session/minecraft/hasJoined", {
                 params
             });
 
             // Confirm client authentication succeeded
             if (res.status == 200) {
-                this._Client.Player = await Player.Load(this._Client.Player.Username, new UUID(res.data["id"]));
+                this._Client.Player = await Player.Load(this._Client.Player.Username, new UUID(res.data.id));
 
                 console.log(`${this._Client.Player.Username} authenticated successfully with UUID ${this._Client.Player.UUID.Format(true)}`);
 
