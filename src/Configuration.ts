@@ -62,42 +62,59 @@ export class Settings {
 
     /**
      * Load a configuration node from the database.
-     * @param {string} name The name of the configuration node to retrieve.
      * @param {string} [namespace=minecraft] The namespace within which the configuration node resides.
-     * @returns {any} The retrieved configuration value.
+     * @param {string} name The name of the configuration node to retrieve.
+     * @returns {any} The retrieved configuration value, or null.
      * @static
      * @async
      */
-    public static async Get(name: string, namespace: string = "minecraft") : Promise<any> {
+    public static async Get(name: string) : Promise<any>;
+    public static async Get(namespace: string, name: string) : Promise<any>;
+    public static async Get(namespaceOrName: string, name?: string) : Promise<any> {
+        // support an overload which assumes the namespace as the first parameter is not necessary
+        if (!name) {
+            name = namespaceOrName;
+            namespaceOrName = Constants.ConfigNamespace;
+        }
+
         const playerDocument: IConfigDocument = await ConfigModel.findOne({
-            name,
-            namespace
+            namespaceOrName,
+            name
         }, [ "value" ]);
 
         if (playerDocument) return playerDocument.value;
-        else if (namespace === "minecraft") return this._Defaults[namespace][name];
+        else if (namespaceOrName === Constants.ConfigNamespace) return this._Defaults[namespaceOrName][name];
     }
 
     /**
      * Update a configuration node in the database.
+     * @param {string} [namespace=minecraft] The namespace within which the configuration node should reside.
      * @param {string} name The name of the configuration node to update.
-     * @param {string} namespace The namespace within which the configuration node should reside.
      * @param {any} value The value to enter as the configuration.
      * @static
      * @async
      */
-    public static async Set(name: string, namespace: string = "minecraft", value: any) {
+    public static async Set(name: string, value: any) : Promise<void>;
+    public static async Set(namespace: string, name: string, value: any) : Promise<void>;
+    public static async Set(namespaceOrName: string, nameOrValue: any, value?: any) : Promise<void> {
+        // support an overload which assumes the namespace as the first parameter is not necessary
+        if (!value) {
+            value = nameOrValue;
+            nameOrValue = namespaceOrName;
+            namespaceOrName = Constants.ConfigNamespace;
+        }
+
         // Update or insert the configuration value
         await ConfigModel.updateOne({
-            name,
-            namespace
+            namespaceOrName,
+            nameOrValue
         }, {
             $set: {
                 value
             },
             $setOnInsert: {
-                name,
-                namespace,
+                namespaceOrName,
+                nameOrValue,
                 value
             }
         }, {
@@ -115,6 +132,7 @@ export class State {
 export class Constants {
     public static ServerName: string = "Elytra";
     public static MinecraftVersion: string = "1.15.2";
+    public static ConfigNamespace: string = "minecraft";
     public static ProtocolVersion: number = 578;
     public static CompressionThreshold: number = 64;
     public static KeyLength: number = 1024;
