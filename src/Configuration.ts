@@ -78,8 +78,8 @@ export class Settings {
         }
 
         const playerDocument: IConfigDocument = await ConfigModel.findOne({
-            namespaceOrName,
-            name
+            namespace: namespaceOrName,
+            name: name
         }, [ "value" ]);
 
         if (playerDocument) return playerDocument.value;
@@ -106,16 +106,16 @@ export class Settings {
 
         // Update or insert the configuration value
         await ConfigModel.updateOne({
-            namespaceOrName,
-            nameOrValue
+            namespace: namespaceOrName,
+            name: nameOrValue
         }, {
             $set: {
-                value
+                value: value
             },
             $setOnInsert: {
-                namespaceOrName,
-                nameOrValue,
-                value
+                namespace: namespaceOrName,
+                name: nameOrValue,
+                value: value
             }
         }, {
             upsert: true
