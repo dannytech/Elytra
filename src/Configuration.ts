@@ -57,7 +57,9 @@ export class Settings {
      */
     public static Load() {
         // Load the database URI
-        dotenv.load();
+        dotenv.load({
+            errorOnMissing: true
+        });
     }
 
     /**
