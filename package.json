@@ -4,7 +4,7 @@
   "description": "Efficient scalable Minecraft server",
   "main": "index.js",
   "repository": "git@github.com:dannytech/Elytra.git",
-  "author": "Daniel Hellstern <dhellstern@outlook.com>",
+  "author": "Daniel Hellstern <elytra@daniel.hellstern.org>",
   "license": "GPL-3.0-or-later",
   "scripts": {
     "build": "tsc -p .",

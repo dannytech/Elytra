@@ -48,23 +48,21 @@ export class Player extends Entity {
 
     /**
      * Load a player object from the database.
-     * @param {string} username The username of the player (not used in database queries).
-     * @param {string} uuid The UUID of the player, used in the query.
-     * @static
      * @async
      */
-    public static async Load(username: string, uuid: UUID) : Promise<Player> {
-        // Retrieve all existing player data
-        const playerDocument: IPlayerDocument = await PlayerModel.findOne({
-            uuid: uuid.Format()
-        }, [ "gamemode" ]);
+    public async Load() : Promise<void> {
+        // Retrieve state and update the username history
+        const playerDocument = await PlayerModel.findOneAndUpdate({
+            uuid: this.UUID.Format()
+        }, {
+            $addToSet: {
+                username: this.Username
+            }
+        }, { new: true });
 
         if (playerDocument) {
-            // Import the player data into a new Player object
-            const player: Player = new Player(username, uuid);
-            player.Gamemode = playerDocument.gamemode;
-
-            return player;
-        } else return new Player(username, uuid);
+            // Load the player state
+            this.Gamemode = playerDocument.gamemode;
+        }
     }
 }
