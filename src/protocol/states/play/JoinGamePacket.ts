@@ -1,4 +1,3 @@
-import * as crypto from "crypto";
 import { IClientboundPacket } from "../../Packet";
 import { WritableBuffer } from "../../WritableBuffer";
 import { Client } from "../../Client";
@@ -42,10 +41,7 @@ export class JoinGamePacket implements IClientboundPacket {
         seed.writeBigInt64BE(State.World.Seed);
         
         // Hash the seed, truncate it, and write it
-        const seedHash: bigint = crypto.createHash("sha256")
-            .update(seed)
-            .digest()
-            .readBigInt64BE();
+        const seedHash: bigint = BigInt(0);
         buf.WriteInt64(seedHash);
         
         // Write the maximum number of players (this is ignored)
