@@ -143,6 +143,19 @@ export class ChatComponentFactory {
     }
 
     /**
+     * Wrap a plain string into a text component.
+     * @param {string} str The string to wrap.
+     * @returns {ChatTextComponent} The parsed component.
+     * @static
+     *
+     */
+     public static FromString(str: string) : ChatTextComponent {
+        return {
+            text: str
+        };
+    }
+
+    /**
      * Parse an entire formatted string into JSON.
      * @param {string} str The string to parse.
      * @returns {ChatTextComponent} The parsed component.

@@ -110,12 +110,12 @@ export class EncryptionResponsePacket implements IServerboundPacket {
                 this._Client.Queue(new LoginSuccessPacket(this._Client));
                 this._Client.Queue(new JoinGamePacket(this._Client));
             } else {
-                this._Client.Queue(new LoginDisconnectPacket(ChatComponentFactory.FromFormattedString("Invalid session")), true);
+                this._Client.Queue(new LoginDisconnectPacket(ChatComponentFactory.FromString("Invalid session")), true);
 
                 console.log(`Player ${this._Client.Player.Username} has invalid session`);
             }
         } else {
-            this._Client.Queue(new LoginDisconnectPacket(ChatComponentFactory.FromFormattedString("Failed to negotiate encrypted channel")), true);
+            this._Client.Queue(new LoginDisconnectPacket(ChatComponentFactory.FromString("Failed to negotiate encrypted channel")), true);
 
             console.log(`Player ${this._Client.Player.Username} failed to negotiate encrypted channel`);
         }
@@ -126,11 +126,11 @@ export class EncryptionResponsePacket implements IServerboundPacket {
         
         // Determine whether the player is allowed to join
         if (filter?.mode == "deny" && inFilter) {
-            this._Client.Queue(new PlayDisconnectPacket(ChatComponentFactory.FromFormattedString("You have been disallowed from this server")));
+            this._Client.Queue(new PlayDisconnectPacket(ChatComponentFactory.FromString("You have been disallowed from this server")));
             
             console.log(`Player ${this._Client.Player.Username} is disallowed by filter, disconnecting`);
         } else if (filter?.mode == "allow" && !inFilter) {
-            this._Client.Queue(new PlayDisconnectPacket(ChatComponentFactory.FromFormattedString("You have not been allowed on this server")));
+            this._Client.Queue(new PlayDisconnectPacket(ChatComponentFactory.FromString("You have not been allowed on this server")));
         
             console.log(`Player ${this._Client.Player.Username} is not allowed by filter, disconnecting`);
         }
