@@ -7,6 +7,7 @@ import { LoginSuccessPacket } from "./LoginSuccessPacket";
 import { EncryptionRequestPacket } from "./EncryptionRequestPacket";
 import { JoinGamePacket } from "../play/JoinGamePacket";
 import { Settings, MinecraftConfigs } from "../../../Configuration";
+import { Console } from "../../../game/Console";
 
 interface ProfileResponse {
     name: string,
@@ -38,7 +39,7 @@ export class LoginStartPacket implements IServerboundPacket {
             // Begin the encryption/authentication process
             this._Client.Queue(new EncryptionRequestPacket(this._Client));
         } else {
-            console.log(`Online mode is off, allowing alleged player ${this._Client.Player.Username} to connect`);
+            Console.Warn(`Online mode is off, allowing alleged player ${this._Client.Player.Username} to connect`);
 
             // Prepare the player to join
             this._Client.Queue(new SetCompressionPacket(this._Client));

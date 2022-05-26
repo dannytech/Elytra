@@ -6,6 +6,7 @@ import { PingPacket } from "./states/status/PingPacket";
 import { RequestPacket } from "./states/status/RequestPacket";
 import { LoginStartPacket } from "./states/login/LoginStartPacket";
 import { EncryptionResponsePacket } from "./states/login/EncryptionResponsePacket";
+import { Console } from "../game/Console";
 
 export interface IServerboundPacket {
     /**
@@ -78,6 +79,6 @@ export class PacketFactory {
             // Dispatch packets if a send is requested
             if (queued) client.Send();
         } else
-            console.log(`Unrecognized packet with ID 0x${packetId.toString(16).padStart(2, "0")}:`, buf.Buffer);
+            Console.Error(`Unrecognized packet with ID 0x${packetId.toString(16).padStart(2, "0")}:`, buf.Buffer);
     }
 }

@@ -5,6 +5,7 @@ import { Database } from "./src/Database";
 import { ClientBus } from "./src/protocol/ClientBus";
 import { Keypair } from "./src/protocol/Encryption";
 import { World } from "./src/game/World";
+import { Console } from "./src/game/Console";
 
 /**
  * Prepare the server to accept players.
@@ -13,7 +14,7 @@ import { World } from "./src/game/World";
 async function bootstrap() {
     // Load settings from the config file
     Settings.Load();
-    console.log("Loaded database configuration");
+    Console.Info("Loaded database configuration");
 
     // Generate a keypair for protocol encryption
     State.Keypair = await Keypair.Generate();
@@ -24,21 +25,13 @@ async function bootstrap() {
         .update(publicKey)
         .digest("hex")
         .replace(/(\w{2})(?!$)/g, "$1:");
-    console.log(`Server public key has fingerprint ${fingerprint}`);
+    Console.Info(`Server public key has fingerprint ${fingerprint}`);
 
     // Connect to the database
     await Database.Connect(process.env.MONGO_URI);
 
     // Load world data
     State.World = await World.Load();
-}
-
-/**
- * Start the local console and relevant pseudo-terminals that can be accessed from within the game.
- * @async
- */
-async function startConsole() {
-
 }
 
 /**
@@ -55,7 +48,7 @@ async function startListener() {
     const port: number = await Settings.Get(MinecraftConfigs.ServerPort);
     const ip: number = await Settings.Get(MinecraftConfigs.ServerIP);
     server.listen(port, ip, () => {
-        console.log(`Server listening on port ${port}`);
+        Console.Info(`Server listening on ${ip}:${port}`);
     });
 }
 
@@ -68,10 +61,8 @@ async function startAPI() {
 }
 
 (async () => {
+    // Prepare the server to start
     await bootstrap();
-
-    // Start the server console
-    await startConsole();
 
     // Start the API
     await startAPI();
@@ -80,5 +71,5 @@ async function startAPI() {
     if (eula)
         // Start the Minecraft server
         await startListener();
-    else console.error("You must accept the EULA first. Go to https://account.mojang.com/documents/minecraft_eula, then run \"set eula true\" to accept.");
+    else Console.Error("You must accept the EULA first. Go to https://account.mojang.com/documents/minecraft_eula, then run elytractl set eula true");
 })();

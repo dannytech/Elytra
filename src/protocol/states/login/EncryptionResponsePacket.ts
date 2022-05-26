@@ -12,6 +12,7 @@ import { JoinGamePacket } from "../play/JoinGamePacket";
 import { Player } from "../../../game/Player";
 import { UUID } from "../../../game/UUID";
 import { ChatComponentFactory } from "../../../game/chat/ChatComponentFactory";
+import { Console } from "../../../game/Console";
 
 interface AuthenticationRequestParams {
     username: string,
@@ -103,7 +104,7 @@ export class EncryptionResponsePacket implements IServerboundPacket {
                 this._Client.Player = new Player(this._Client.Player.Username, new UUID(res.data.id));
                 await this._Client.Player.Load();
 
-                console.log(`${this._Client.Player.Username} authenticated successfully with UUID ${this._Client.Player.UUID.Format(true)}`);
+                Console.Info(`${this._Client.Player.Username} authenticated successfully with UUID ${this._Client.Player.UUID.Format(true)}`);
 
                 // Finish the handshake and proceed to the play state
                 this._Client.Queue(new SetCompressionPacket(this._Client));
@@ -112,12 +113,12 @@ export class EncryptionResponsePacket implements IServerboundPacket {
             } else {
                 this._Client.Queue(new LoginDisconnectPacket(ChatComponentFactory.FromString("Invalid session")), true);
 
-                console.log(`Player ${this._Client.Player.Username} has invalid session`);
+                Console.Error(`Player ${this._Client.Player.Username} has invalid session`);
             }
         } else {
             this._Client.Queue(new LoginDisconnectPacket(ChatComponentFactory.FromString("Failed to negotiate encrypted channel")), true);
 
-            console.log(`Player ${this._Client.Player.Username} failed to negotiate encrypted channel`);
+            Console.Error(`Player ${this._Client.Player.Username} failed to negotiate encrypted channel`);
         }
 
         // Load the player filter
@@ -128,11 +129,11 @@ export class EncryptionResponsePacket implements IServerboundPacket {
         if (filter?.mode == "deny" && inFilter) {
             this._Client.Queue(new PlayDisconnectPacket(ChatComponentFactory.FromString("You have been disallowed from this server")));
             
-            console.log(`Player ${this._Client.Player.Username} is disallowed by filter, disconnecting`);
+            Console.Error(`Player ${this._Client.Player.Username} is disallowed by filter, disconnecting`);
         } else if (filter?.mode == "allow" && !inFilter) {
             this._Client.Queue(new PlayDisconnectPacket(ChatComponentFactory.FromString("You have not been allowed on this server")));
         
-            console.log(`Player ${this._Client.Player.Username} is not allowed by filter, disconnecting`);
+            Console.Warn(`Player ${this._Client.Player.Username} is not allowed by filter, disconnecting`);
         }
 
         return true;

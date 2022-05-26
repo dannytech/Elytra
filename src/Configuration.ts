@@ -138,4 +138,5 @@ export class Constants {
     public static CompressionThreshold: number = 64;
     public static KeyLength: number = 1024;
     public static VerificationTokenLength: number = 8;
+    public static MessageBufferSize: number = 1000000;
 }

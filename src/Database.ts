@@ -1,4 +1,5 @@
 import * as mongoose from "mongoose";
+import { Console } from "./game/Console";
 
 export class Database {
     /**
@@ -15,6 +16,6 @@ export class Database {
             useUnifiedTopology: true
         });
 
-        console.log(`Connected to database with URI ${uri}`);
+        Console.Info(`Connected to database with URI ${uri}`);
     }
 }
