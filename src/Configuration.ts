@@ -116,8 +116,7 @@ export class Settings {
             },
             $setOnInsert: {
                 namespace: namespaceOrName,
-                name: nameOrValue,
-                value: value
+                name: nameOrValue
             }
         }, {
             upsert: true
