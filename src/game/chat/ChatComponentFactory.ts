@@ -2,6 +2,7 @@ import { ChatTextComponent } from "./ChatComponent";
 
 interface ParsableString {
     string: string,
+    reset: boolean,
     cursor: number
 }
 
@@ -19,8 +20,8 @@ export class ChatComponentFactory {
         };
         let escaped: boolean = false;
         let formatting: boolean = false;
-        
-        while (parsable.cursor < parsable.string.length) {
+
+        while (parsable.cursor < parsable.string.length - 1) {
             let char: string = parsable.string[parsable.cursor];
             let skip: boolean = false; // Whether to skip adding the current character, if it has already been processed
 
@@ -29,13 +30,7 @@ export class ChatComponentFactory {
                     escaped = skip = true; // Escape the next character (and skip adding the current one)
                 } else if (formatting) {
                     switch (char) {
-                        case "r":
-                            component.color = "reset";
-
-                            // Nest into the next component
-                            component.extra.push(this.ParseFormattedString(parsable));
-                            break;
-
+                        // Color codes
                         case "0":
                             component.color = "black";
                             break;
@@ -87,6 +82,7 @@ export class ChatComponentFactory {
                         case "#":
                             throw new Error("Hex color codes not implemented");
 
+                        // Formatting codes
                         case "k":
                             component.obfuscated = true;
                             break;
@@ -102,13 +98,28 @@ export class ChatComponentFactory {
                         case "o":
                             component.italic = true;
                             break;
+                        case "r":
+                            // Break out of the component tree
+                            parsable.reset = true;
+
+                            // Skip the "r" since skipping is disabled
+                            parsable.cursor++;
+
+                            break;
                     }
 
                     formatting = false;
                     skip = true;
                 } else if (char == "&") {
-                    if (component.text.length > 0) component.extra.push(this.ParseFormattedString(parsable));
-                    
+                    if (component.text.length > 0) {
+                        // Continue processing as a subcomponent, which will inherit all existing styles
+                        const subcomponent = this.ParseFormattedString(parsable);
+
+                        // Only append if there's actual text left
+                        if (subcomponent.text.length > 0)
+                            component.extra.push(subcomponent);
+                    }
+
                     formatting = true;
                 }
             }
@@ -118,6 +129,9 @@ export class ChatComponentFactory {
 
             // If this character was escaped, reset escaping
             if (!skip && escaped) escaped = false;
+
+            // Stop processing the current component and leave the tree
+            if (parsable.reset) break;
 
             // Set everything up for the next loop
             parsable.cursor++;
@@ -137,10 +151,30 @@ export class ChatComponentFactory {
     public static FromFormattedString(str: string) : ChatTextComponent {
         const parsable: ParsableString = {
             string: str,
+            reset: false,
             cursor: 0
         };
 
-        // Parse until the end of the string is reached
-        return this.ParseFormattedString(parsable);
+        // Pack components into a single top-level component
+        const root: ChatTextComponent = {
+            text: "",
+            extra: new Array<ChatTextComponent>()
+        };
+
+        // Parse the string until the cursor reaches the end
+        while (parsable.cursor < parsable.string.length - 1) {
+            // Clear the reset flag to continue processing
+            const reset: boolean = parsable.reset;
+            parsable.reset = false;
+
+            const subcomponent = this.ParseFormattedString(parsable);
+
+            // Add a reset to the root component if required
+            if (reset) subcomponent.color = "reset";
+
+            root.extra.push(subcomponent);
+        }
+
+        return root;
     }
 }
