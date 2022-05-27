@@ -171,7 +171,8 @@ export class ChatComponentFactory {
         // Pack components into a single top-level component
         const root: ChatTextComponent = {
             text: "",
-            extra: new Array<ChatTextComponent>()
+            extra: new Array<ChatTextComponent>(),
+            color: "reset"
         };
 
         // Parse the string until the cursor reaches the end
