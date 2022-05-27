@@ -74,7 +74,7 @@ export class Settings {
     public static async Get(namespace: string, name: string) : Promise<any>;
     public static async Get(namespaceOrName: string, name?: string) : Promise<any> {
         // support an overload which assumes the namespace as the first parameter is not necessary
-        if (!name) {
+        if (name === undefined) {
             name = namespaceOrName;
             namespaceOrName = Constants.ConfigNamespace;
         }
@@ -100,7 +100,7 @@ export class Settings {
     public static async Set(namespace: string, name: string, value: any) : Promise<void>;
     public static async Set(namespaceOrName: string, nameOrValue: any, value?: any) : Promise<void> {
         // support an overload which assumes the namespace as the first parameter is not necessary
-        if (!value) {
+        if (value === undefined) {
             value = nameOrValue;
             nameOrValue = namespaceOrName;
             namespaceOrName = Constants.ConfigNamespace;
