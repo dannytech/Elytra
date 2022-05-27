@@ -177,13 +177,9 @@ export class ChatComponentFactory {
         // Parse the string until the cursor reaches the end
         while (parsable.cursor < parsable.string.length) {
             // Clear the reset flag to continue processing
-            const reset: boolean = parsable.reset;
             parsable.reset = false;
 
             const subcomponent = this.ParseFormattedString(parsable);
-
-            // Add a reset to the root component if required
-            if (reset) subcomponent.color = "reset";
 
             root.extra.push(subcomponent);
         }
