@@ -18,4 +18,14 @@ export class Database {
 
         Console.Info(`Connected to database with URI ${uri}`);
     }
+
+    /**
+     * Disconnect Mongoose from the database backend
+     * @static
+     * @async
+     */
+    public static async Disconnect() {
+        await mongoose.disconnect();
+        Console.Info("Disconnected from database");
+    }
 }
