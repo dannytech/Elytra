@@ -21,7 +21,7 @@ export class ChatComponentFactory {
         let escaped: boolean = false;
         let formatting: boolean = false;
 
-        while (parsable.cursor < parsable.string.length - 1) {
+        while (parsable.cursor < parsable.string.length) {
             let char: string = parsable.string[parsable.cursor];
             let skip: boolean = false; // Whether to skip adding the current character, if it has already been processed
 
@@ -175,7 +175,7 @@ export class ChatComponentFactory {
         };
 
         // Parse the string until the cursor reaches the end
-        while (parsable.cursor < parsable.string.length - 1) {
+        while (parsable.cursor < parsable.string.length) {
             // Clear the reset flag to continue processing
             const reset: boolean = parsable.reset;
             parsable.reset = false;
