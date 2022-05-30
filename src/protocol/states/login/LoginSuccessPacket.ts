@@ -1,6 +1,7 @@
 import { IClientboundPacket } from "../../Packet";
 import { WritableBuffer } from "../../WritableBuffer";
 import { Client } from "../../Client";
+import { UUID } from "../../../game/UUID";
 
 export class LoginSuccessPacket implements IClientboundPacket {
     private _Client: Client;
@@ -20,7 +21,8 @@ export class LoginSuccessPacket implements IClientboundPacket {
      */
     public async Write(buf: WritableBuffer) {
         // Write the player UUID
-        buf.WriteVarChar(this._Client.Player.UUID.Format(true));
+        const uuid: UUID = this._Client.Player.UUID || UUID.Generate();
+        buf.WriteVarChar(uuid.Format(true));
 
         // Write the username
         buf.WriteVarChar(this._Client.Player.Username);
