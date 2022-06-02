@@ -6,6 +6,7 @@ import { Console } from "../../../game/Console";
 import { JoinGamePacket } from "../play/JoinGamePacket";
 import { Constants } from "../../../Configuration";
 import { ServerPluginMessagePacket } from "../play/PluginMessagePacket";
+import { HeldItemChangePacket } from "../play/HeldItemChangePacket";
 
 export class LoginSuccessPacket implements IClientboundPacket {
     private _Client: Client;
@@ -44,5 +45,7 @@ export class LoginSuccessPacket implements IClientboundPacket {
         const pluginMessage: WritableBuffer = new WritableBuffer();
         pluginMessage.WriteVarChar(Constants.ServerName);
         this._Client.Queue(new ServerPluginMessagePacket(this._Client, "minecraft:brand", pluginMessage.Buffer));
+
+        this._Client.Queue(new HeldItemChangePacket(this._Client, 0));
     }
 }
