@@ -13,6 +13,8 @@ import { Player } from "../../../game/Player";
 import { UUID } from "../../../game/UUID";
 import { ChatComponentFactory } from "../../../game/chat/ChatComponentFactory";
 import { Console } from "../../../game/Console";
+import { ServerPluginMessagePacket } from "../play/PluginMessagePacket";
+import { WritableBuffer } from "../../WritableBuffer";
 
 interface AuthenticationRequestParams {
     username: string,

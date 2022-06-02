@@ -7,6 +7,7 @@ import { RequestPacket } from "./states/status/RequestPacket";
 import { LoginStartPacket } from "./states/login/LoginStartPacket";
 import { EncryptionResponsePacket } from "./states/login/EncryptionResponsePacket";
 import { Console } from "../game/Console";
+import { ClientPluginMessagePacket } from "./states/play/PluginMessagePacket";
 
 export interface IServerboundPacket {
     /**
@@ -38,7 +39,7 @@ export class PacketFactory {
      * @async
      */
     public static async Parse(buf: ReadableBuffer, client: Client) {
-        const packetId = buf.ReadVarInt();
+        const packetId: number = buf.ReadVarInt();
 
         // Determine the incoming packet identity based on current state and the packet ID
         let packet: IServerboundPacket;
@@ -70,6 +71,12 @@ export class PacketFactory {
                         break;
                 }
                 break;
+            case ClientState.Play:
+                switch (packetId) {
+                    case 0x0B:
+                        packet = new ClientPluginMessagePacket(client);
+                        break;
+                }
         }
 
         // Process the packet and allow it to generate a response

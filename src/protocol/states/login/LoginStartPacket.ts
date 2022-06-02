@@ -6,13 +6,10 @@ import { Player } from "../../../game/Player";
 import { LoginSuccessPacket } from "./LoginSuccessPacket";
 import { EncryptionRequestPacket } from "./EncryptionRequestPacket";
 import { JoinGamePacket } from "../play/JoinGamePacket";
-import { Settings, MinecraftConfigs } from "../../../Configuration";
+import { Settings, MinecraftConfigs, Constants } from "../../../Configuration";
 import { Console } from "../../../game/Console";
-
-interface ProfileResponse {
-    name: string,
-    id: string
-}
+import { ServerPluginMessagePacket } from "../play/PluginMessagePacket";
+import { WritableBuffer } from "../../WritableBuffer";
 
 export class LoginStartPacket implements IServerboundPacket {
     private _Client: Client;
@@ -49,6 +46,11 @@ export class LoginStartPacket implements IServerboundPacket {
             Console.Debug(`(${this._Client.ClientId})`, "[C → S]", "[LoginStartPacket]", "Bypassing login due to online mode being off");
             this._Client.Queue(new LoginSuccessPacket(this._Client));
             this._Client.Queue(new JoinGamePacket(this._Client));
+
+            // Send the server brand
+            const pluginMessage: WritableBuffer = new WritableBuffer();
+            pluginMessage.WriteVarChar(Constants.ServerName);
+            this._Client.Queue(new ServerPluginMessagePacket(this._Client, "minecraft:brand", pluginMessage.Buffer));
         }
 
         return true;
