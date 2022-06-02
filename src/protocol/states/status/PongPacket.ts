@@ -6,7 +6,7 @@ import { WritableBuffer } from "../../WritableBuffer";
 export class PongPacket implements IClientboundPacket {
     private _Client: Client;
     private _Payload: bigint;
-    
+
     public PacketID: number = 0x01;
 
     constructor(client: Client, payload: bigint) {

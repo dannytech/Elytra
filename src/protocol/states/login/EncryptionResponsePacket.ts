@@ -44,11 +44,11 @@ interface FilterList {
 
 export class EncryptionResponsePacket implements IServerboundPacket {
     private _Client: Client;
-    
+
     constructor(client: Client) {
         this._Client = client;
     }
-    
+
     /**
      * Parse a response to the server's encryption request.
      * @param {ReadableBuffer} buf The incoming packet buffer.
@@ -65,7 +65,7 @@ export class EncryptionResponsePacket implements IServerboundPacket {
 
         // Decrypt the shared secret using the server's private key
         const decryptedSecret: Buffer = State.Keypair.Decrypt(sharedSecret);
-        
+
         // Read the encrypted verification token
         const verifyTokenLength: number = buf.ReadVarInt();
         const verifyToken: Buffer = buf.Read(verifyTokenLength);
@@ -133,16 +133,16 @@ export class EncryptionResponsePacket implements IServerboundPacket {
         // Load the player filter
         const filter: FilterList = await Settings.Get(MinecraftConfigs.Filter);
         const inFilter: boolean = filter?.players?.some(player => player.uuid == this._Client.Player.UUID.Format());
-        
+
         // Determine whether the player is allowed to join
         Console.Debug(`(${this._Client.ClientId})`, "[C → S]", "[EncryptionResponsePacket]", "Checking player against filter");
         if (filter?.mode == "deny" && inFilter) {
             this._Client.Queue(new PlayDisconnectPacket(this._Client, ChatComponentFactory.FromString("You have been disallowed from this server")));
-            
+
             Console.Error(`Player ${this._Client.Player.Username} is disallowed by filter, disconnecting`);
         } else if (filter?.mode == "allow" && !inFilter) {
             this._Client.Queue(new PlayDisconnectPacket(this._Client, ChatComponentFactory.FromString("You have not been allowed on this server")));
-        
+
             Console.Warn(`Player ${this._Client.Player.Username} is not allowed by filter, disconnecting`);
         }
 

@@ -32,7 +32,7 @@ export class ReadableBuffer {
      */
     public Read(bytes?: number) : Buffer {
         bytes = bytes || this.Buffer.length - this.Cursor;
-        
+
         return this.Buffer.slice(this.Cursor, this.Cursor += bytes);
     }
 
@@ -157,7 +157,7 @@ export class ReadableBuffer {
     public ReadSingle() : number {
         return this.Read(4).readFloatBE();
     }
-    
+
     /**
      * Reads an eight-byte double from the buffer.
      * @returns {number} The double.

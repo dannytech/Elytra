@@ -5,11 +5,11 @@ import { Console } from "../../../game/Console";
 
 export class HandshakePacket implements IServerboundPacket {
     private _Client: Client;
-    
+
     constructor(client: Client) {
         this._Client = client;
     }
-    
+
     /**
      * Parse requests to switch client states.
      * @param {ReadableBuffer} buf The incoming packet buffer.

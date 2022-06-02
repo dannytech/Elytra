@@ -14,11 +14,11 @@ export class Zlib {
      */
     public static async Deflate(uncompressed: ReadableBuffer) : Promise<ReadableBuffer> {
         let output = new WritableBuffer();
-        
+
         const compressed: Buffer = await new Promise((resolve, reject) => {
             deflate(uncompressed.Buffer, (err, buf: Buffer) => {
                 if (err) return reject(err);
-                
+
                 return resolve(buf);
             })
         });
@@ -53,7 +53,7 @@ export class Zlib {
             const decompressed: Buffer = await new Promise((resolve, reject) => {
                 inflate(compressed.Read(), (err, buf: Buffer) => {
                     if (err) return reject(err);
-                    
+
                     return resolve(buf);
                 })
             });

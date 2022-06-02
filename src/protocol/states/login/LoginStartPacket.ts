@@ -16,11 +16,11 @@ interface ProfileResponse {
 
 export class LoginStartPacket implements IServerboundPacket {
     private _Client: Client;
-    
+
     constructor(client: Client) {
         this._Client = client;
     }
-    
+
     /**
      * Parse requests to begin the login process.
      * @param {ReadableBuffer} buf The incoming packet buffer.

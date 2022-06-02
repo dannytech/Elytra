@@ -5,11 +5,11 @@ import { Console } from "../../../game/Console";
 
 export class RequestPacket implements IServerboundPacket {
     private _Client: Client;
-    
+
     constructor(client: Client) {
         this._Client = client;
     }
-    
+
     /**
      * Handle requests for server information.
      * @async

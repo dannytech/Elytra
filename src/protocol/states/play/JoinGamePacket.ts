@@ -37,11 +37,11 @@ export class JoinGamePacket implements IClientboundPacket {
 
         // Dimension
         buf.WriteInt32(0); // TODO Determine the actual dimension ID and send it back
-        
+
         // Send a fake seed hash to prevent any possibility of reversing
         const seedHash: bigint = BigInt(0);
         buf.WriteInt64(seedHash);
-        
+
         // Write the maximum number of players (this is ignored)
         buf.WriteByte(0);
 

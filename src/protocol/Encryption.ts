@@ -13,7 +13,7 @@ export class Keypair {
         this.PublicKey = publicKey;
         this.PrivateKey = privateKey;
     }
-    
+
     /**
      * Decrypt the given buffer using the keypair's private key.
      * @param {Buffer} buf The buffer to decrypt.

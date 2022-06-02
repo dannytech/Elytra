@@ -43,7 +43,7 @@ async function startListener() {
 
     // Attach a connection handler
     State.ClientBus = new ClientBus(server);
-    
+
     // Start the server
     const port: number = await Settings.Get(MinecraftConfigs.ServerPort);
     const ip: number = await Settings.Get(MinecraftConfigs.ServerIP);

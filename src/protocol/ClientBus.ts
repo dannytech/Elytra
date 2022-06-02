@@ -5,7 +5,7 @@ import { ReadableBuffer } from "./ReadableBuffer";
 export class ClientBus {
     private _Server: Server;
     private _ClientCounter: number;
-    
+
     public Clients: Array<Client>;
 
     constructor(server: Server) {

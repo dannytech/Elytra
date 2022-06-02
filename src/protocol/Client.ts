@@ -36,7 +36,7 @@ export class Client extends EventEmitter {
     private _ClientboundQueue: Array<IClientboundPacket>;
     private _Decipher: Decipher;
     private _Cipher: Cipher;
-    
+
     public ClientId: number;
     public State: ClientState;
     public Compression: CompressionState;
@@ -79,7 +79,7 @@ export class Client extends EventEmitter {
         // Loop until no more packets exist
         while (packetStream.Cursor < packetStream.Buffer.length - 1) {
             const packetLength: number = packetStream.ReadVarInt();
-    
+
             // A zero-length packet indicates the end of a connection (a FIN)
             if (packetLength === 0)
                 return this.Disconnect();
@@ -90,7 +90,7 @@ export class Client extends EventEmitter {
             if (this.Compression === CompressionState.Enabled) {
                 // Check that the packet met the compression threshold
                 const compressedLength: number = packet.ReadVarInt();
-                
+
                 // If the threshold is met, then decompress the packet, otherwise assume the rest is uncompressed
                 if (compressedLength > 0) {
                     const compressed: Buffer = packet.Read(compressedLength);
@@ -111,7 +111,7 @@ export class Client extends EventEmitter {
     public async Send() {
         while (this._ClientboundQueue.length > 0) {
             let packet: IClientboundPacket = this._ClientboundQueue.shift();
-            
+
             // Export the fields to the completed packet
             let payload: WritableBuffer = new WritableBuffer();
             await packet.Write(payload);
@@ -158,7 +158,7 @@ export class Client extends EventEmitter {
             // Enable compression after telling the client it will be enabled
             if (this.Compression === CompressionState.Enabling && packet instanceof SetCompressionPacket)
                 this.Compression = CompressionState.Enabled;
-            
+
             // If the packet was a disconnection packet, stop accepting serverbound packets
             if (packet instanceof LoginDisconnectPacket || packet instanceof PlayDisconnectPacket) {
                 this._ClientboundQueue.splice(0, this._ClientboundQueue.length); // Flush the clientbound queue

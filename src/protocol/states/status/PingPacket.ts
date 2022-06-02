@@ -6,11 +6,11 @@ import { Console } from "../../../game/Console";
 
 export class PingPacket implements IServerboundPacket {
     private _Client: Client;
-    
+
     constructor(client: Client) {
         this._Client = client;
     }
-    
+
     /**
      * Parse server pings.
      * @param {ReadableBuffer} buf The incoming packet buffer.
