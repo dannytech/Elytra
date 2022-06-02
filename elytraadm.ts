@@ -4,6 +4,7 @@ import axios from "axios";
 import { Database } from "./src/Database";
 import { Settings, Constants, MinecraftConfigs } from "./src/Configuration";
 import { Console } from "./src/game/Console";
+import { PlayerModel } from "./src/database/PlayerModel";
 import { ConfigModel } from "./src/database/ConfigModel";
 
 /**
@@ -137,6 +138,44 @@ function cast(value: any) : any {
                         break;
                     default:
                         Console.Error(`Invalid filter action: ${action}`);
+                }
+            }
+            break;
+        case "player":
+            if (args.length == 3) {
+                await connectToDatabase();
+
+                let username: string = args.shift();
+                let attribute: string = args.shift();
+                let value: any = cast(args.shift());
+
+                switch (attribute) {
+                    case "gamemode":
+                        await PlayerModel.findOneAndUpdate({
+                            username: username
+                        }, {
+                            $set: {
+                                gamemode: value
+                            }
+                        });
+                        Console.Info(`Set ${username}'s gamemode to ${value}`);
+
+                        break;
+                    case "op":
+                        if (typeof value == "number" && value >= 0 && value <= 4) {
+                            await PlayerModel.findOneAndUpdate({
+                                username: username
+                            }, {
+                                $set: {
+                                    op: value
+                                }
+                            });
+                            Console.Info(`Set ${username}'s op level to ${value}`);
+                        } else Console.Error(`Invalid op level ${value}`);
+
+                        break;
+                    default:
+                        Console.Error(`Invalid attribute ${attribute}`);
                 }
             }
             break;

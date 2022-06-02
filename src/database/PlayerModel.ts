@@ -1,11 +1,13 @@
 import * as mongoose from "mongoose";
 import { Schema, Model, Document } from "mongoose";
+import { PermissionLevel } from "../game/Player";
 
 // TypeScript Interface for handling data going to and from the database
 export interface IPlayerSchema {
     uuid: string,
     username: string[],
     gamemode: number,
+    op: PermissionLevel,
     world: string
 }
 export interface IPlayerDocument extends IPlayerSchema, Document {}

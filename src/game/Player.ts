@@ -11,10 +11,19 @@ export enum Gamemode {
     Hardcore = 0b100
 }
 
+export enum PermissionLevel {
+    None = 0,
+    Bypass = 1,
+    Cheats = 2,
+    Multiplayer = 3,
+    Admin = 4
+}
+
 export class Player extends Entity {
     public Username: string;
     public UUID: UUID;
     public Gamemode: number;
+    public Op: PermissionLevel;
 
     constructor(username: string, uuid?: UUID) {
         super();
@@ -24,6 +33,7 @@ export class Player extends Entity {
 
         // Defaults
         this.Gamemode = Gamemode.Survival;
+        this.Op = PermissionLevel.None;
     }
 
     /**
@@ -38,7 +48,8 @@ export class Player extends Entity {
                 uuid: this.UUID.Format()
             }, {
                 $set: {
-                    gamemode: this.Gamemode
+                    gamemode: this.Gamemode,
+                    op: this.Op
                 }
             }, {
                 upsert: true
@@ -63,6 +74,7 @@ export class Player extends Entity {
         if (playerDocument) {
             // Load the player state
             this.Gamemode = playerDocument.gamemode;
+            this.Op = playerDocument.op;
         }
     }
 }

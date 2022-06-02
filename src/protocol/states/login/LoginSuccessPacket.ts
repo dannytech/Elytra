@@ -54,7 +54,7 @@ export class LoginSuccessPacket implements IClientboundPacket {
         this._Client.Queue(new HeldItemChangePacket(this._Client, 0));
         this._Client.Queue(new DeclareRecipesPacket(this._Client));
         this._Client.Queue(new TagsPacket(this._Client));
-        this._Client.Queue(new EntityStatusPacket(this._Client, 0, EntityStatus.PlayerPermissionsLevel4)); // TODO: Properly set entity ID and state
+        this._Client.Queue(new EntityStatusPacket(this._Client, this._Client.Player.EntityID, EntityStatus.PlayerPermissionsLevel0 + this._Client.Player.Op));
         this._Client.Queue(new DeclareCommandsPacket(this._Client));
     }
 }
