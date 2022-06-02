@@ -1,16 +1,17 @@
 import { parse } from "yaml";
+import { readFile } from "fs/promises";
 
 import { ReadableBuffer } from "./ReadableBuffer";
 import { WritableBuffer } from "./WritableBuffer";
 import { Client, ClientState } from "./Client";
+import { Console } from "../game/Console";
 import { HandshakePacket } from "./states/handshaking/HandshakePacket";
 import { PingPacket } from "./states/status/PingPacket";
 import { RequestPacket } from "./states/status/RequestPacket";
 import { LoginStartPacket } from "./states/login/LoginStartPacket";
 import { EncryptionResponsePacket } from "./states/login/EncryptionResponsePacket";
-import { Console } from "../game/Console";
 import { ClientPluginMessagePacket } from "./states/play/PluginMessagePacket";
-import { readFile } from "fs/promises";
+import { TeleportConfirmPacket } from "./states/play/TeleportConfirmPacket";
 
 export interface IServerboundPacket {
     /**
@@ -125,6 +126,9 @@ export class PacketFactory {
                 switch (packetId) {
                     case this.Lookup(client, ClientPluginMessagePacket.name):
                         packet = new ClientPluginMessagePacket(client);
+                        break;
+                    case this.Lookup(client, TeleportConfirmPacket.name):
+                        packet = new TeleportConfirmPacket(client);
                         break;
                 }
         }

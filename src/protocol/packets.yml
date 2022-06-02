@@ -15,6 +15,7 @@ login:
   SetCompressionPacket: 0x03
 play:
   # TODO Add versioning for the below
+  TeleportConfirmPacket: 0x00
   DeclareCommandsPacket: 0x12
   ClientPluginMessagePacket:
     464: 0x0B
