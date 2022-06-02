@@ -3,14 +3,12 @@ import * as crypto from "crypto";
 import { Decipher, Cipher } from "crypto";
 import { EventEmitter } from "events";
 import { Constants, State } from "../Configuration";
-import { IClientboundPacket, PacketFactory } from "./Packet";
+import { IClientboundPacket } from "./Packet";
 import { ReadableBuffer } from "./ReadableBuffer";
 import { WritableBuffer } from "./WritableBuffer";
 import { Zlib } from "./Zlib";
-import { SetCompressionPacket } from "./states/login/SetCompressionPacket";
 import { Player } from "../game/Player";
-import { DisconnectPacket as LoginDisconnectPacket } from "./states/login/DisconnectPacket";
-import { DisconnectPacket as PlayDisconnectPacket } from "./states/play/DisconnectPacket";
+import { Console } from "../game/Console";
 
 export enum ClientState {
     Handshaking = "handshaking",
@@ -163,16 +161,9 @@ export class Client extends EventEmitter {
                 });
             });
 
-            // Enable compression after telling the client it will be enabled
-            if (this.Compression === CompressionState.Enabling && packet instanceof SetCompressionPacket)
-                this.Compression = CompressionState.Enabled;
-
-            // If the packet was a disconnection packet, stop accepting serverbound packets
-            if (packet instanceof LoginDisconnectPacket || packet instanceof PlayDisconnectPacket) {
-                this._ClientboundQueue.splice(0, this._ClientboundQueue.length); // Flush the clientbound queue
-
-                this.Disconnect(); // Destroy the socket and this client
-            }
+            // Trigger after-send actions like enabling compression
+            if (packet.AfterSend)
+                await packet.AfterSend();
         }
     }
 
@@ -181,6 +172,9 @@ export class Client extends EventEmitter {
      * @fires Client#disconnected
      */
     public Disconnect() {
+        // Flush the clientbound queue
+        this._ClientboundQueue.splice(0, this._ClientboundQueue.length);
+
         this._Socket.destroy();
 
         // Save the player state before destroying the client

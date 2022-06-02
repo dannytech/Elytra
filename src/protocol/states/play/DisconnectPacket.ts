@@ -27,4 +27,12 @@ export class DisconnectPacket implements IClientboundPacket {
         // Chat component containing reason for disconnect
         buf.WriteJSON(this._Reason);
     }
+
+    /**
+     * Disconnect the client after sending the packet.
+     * @async
+     */
+     public async AfterSend() {
+        this._Client.Disconnect();
+    }
 }

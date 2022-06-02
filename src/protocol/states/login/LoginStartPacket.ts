@@ -5,11 +5,8 @@ import { SetCompressionPacket } from "./SetCompressionPacket";
 import { Player } from "../../../game/Player";
 import { LoginSuccessPacket } from "./LoginSuccessPacket";
 import { EncryptionRequestPacket } from "./EncryptionRequestPacket";
-import { JoinGamePacket } from "../play/JoinGamePacket";
-import { Settings, MinecraftConfigs, Constants } from "../../../Configuration";
+import { Settings, MinecraftConfigs } from "../../../Configuration";
 import { Console } from "../../../game/Console";
-import { ServerPluginMessagePacket } from "../play/PluginMessagePacket";
-import { WritableBuffer } from "../../WritableBuffer";
 
 export class LoginStartPacket implements IServerboundPacket {
     private _Client: Client;

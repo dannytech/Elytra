@@ -25,4 +25,12 @@ export class SetCompressionPacket implements IClientboundPacket {
         // Threshold to compress packets
         buf.WriteVarInt(Constants.CompressionThreshold);
     }
+
+    /**
+     * Enable compression after alerting the client
+     * @async
+     */
+    public async AfterSend() {
+        this._Client.Compression = CompressionState.Enabled;
+    }
 }

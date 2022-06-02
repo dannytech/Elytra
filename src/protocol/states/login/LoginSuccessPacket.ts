@@ -37,7 +37,13 @@ export class LoginSuccessPacket implements IClientboundPacket {
 
         // Write the username
         buf.WriteVarChar(this._Client.Player.Username);
+    }
 
+    /**
+     * Switch to the play state and send join game packets
+     * @async
+     */
+    public async AfterSend() {
         // Update the client's state
         Console.Debug(`(${this._Client.ClientId})`, "[S → C]", "[LoginSuccessPacket]", "Switching to state: Play");
         this._Client.State = ClientState.Play;
