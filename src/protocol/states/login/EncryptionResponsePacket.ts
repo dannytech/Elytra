@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from "axios";
-import { State, Settings, MinecraftConfigs } from "../../../Configuration";
+import { State, Settings, MinecraftConfigs, Constants } from "../../../Configuration";
 import { Client } from "../../Client";
 import { IServerboundPacket } from "../../Packet";
 import { ReadableBuffer } from "../../ReadableBuffer";
@@ -118,9 +118,11 @@ export class EncryptionResponsePacket implements IServerboundPacket {
 
                 this._Client.Queue(new LoginSuccessPacket(this._Client));
                 this._Client.Queue(new JoinGamePacket(this._Client));
-                const buf: WritableBuffer = new WritableBuffer();
-                buf.WriteInt16(0);
-                this._Client.Queue(new ServerPluginMessagePacket(this._Client, "minecraft:brand", buf.Buffer));
+
+                // Send the server brand
+                const pluginMessage: WritableBuffer = new WritableBuffer();
+                pluginMessage.WriteVarChar(Constants.ServerName);
+                this._Client.Queue(new ServerPluginMessagePacket(this._Client, "minecraft:brand", pluginMessage.Buffer));
             } else {
                 this._Client.Queue(new LoginDisconnectPacket(this._Client, ChatComponentFactory.FromString("Invalid session")), true);
 
