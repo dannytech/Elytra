@@ -8,6 +8,7 @@ import { Constants } from "../../../Configuration";
 import { ServerPluginMessagePacket } from "../play/PluginMessagePacket";
 import { HeldItemChangePacket } from "../play/HeldItemChangePacket";
 import { DeclareRecipesPacket } from "../play/DeclareRecipesPacket";
+import { TagsPacket } from "../play/TagsPacket";
 
 export class LoginSuccessPacket implements IClientboundPacket {
     private _Client: Client;
@@ -49,5 +50,6 @@ export class LoginSuccessPacket implements IClientboundPacket {
 
         this._Client.Queue(new HeldItemChangePacket(this._Client, 0));
         this._Client.Queue(new DeclareRecipesPacket(this._Client));
+        this._Client.Queue(new TagsPacket(this._Client));
     }
 }
