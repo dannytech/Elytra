@@ -71,5 +71,5 @@ async function startAPI() {
     if (eula)
         // Start the Minecraft server
         await startListener();
-    else Console.Error("You must accept the EULA first. Go to https://account.mojang.com/documents/minecraft_eula, then run elytractl set eula true");
+    else Console.Error("You must accept the EULA first. Go to https://account.mojang.com/documents/minecraft_eula, then run \"elytractl set eula true\"");
 })();
