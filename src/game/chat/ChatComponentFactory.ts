@@ -1,4 +1,4 @@
-import { ChatTextComponent } from "./ChatComponent";
+import { ChatComponent, ChatTextComponent } from "./ChatComponent";
 
 interface ParsableString {
     string: string,
@@ -186,5 +186,26 @@ export class ChatComponentFactory {
         }
 
         return root;
+    }
+
+    /**
+     * Convert a text component and its children into a string.
+     * @param {ChatComponent} component The component to convert.
+     * @returns {string} The converted string.
+     * @static
+     */
+    public static GetRaw(component: ChatComponent) : string {
+        let raw: string = "";
+
+        // Append the element text
+        if ("text" in component) raw += component.text;
+
+        // Recurse through all the children
+        if ("extra" in component)
+            for (let i = 0; i < component.extra.length; i++) {
+                raw += this.GetRaw(component.extra[i]);
+            }
+
+        return raw;
     }
 }

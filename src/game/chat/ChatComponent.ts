@@ -19,7 +19,7 @@ export interface ChatTextComponent {
     underline?: boolean;
     strikethrough?: boolean;
     obfuscated?: boolean;
-    extra?: object[];
+    extra?: ChatComponent[];
 }
 
 /**
