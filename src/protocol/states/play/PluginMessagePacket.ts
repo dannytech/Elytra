@@ -46,14 +46,12 @@ export class ClientPluginMessagePacket implements IServerboundPacket {
      * @property {Buffer} Data The message data.
      * @async
      */
-    public async Parse(buf: ReadableBuffer): Promise<boolean> {
+    public async Parse(buf: ReadableBuffer) {
         // Read the plugin channel
         const channel: string = buf.ReadVarChar();
         Console.Debug(`(${this._Client.ClientId})`, "[C → S]", "[ClientPluginMessagePacket]", `Received plugin message on channel "${channel}"`);
 
         // Read the arbitrary data for the plugin
         const data: any = buf.Read();
-
-        return false;
     }
 }

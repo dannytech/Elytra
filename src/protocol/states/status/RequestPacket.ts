@@ -14,11 +14,9 @@ export class RequestPacket implements IServerboundPacket {
      * Handle requests for server information.
      * @async
      */
-    public async Parse() : Promise<boolean> {
+    public async Parse() {
         // Generate a response containing server information
         Console.Debug(`(${this._Client.ClientId})`, "[C → S]", "[RequestPacket]", "Requesting server information");
         this._Client.Queue(new ResponsePacket(this._Client));
-
-        return true;
     }
 }

@@ -17,13 +17,11 @@ export class PingPacket implements IServerboundPacket {
      * @property {bigint} Payload The ping payload, used to ensure pong integrity.
      * @async
      */
-    public async Parse(buf: ReadableBuffer) : Promise<boolean> {
+    public async Parse(buf: ReadableBuffer) {
         // Generate a packet echoing back the ping payload
         const payload: bigint = buf.ReadInt64();
 
         Console.Debug(`(${this._Client.ClientId})`, "[C → S]", "[PingPacket]", "Ping!");
         this._Client.Queue(new PongPacket(this._Client, payload));
-
-        return true;
     }
 }

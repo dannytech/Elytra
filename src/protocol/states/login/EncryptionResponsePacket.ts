@@ -55,7 +55,7 @@ export class EncryptionResponsePacket implements IServerboundPacket {
      * @property {Buffer} VerifyToken A byte array of the specified length, containing the encrypted verification token.
      * @async
      */
-    public async Parse(buf: ReadableBuffer) : Promise<boolean> {
+    public async Parse(buf: ReadableBuffer) {
         // Read the client-generated shared secret
         const sharedSecretLength: number = buf.ReadVarInt();
         const sharedSecret: Buffer = buf.Read(sharedSecretLength);
@@ -139,7 +139,5 @@ export class EncryptionResponsePacket implements IServerboundPacket {
 
             Console.Warn(`Player ${this._Client.Player.Username} is not allowed by filter, disconnecting`);
         }
-
-        return true;
     }
 }

@@ -16,10 +16,9 @@ export interface IServerboundPacket {
     /**
      * Parses the packet, modifying game state and responding as needed.
      * @param {ReadableBuffer} buf The packet contents to parse.
-     * @returns {boolean} Whether packets were queued and need to be dispatched to the client.
      * @async
      */
-    Parse(buf: ReadableBuffer) : Promise<boolean>;
+    Parse(buf: ReadableBuffer) : Promise<void>;
 
     AfterReceive?() : Promise<void>;
 }
@@ -132,10 +131,14 @@ export class PacketFactory {
 
         // Process the packet and allow it to generate a response
         if (packet) {
-            const queued: boolean = await packet.Parse(buf);
+            await packet.Parse(buf);
 
-            // Dispatch packets if a send is requested
-            if (queued) client.Send();
+            // Activate post-receive hooks
+            if (packet.AfterReceive)
+                await packet.AfterReceive();
+
+            // Dispatch packets if a send is needed
+            client.Send();
         } else
             Console.Debug(`(${client.ClientId})`, "[C → S]", "[PacketFactory]", `Unrecognized packet: ${packetId.toString(16).padStart(2, "0")}`, buf.Read().toString("hex"));
     }

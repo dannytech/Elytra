@@ -1,4 +1,3 @@
-import { Console } from "../game/Console";
 import { IPlayerDocument, PlayerModel } from "../database/PlayerModel";
 import { Entity } from "./Entity";
 import { UUID } from "./UUID";

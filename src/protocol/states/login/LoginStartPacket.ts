@@ -21,7 +21,7 @@ export class LoginStartPacket implements IServerboundPacket {
      * @property {string} Name The player's username.
      * @async
      */
-    public async Parse(buf: ReadableBuffer) : Promise<boolean> {
+    public async Parse(buf: ReadableBuffer) {
         const username: string = buf.ReadVarChar();
 
         // Create an unauthenticated player object (which will remain if offline mode is enabled)
@@ -43,7 +43,5 @@ export class LoginStartPacket implements IServerboundPacket {
             Console.Debug(`(${this._Client.ClientId})`, "[C → S]", "[LoginStartPacket]", "Bypassing login due to online mode being off");
             this._Client.Queue(new LoginSuccessPacket(this._Client));
         }
-
-        return true;
     }
 }

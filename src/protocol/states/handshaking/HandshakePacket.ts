@@ -19,7 +19,7 @@ export class HandshakePacket implements IServerboundPacket {
      * @property {number} NextState The client state to switch to.
      * @async
      */
-    public async Parse(buf: ReadableBuffer) : Promise<boolean> {
+    public async Parse(buf: ReadableBuffer) {
         // First, read the protocol version
         this._Client.ProtocolVersion = buf.ReadVarInt();
         Console.Debug(`(${this._Client.ClientId})`, "[C → S]", "[HandshakePacket]", `Protocol version: ${this._Client.ProtocolVersion}`);
@@ -41,7 +41,5 @@ export class HandshakePacket implements IServerboundPacket {
                 this._Client.State = ClientState.Login;
                 break;
         }
-
-        return false;
     }
 }
