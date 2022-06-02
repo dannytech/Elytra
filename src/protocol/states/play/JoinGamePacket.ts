@@ -37,12 +37,8 @@ export class JoinGamePacket implements IClientboundPacket {
 
         // Dimension
         buf.WriteInt32(0); // TODO Determine the actual dimension ID and send it back
-
-        // Convert the seed to a hashable format
-        const seed: Buffer = Buffer.alloc(8);
-        seed.writeBigInt64BE(State.World.Seed);
         
-        // Hash the seed, truncate it, and write it
+        // Send a fake seed hash to prevent any possibility of reversing
         const seedHash: bigint = BigInt(0);
         buf.WriteInt64(seedHash);
         

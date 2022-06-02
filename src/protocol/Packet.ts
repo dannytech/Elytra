@@ -79,6 +79,6 @@ export class PacketFactory {
             // Dispatch packets if a send is requested
             if (queued) client.Send();
         } else
-            Console.Error(`Unrecognized packet with ID 0x${packetId.toString(16).padStart(2, "0")}:`, buf.Buffer);
+            Console.Error(`Unrecognized packet with ID 0x${packetId.toString(16).padStart(2, "0")}:`, buf.Buffer.toString());
     }
 }
