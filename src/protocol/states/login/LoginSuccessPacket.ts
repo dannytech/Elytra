@@ -12,6 +12,7 @@ import { TagsPacket } from "../play/TagsPacket";
 import { EntityStatus, EntityStatusPacket } from "../play/EntityStatusPacket";
 import { DeclareCommandsPacket } from "../play/DeclareCommandsPacket";
 import { UnlockRecipesAction, UnlockRecipesPacket } from "../play/UnlockRecipesPacket";
+import { PlayerPositionAndLookPacket } from "../play/PlayerPositionAndLookPacket";
 
 export class LoginSuccessPacket implements IClientboundPacket {
     private _Client: Client;
@@ -64,5 +65,6 @@ export class LoginSuccessPacket implements IClientboundPacket {
         this._Client.Queue(new EntityStatusPacket(this._Client, this._Client.Player.EntityID, EntityStatus.PlayerPermissionsLevel0 + this._Client.Player.Op));
         this._Client.Queue(new DeclareCommandsPacket(this._Client));
         this._Client.Queue(new UnlockRecipesPacket(this._Client, UnlockRecipesAction.Init));
+        this._Client.Queue(new PlayerPositionAndLookPacket(this._Client, this._Client.Player.Position));
     }
 }

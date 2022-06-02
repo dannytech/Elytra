@@ -1,4 +1,5 @@
-import { PlayerModel, IPlayerDocument } from "../database/PlayerModel";
+import { Console } from "../game/Console";
+import { IPlayerDocument, PlayerModel } from "../database/PlayerModel";
 import { Entity } from "./Entity";
 import { UUID } from "./UUID";
 
@@ -19,11 +20,25 @@ export enum PermissionLevel {
     Admin = 4
 }
 
+export interface PlayerPosition {
+    x: number;
+    y: number;
+    z: number;
+}
+
+export interface PlayerLook {
+    yaw: number;
+    pitch: number;
+}
+
+export type PlayerPositionAndLook = PlayerPosition & PlayerLook;
+
 export class Player extends Entity {
     public Username: string;
     public UUID: UUID;
     public Gamemode: number;
     public Op: PermissionLevel;
+    public Position: PlayerPositionAndLook;
 
     constructor(username: string, uuid?: UUID) {
         super();
@@ -34,6 +49,13 @@ export class Player extends Entity {
         // Defaults
         this.Gamemode = Gamemode.Survival;
         this.Op = PermissionLevel.None;
+        this.Position = {
+            x: 0,
+            y: 0,
+            z: 0,
+            yaw: 0,
+            pitch: 0
+        };
     }
 
     /**
@@ -47,9 +69,13 @@ export class Player extends Entity {
             await PlayerModel.findOneAndUpdate({
                 uuid: this.UUID.Format()
             }, {
+                $setOnInsert: {
+                    uuid: this.UUID.Format()
+                },
                 $set: {
                     gamemode: this.Gamemode,
-                    op: this.Op
+                    op: this.Op,
+                    positionAndLook: this.Position
                 }
             }, {
                 upsert: true
@@ -63,7 +89,7 @@ export class Player extends Entity {
      */
     public async Load() : Promise<void> {
         // Retrieve state and update the username history
-        const playerDocument = await PlayerModel.findOneAndUpdate({
+        const playerDocument: IPlayerDocument = await PlayerModel.findOneAndUpdate({
             uuid: this.UUID.Format()
         }, {
             $addToSet: {
@@ -75,6 +101,7 @@ export class Player extends Entity {
             // Load the player state
             this.Gamemode = playerDocument.gamemode;
             this.Op = playerDocument.op;
+            this.Position = playerDocument.positionAndLook;
         }
     }
 }
