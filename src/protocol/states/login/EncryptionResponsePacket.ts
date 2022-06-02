@@ -115,7 +115,7 @@ export class EncryptionResponsePacket implements IServerboundPacket {
             } else {
                 this._Client.Queue(new LoginDisconnectPacket(this._Client, ChatComponentFactory.FromString("Invalid session")), true);
 
-                Console.Error(`Player ${this._Client.Player.Username} has invalid session`);
+                Console.Error(`Player ${this._Client.Player.Username} has invalid session (player might be using a proxy)`);
             }
         } else {
             this._Client.Queue(new LoginDisconnectPacket(this._Client, ChatComponentFactory.FromString("Failed to negotiate encrypted channel")), true);
