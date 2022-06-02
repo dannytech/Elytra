@@ -1,6 +1,7 @@
 import { Client } from "../../Client";
 import { IServerboundPacket } from "../../Packet";
 import { ResponsePacket } from "./ResponsePacket";
+import { Console } from "../../../game/Console";
 
 export class RequestPacket implements IServerboundPacket {
     private _Client: Client;
@@ -15,7 +16,8 @@ export class RequestPacket implements IServerboundPacket {
      */
     public async Parse() : Promise<boolean> {
         // Generate a response containing server information
-        this._Client.Queue(new ResponsePacket());
+        Console.Debug(`(${this._Client.ClientId})`, "[C → S]", "[RequestPacket]", "Requesting server information");
+        this._Client.Queue(new ResponsePacket(this._Client));
 
         return true;
     }

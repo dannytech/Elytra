@@ -4,6 +4,7 @@ import { IClientboundPacket } from "../../Packet";
 import { WritableBuffer } from "../../WritableBuffer";
 import { Client } from "../../Client";
 import { State, Constants } from "../../../Configuration";
+import { Console } from "../../../game/Console";
 
 const randomBytesAsync = promisify(crypto.randomBytes);
 
@@ -34,6 +35,7 @@ export class EncryptionRequestPacket implements IClientboundPacket {
         const publicKey: Buffer = State.Keypair.PublicKey.export({ format: "der", type: "spki" });
 
         // Write the public key
+        Console.Debug(`(${this._Client.ClientId})`, "[S → C]", "[EncryptionRequestPacket]", "Requesting to enable encryption");
         buf.WriteVarInt(publicKey.length);
         buf.Write(publicKey);
 

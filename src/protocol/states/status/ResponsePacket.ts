@@ -3,9 +3,15 @@ import { IClientboundPacket } from "../../Packet";
 import { WritableBuffer } from "../../WritableBuffer";
 import { Client } from "../../Client";
 import { ChatComponentFactory } from "../../../game/chat/ChatComponentFactory";
+import { Console } from "../../../game/Console";
 
 export class ResponsePacket implements IClientboundPacket {
+    private _Client: Client;
     public PacketID: number = 0x00;
+
+    constructor(client: Client) {
+        this._Client = client;
+    }
 
     /**
      * Send the client the server's current status.
@@ -19,6 +25,7 @@ export class ResponsePacket implements IClientboundPacket {
         const motd: string = await Settings.Get(MinecraftConfigs.MOTD);
 
         // Send back server information
+        Console.Debug(`(${this._Client.ClientId})`, "[S → C]", "[ResponsePacket]", "Sending server list information");
         buf.WriteJSON({
             version: {
                 name: `${Constants.ServerName} ${Constants.MinecraftVersion}`,

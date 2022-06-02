@@ -37,6 +37,7 @@ export class LoginStartPacket implements IServerboundPacket {
         const debug: boolean = await Settings.Get(MinecraftConfigs.Debug);
         if (online && !debug) {
             // Begin the encryption/authentication process
+            Console.Debug(`(${this._Client.ClientId})`, "[C → S]", "[LoginStartPacket]", "Beginning encryption/authentication process");
             this._Client.Queue(new EncryptionRequestPacket(this._Client));
         } else {
             Console.Warn(`Online mode is off, allowing alleged player ${this._Client.Player.Username} to connect`);
@@ -45,6 +46,7 @@ export class LoginStartPacket implements IServerboundPacket {
             if (!debug)
                 this._Client.Queue(new SetCompressionPacket(this._Client));
 
+            Console.Debug(`(${this._Client.ClientId})`, "[C → S]", "[LoginStartPacket]", "Bypassing login due to online mode being off");
             this._Client.Queue(new LoginSuccessPacket(this._Client));
             this._Client.Queue(new JoinGamePacket(this._Client));
         }

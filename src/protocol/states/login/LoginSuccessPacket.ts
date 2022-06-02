@@ -2,6 +2,7 @@ import { IClientboundPacket } from "../../Packet";
 import { WritableBuffer } from "../../WritableBuffer";
 import { Client } from "../../Client";
 import { UUID } from "../../../game/UUID";
+import { Console } from "../../../game/Console";
 
 export class LoginSuccessPacket implements IClientboundPacket {
     private _Client: Client;
@@ -21,6 +22,7 @@ export class LoginSuccessPacket implements IClientboundPacket {
      */
     public async Write(buf: WritableBuffer) {
         // Write the player UUID
+        Console.Debug(`(${this._Client.ClientId})`, "[S → C]", "[LoginSuccessPacket]", "Sending logged-in UUID");
         const uuid: UUID = this._Client.Player.UUID || UUID.Generate();
         buf.WriteVarChar(uuid.Format(true));
 

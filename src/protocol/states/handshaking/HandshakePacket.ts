@@ -1,6 +1,7 @@
 import { IServerboundPacket } from "../../Packet";
 import { ReadableBuffer } from "../../ReadableBuffer";
 import { Client, ClientState } from "../../Client";
+import { Console } from "../../../game/Console";
 
 export class HandshakePacket implements IServerboundPacket {
     private _Client: Client;
@@ -24,16 +25,18 @@ export class HandshakePacket implements IServerboundPacket {
 
         // Then, the hostname
         buf.ReadVarChar();
-        
+
         // Then, the port
         buf.ReadUint16();
 
         // Switch to the requested state
         switch (buf.ReadVarInt()) {
             case 1:
+                Console.Debug(`(${this._Client.ClientId})`, "[C → S]", "[HandshakePacket]", "Switching to state: Status");
                 this._Client.State = ClientState.Status;
                 break;
             case 2:
+                Console.Debug(`(${this._Client.ClientId})`, "[C → S]", "[HandshakePacket]", "Switching to state: Login");
                 this._Client.State = ClientState.Login;
                 break;
         }

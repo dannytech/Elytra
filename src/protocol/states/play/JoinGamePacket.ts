@@ -2,6 +2,7 @@ import { IClientboundPacket } from "../../Packet";
 import { WritableBuffer } from "../../WritableBuffer";
 import { Client } from "../../Client";
 import { State, Settings, MinecraftConfigs } from "../../../Configuration";
+import { Console } from "../../../game/Console";
 
 export class JoinGamePacket implements IClientboundPacket {
     private _Client: Client;
@@ -28,6 +29,7 @@ export class JoinGamePacket implements IClientboundPacket {
      */
     public async Write(buf: WritableBuffer) {
         // Player entity ID
+        Console.Debug(`(${this._Client.ClientId})`, "[S → C]", "[JoinGamePacket]", "Requesting player entity to join.");
         buf.WriteInt32(this._Client.Player.EntityID);
 
         // Gamemode

@@ -1,13 +1,17 @@
 import { IClientboundPacket } from "../../Packet";
 import { WritableBuffer } from "../../WritableBuffer";
 import { ChatComponent } from "../../../game/chat/ChatComponent";
+import { Console } from "../../../game/Console";
+import { Client } from "../../Client";
 
 export class DisconnectPacket implements IClientboundPacket {
+    private _Client: Client;
     private _Reason: ChatComponent;
 
     public PacketID: number = 0x00;
 
-    constructor(reason: ChatComponent) {
+    constructor(client: Client, reason: ChatComponent) {
+        this._Client = client;
         this._Reason = reason;
     }
 
@@ -19,6 +23,7 @@ export class DisconnectPacket implements IClientboundPacket {
      */
     public async Write(buf: WritableBuffer) {
         // Chat component containing reason for disconnect
+        Console.Debug(`(${this._Client.ClientId})`, "[S → C]", "[DisconnectPacket]", `Disconnecting client for "${this._Reason}"`);
         buf.WriteJSON(this._Reason);
     }
 }
