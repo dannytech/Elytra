@@ -116,7 +116,7 @@ function cast(value: any) : any {
                                     "value.players": uuid
                                 }
                             }, { upsert: true });
-                            Console.Info(`Added ${usernameOrMode} -> ${uuid} to filter`);
+                            Console.Info(`Added/removed ${usernameOrMode} -> ${uuid} from filter`);
                         } else Console.Error(`Failed to get UUID for ${usernameOrMode}`);
                         break;
                     case "mode":
