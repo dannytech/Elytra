@@ -34,15 +34,17 @@ export class LoginStartPacket implements IServerboundPacket {
         this._Client.Player = new Player(username);
 
         const online: boolean = await Settings.Get(MinecraftConfigs.Online);
-        if (online) {
-
+        const debug: boolean = await Settings.Get(MinecraftConfigs.Debug);
+        if (online && !debug) {
             // Begin the encryption/authentication process
             this._Client.Queue(new EncryptionRequestPacket(this._Client));
         } else {
             Console.Warn(`Online mode is off, allowing alleged player ${this._Client.Player.Username} to connect`);
 
             // Prepare the player to join
-            this._Client.Queue(new SetCompressionPacket(this._Client));
+            if (!debug)
+                this._Client.Queue(new SetCompressionPacket(this._Client));
+
             this._Client.Queue(new LoginSuccessPacket(this._Client));
             this._Client.Queue(new JoinGamePacket(this._Client));
         }

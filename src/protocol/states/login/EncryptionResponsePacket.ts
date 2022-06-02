@@ -107,7 +107,10 @@ export class EncryptionResponsePacket implements IServerboundPacket {
                 Console.Info(`${this._Client.Player.Username} authenticated successfully with UUID ${this._Client.Player.UUID.Format(true)}`);
 
                 // Finish the handshake and proceed to the play state
-                this._Client.Queue(new SetCompressionPacket(this._Client));
+                const debug: boolean = await Settings.Get(MinecraftConfigs.Debug);
+                if (!debug)
+                    this._Client.Queue(new SetCompressionPacket(this._Client));
+
                 this._Client.Queue(new LoginSuccessPacket(this._Client));
                 this._Client.Queue(new JoinGamePacket(this._Client));
             } else {

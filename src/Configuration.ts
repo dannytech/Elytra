@@ -15,7 +15,8 @@ export enum MinecraftConfigs {
     RespawnScreen = "respawnScreen",
     MOTD = "motd",
     EULA = "eula",
-    Filter = "filter"
+    Filter = "filter",
+    Debug = "debug"
 }
 
 export enum ElytraConfigs {
@@ -43,7 +44,8 @@ export class Settings {
             [MinecraftConfigs.Filter]: {
                 mode: "deny",
                 players: []
-            }
+            },
+            [MinecraftConfigs.Debug]: false
         },
         elytra: {
             [ElytraConfigs.ApiIP]: "127.0.0.1",
