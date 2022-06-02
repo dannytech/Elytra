@@ -147,7 +147,7 @@ export class Client extends EventEmitter {
             }
 
             // Send the packet to the client
-            await new Promise((resolve, reject) => {
+            await new Promise<void>((resolve, reject) => {
                 this._Socket.write(payload.Buffer, (err) => {
                     if (err) reject(err);
 
