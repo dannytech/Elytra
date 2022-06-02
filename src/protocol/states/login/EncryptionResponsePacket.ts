@@ -36,12 +36,7 @@ interface SessionResponse {
 
 interface FilterList {
     mode: string,
-    players: [
-        {
-            username?: string,
-            uuid: string
-        }
-    ]
+    players: [string]
 }
 
 export class EncryptionResponsePacket implements IServerboundPacket {
@@ -130,7 +125,7 @@ export class EncryptionResponsePacket implements IServerboundPacket {
 
         // Load the player filter
         const filter: FilterList = await Settings.Get(MinecraftConfigs.Filter);
-        const inFilter: boolean = filter?.players?.some(player => player.uuid == this._Client.Player.UUID.Format());
+        const inFilter: boolean = filter?.players?.some(uuid => uuid == this._Client.Player.UUID.Format());
 
         // Determine whether the player is allowed to join
         Console.Debug(`(${this._Client.ClientId})`, "[C → S]", "[EncryptionResponsePacket]", "Checking player against filter");
