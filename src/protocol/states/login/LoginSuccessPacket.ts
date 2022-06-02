@@ -7,6 +7,7 @@ import { JoinGamePacket } from "../play/JoinGamePacket";
 import { Constants } from "../../../Configuration";
 import { ServerPluginMessagePacket } from "../play/PluginMessagePacket";
 import { HeldItemChangePacket } from "../play/HeldItemChangePacket";
+import { DeclareRecipesPacket } from "../play/DeclareRecipesPacket";
 
 export class LoginSuccessPacket implements IClientboundPacket {
     private _Client: Client;
@@ -47,5 +48,6 @@ export class LoginSuccessPacket implements IClientboundPacket {
         this._Client.Queue(new ServerPluginMessagePacket(this._Client, "minecraft:brand", pluginMessage.Buffer));
 
         this._Client.Queue(new HeldItemChangePacket(this._Client, 0));
+        this._Client.Queue(new DeclareRecipesPacket(this._Client));
     }
 }
