@@ -1,6 +1,6 @@
 import { IClientboundPacket } from "../../Packet";
 import { WritableBuffer } from "../../WritableBuffer";
-import { Client } from "../../Client";
+import { Client, ClientState } from "../../Client";
 import { UUID } from "../../../game/UUID";
 import { Console } from "../../../game/Console";
 
@@ -28,5 +28,9 @@ export class LoginSuccessPacket implements IClientboundPacket {
 
         // Write the username
         buf.WriteVarChar(this._Client.Player.Username);
+
+        // Update the client's state
+        Console.Debug(`(${this._Client.ClientId})`, "[S → C]", "[LoginSuccessPacket]", "Switching to state: Play");
+        this._Client.State = ClientState.Play;
     }
 }
