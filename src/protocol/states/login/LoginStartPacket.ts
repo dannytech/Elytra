@@ -45,12 +45,6 @@ export class LoginStartPacket implements IServerboundPacket {
 
             Console.Debug(`(${this._Client.ClientId})`, "[C → S]", "[LoginStartPacket]", "Bypassing login due to online mode being off");
             this._Client.Queue(new LoginSuccessPacket(this._Client));
-            this._Client.Queue(new JoinGamePacket(this._Client));
-
-            // Send the server brand
-            const pluginMessage: WritableBuffer = new WritableBuffer();
-            pluginMessage.WriteVarChar(Constants.ServerName);
-            this._Client.Queue(new ServerPluginMessagePacket(this._Client, "minecraft:brand", pluginMessage.Buffer));
         }
 
         return true;

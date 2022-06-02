@@ -117,12 +117,6 @@ export class EncryptionResponsePacket implements IServerboundPacket {
                     this._Client.Queue(new SetCompressionPacket(this._Client));
 
                 this._Client.Queue(new LoginSuccessPacket(this._Client));
-                this._Client.Queue(new JoinGamePacket(this._Client));
-
-                // Send the server brand
-                const pluginMessage: WritableBuffer = new WritableBuffer();
-                pluginMessage.WriteVarChar(Constants.ServerName);
-                this._Client.Queue(new ServerPluginMessagePacket(this._Client, "minecraft:brand", pluginMessage.Buffer));
             } else {
                 this._Client.Queue(new LoginDisconnectPacket(this._Client, ChatComponentFactory.FromString("Invalid session")), true);
 

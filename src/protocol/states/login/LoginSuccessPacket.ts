@@ -3,6 +3,9 @@ import { WritableBuffer } from "../../WritableBuffer";
 import { Client, ClientState } from "../../Client";
 import { UUID } from "../../../game/UUID";
 import { Console } from "../../../game/Console";
+import { JoinGamePacket } from "../play/JoinGamePacket";
+import { Constants } from "../../../Configuration";
+import { ServerPluginMessagePacket } from "../play/PluginMessagePacket";
 
 export class LoginSuccessPacket implements IClientboundPacket {
     private _Client: Client;
@@ -32,5 +35,14 @@ export class LoginSuccessPacket implements IClientboundPacket {
         // Update the client's state
         Console.Debug(`(${this._Client.ClientId})`, "[S → C]", "[LoginSuccessPacket]", "Switching to state: Play");
         this._Client.State = ClientState.Play;
+
+        // Queue some more joining packets
+        Console.Debug(`(${this._Client.ClientId})`, "[S → C]", "[LoginSuccessPacket]", "Queueing initial play state packets");
+        this._Client.Queue(new JoinGamePacket(this._Client));
+
+        // Send the server brand
+        const pluginMessage: WritableBuffer = new WritableBuffer();
+        pluginMessage.WriteVarChar(Constants.ServerName);
+        this._Client.Queue(new ServerPluginMessagePacket(this._Client, "minecraft:brand", pluginMessage.Buffer));
     }
 }
