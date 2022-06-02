@@ -14,8 +14,6 @@ export class UnlockRecipesPacket implements IClientboundPacket {
     private _State: UnlockRecipesAction;
     private _Displayed: string[] = [];
 
-    public PacketID: number = 0x37;
-
     constructor(client: Client, action: UnlockRecipesAction, displayed: string[] = []) {
         this._Client = client;
         this._State = action;

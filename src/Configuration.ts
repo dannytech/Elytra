@@ -3,6 +3,7 @@ import { ConfigModel, IConfigDocument } from "./database/ConfigModel";
 import { Keypair } from "./protocol/Encryption";
 import { ClientBus } from "./protocol/ClientBus";
 import { World } from "./game/World";
+import { PacketFactory } from "./protocol/Packet";
 
 export enum MinecraftConfigs {
     ServerIP = "serverIP",
@@ -133,6 +134,7 @@ export class Settings {
 export class State {
     public static Keypair: Keypair;
     public static ClientBus: ClientBus;
+    public static PacketFactory: PacketFactory;
     public static World: World;
 }
 

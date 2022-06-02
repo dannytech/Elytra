@@ -9,8 +9,6 @@ export class ServerPluginMessagePacket implements IClientboundPacket {
     private _Channel: string;
     private _Message: Buffer;
 
-    public PacketID: number = 0x19;
-
     constructor(client: Client, channel: string, message: any) {
         this._Client = client;
         this._Channel = channel;

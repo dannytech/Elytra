@@ -1,0 +1,31 @@
+# maps packet names to IDs based on protocol version
+handshaking:
+  HandshakePacket: 0x00
+status:
+  RequestPacket: 0x00
+  ResponsePacket: 0x00
+  PingPacket: 0x01
+  PongPacket: 0x01
+login:
+  LoginStartPacket: 0x00
+  DisconnectPacket: 0x00
+  EncryptionRequestPacket: 0x01
+  EncryptionResponsePacket: 0x01
+  LoginSuccessPacket: 0x02
+  SetCompressionPacket: 0x03
+play:
+  # TODO Add versioning for the below
+  DeclareCommandsPacket: 0x12
+  ClientPluginMessagePacket:
+    464: 0x0B
+    755: 0x0A
+  ServerPluginMessagePacket:
+    464: 0x19
+    755: 0x18
+  DisconnectPacket: 0x1B
+  EntityStatusPacket: 0x1C
+  JoinGamePacket: 0x26
+  UnlockRecipesPacket: 0x37
+  HeldItemChangePacket: 0x40
+  DeclareRecipesPacket: 0x5B
+  TagsPacket: 0x5C

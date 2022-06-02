@@ -2,7 +2,7 @@ import { Socket } from "net";
 import * as crypto from "crypto";
 import { Decipher, Cipher } from "crypto";
 import { EventEmitter } from "events";
-import { Constants } from "../Configuration";
+import { Constants, State } from "../Configuration";
 import { IClientboundPacket, PacketFactory } from "./Packet";
 import { ReadableBuffer } from "./ReadableBuffer";
 import { WritableBuffer } from "./WritableBuffer";
@@ -13,10 +13,10 @@ import { DisconnectPacket as LoginDisconnectPacket } from "./states/login/Discon
 import { DisconnectPacket as PlayDisconnectPacket } from "./states/play/DisconnectPacket";
 
 export enum ClientState {
-    Handshaking,
-    Status,
-    Login,
-    Play
+    Handshaking = "handshaking",
+    Status = "status",
+    Login = "login",
+    Play = "play"
 }
 
 export enum CompressionState {
@@ -101,7 +101,7 @@ export class Client extends EventEmitter {
             }
 
             // Generate a response to the packet
-            PacketFactory.Parse(packet, this);
+            State.PacketFactory.Parse(packet, this);
         }
     }
 
@@ -117,8 +117,15 @@ export class Client extends EventEmitter {
             let payload: WritableBuffer = new WritableBuffer();
             await packet.Write(payload);
 
+            // Resolve the packet ID
+            const packetId: number = State.PacketFactory.Lookup(this, packet.constructor.name);
+            if (packetId == null) {
+                Console.Debug(`(${this.ClientId})`, "[S → C]", `[${packet.constructor.name}]`, "Not sending due to missing packet ID.");
+                continue;
+            }
+
             // Prepend the packet ID
-            payload.Prepend().WriteVarInt(packet.PacketID);
+            payload.Prepend().WriteVarInt(packetId);
 
             // Compress the packet
             if (this.Compression === CompressionState.Enabled) {

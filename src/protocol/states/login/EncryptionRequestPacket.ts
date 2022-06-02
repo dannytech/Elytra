@@ -11,8 +11,6 @@ const randomBytesAsync = promisify(crypto.randomBytes);
 export class EncryptionRequestPacket implements IClientboundPacket {
     private _Client: Client;
 
-    public PacketID: number = 0x01;
-
     constructor(client: Client) {
         this._Client = client;
     }

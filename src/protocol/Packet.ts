@@ -1,3 +1,5 @@
+import { parse } from "yaml";
+
 import { ReadableBuffer } from "./ReadableBuffer";
 import { WritableBuffer } from "./WritableBuffer";
 import { Client, ClientState } from "./Client";
@@ -8,6 +10,7 @@ import { LoginStartPacket } from "./states/login/LoginStartPacket";
 import { EncryptionResponsePacket } from "./states/login/EncryptionResponsePacket";
 import { Console } from "../game/Console";
 import { ClientPluginMessagePacket } from "./states/play/PluginMessagePacket";
+import { readFile } from "fs/promises";
 
 export interface IServerboundPacket {
     /**
@@ -17,20 +20,68 @@ export interface IServerboundPacket {
      * @async
      */
     Parse(buf: ReadableBuffer) : Promise<boolean>;
+
+    AfterReceive?() : Promise<void>;
 }
 
 export interface IClientboundPacket {
-    PacketID: number;
-
     /**
      * Writes the packet to a buffer.
      * @param {WritableBuffer} buf The buffer to be sent to the client.
      * @async
      */
     Write(buf: WritableBuffer) : Promise<void>;
+
+    AfterSend?() : Promise<void>;
 }
 
 export class PacketFactory {
+    private _PacketSpec: {
+        [key: string]: {
+            [key: string]: number | {
+                [key: number]: number;
+            }
+        }
+    };
+
+    /**
+     * Loads the packet specification from a YAML file.
+     * @async
+     */
+    public async Load() {
+        const spec: string = await readFile("./src/protocol/packets.yml", "utf8");
+        this._PacketSpec = parse(spec);
+    }
+
+    /**
+     * Convert from a packet name to the corresponding version-specific packet ID
+     * @param {ClientState} state The client state to use for the lookup.
+     * @param {string} packetName The name of the packet to convert.
+     * @returns {number} The packet ID.
+     */
+    public Lookup(client: Client, packetName: string) : number {
+        const statePackets = this._PacketSpec[client.State];
+
+        if (statePackets.hasOwnProperty(packetName)) {
+            const packetId = statePackets[packetName];
+
+            if (typeof packetId === "number")
+                return packetId;
+            else {
+                // Get a reverse-ordered (latest first) list of the changes to the packet ID
+                const versions: number[] = Object.keys(packetId).map(Number);
+                versions.sort().reverse();
+
+                // Find the latest version change the client is compatible with
+                for (const version of versions) {
+                    if (client.ProtocolVersion >= version)
+                        return packetId[version];
+                }
+            }
+        }
+        Console.Error(`Unable to resolve packet ID for ${packetName}, please report this to the developer`);
+    }
+
     /**
      * Parse a packet, modifying game state and replying as necessary.
      * @param {ReadableBuffer} buf A buffer containing a single packet to parse.
@@ -38,7 +89,7 @@ export class PacketFactory {
      * @static
      * @async
      */
-    public static async Parse(buf: ReadableBuffer, client: Client) {
+    public async Parse(buf: ReadableBuffer, client: Client) {
         const packetId: number = buf.ReadVarInt();
 
         // Determine the incoming packet identity based on current state and the packet ID
@@ -46,34 +97,34 @@ export class PacketFactory {
         switch (client.State) {
             case ClientState.Handshaking:
                 switch (packetId) {
-                    case 0x00:
+                    case this.Lookup(client, HandshakePacket.name):
                         packet = new HandshakePacket(client);
                         break;
                 }
                 break;
             case ClientState.Status:
                 switch (packetId) {
-                    case 0x00:
+                    case this.Lookup(client, RequestPacket.name):
                         packet = new RequestPacket(client);
                         break;
-                    case 0x01:
+                    case this.Lookup(client, PingPacket.name):
                         packet = new PingPacket(client);
                         break;
                 }
                 break;
             case ClientState.Login:
                 switch (packetId) {
-                    case 0x00:
+                    case this.Lookup(client, LoginStartPacket.name):
                         packet = new LoginStartPacket(client);
                         break;
-                    case 0x01:
+                    case this.Lookup(client, EncryptionResponsePacket.name):
                         packet = new EncryptionResponsePacket(client);
                         break;
                 }
                 break;
             case ClientState.Play:
                 switch (packetId) {
-                    case 0x0B:
+                    case this.Lookup(client, ClientPluginMessagePacket.name):
                         packet = new ClientPluginMessagePacket(client);
                         break;
                 }

@@ -6,6 +6,7 @@ import { ClientBus } from "./src/protocol/ClientBus";
 import { Keypair } from "./src/protocol/Encryption";
 import { World } from "./src/game/World";
 import { Console } from "./src/game/Console";
+import { PacketFactory } from "./src/protocol/Packet";
 
 /**
  * Prepare the server to accept players.
@@ -43,6 +44,10 @@ async function startListener() {
 
     // Attach a connection handler
     State.ClientBus = new ClientBus(server);
+
+    // Set up a packet factory
+    State.PacketFactory = new PacketFactory();
+    await State.PacketFactory.Load();
 
     // Start the server
     const port: number = await Settings.Get(MinecraftConfigs.ServerPort);

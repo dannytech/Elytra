@@ -19,8 +19,6 @@ export class EntityStatusPacket implements IClientboundPacket {
     private _EntityId: number;
     private _Status: number;
 
-    public PacketID: number = 0x1C;
-
     constructor(client: Client, entityId: number, status: EntityStatus) {
         this._Client = client;
         this._EntityId = entityId;

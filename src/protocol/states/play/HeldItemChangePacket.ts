@@ -7,8 +7,6 @@ export class HeldItemChangePacket implements IClientboundPacket {
     private _Client: Client;
     private _Slot: number;
 
-    public PacketID: number = 0x40;
-
     constructor(client: Client, slot: number) {
         this._Client = client;
         this._Slot = slot;

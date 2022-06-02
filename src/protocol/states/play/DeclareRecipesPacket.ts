@@ -6,8 +6,6 @@ import { WritableBuffer } from "../../WritableBuffer";
 export class DeclareRecipesPacket implements IClientboundPacket {
     private _Client: Client;
 
-    public PacketID: number = 0x5B;
-
     constructor(client: Client) {
         this._Client = client;
     }

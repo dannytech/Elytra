@@ -8,7 +8,6 @@ import { checkVersion, VersionSpec } from "../../../Masking";
 
 export class ResponsePacket implements IClientboundPacket {
     private _Client: Client;
-    public PacketID: number = 0x00;
 
     constructor(client: Client) {
         this._Client = client;

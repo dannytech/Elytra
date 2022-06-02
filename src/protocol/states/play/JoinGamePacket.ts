@@ -7,8 +7,6 @@ import { Console } from "../../../game/Console";
 export class JoinGamePacket implements IClientboundPacket {
     private _Client: Client;
 
-    public PacketID: number = 0x26;
-
     constructor(client: Client) {
         this._Client = client;
     }

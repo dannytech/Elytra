@@ -5,7 +5,7 @@
         "config.json",
         "src/"
     ],
-    "ext": "ts",
+    "ext": "ts,yml",
     "ignore": ["node_modules"],
     "exec": "ts-node index.ts"
 }

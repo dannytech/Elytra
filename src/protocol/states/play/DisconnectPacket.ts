@@ -9,8 +9,6 @@ export class DisconnectPacket implements IClientboundPacket {
     private _Client: Client;
     private _Reason: ChatComponent;
 
-    public PacketID: number = 0x1b;
-
     constructor(client: Client, reason: ChatComponent) {
         this._Client = client;
         this._Reason = reason;

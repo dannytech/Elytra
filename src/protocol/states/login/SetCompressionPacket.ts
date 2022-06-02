@@ -7,8 +7,6 @@ import { Console } from "../../../game/Console";
 export class SetCompressionPacket implements IClientboundPacket {
     private _Client: Client;
 
-    public PacketID: number = 0x03;
-
     constructor(client: Client) {
         this._Client = client;
     }

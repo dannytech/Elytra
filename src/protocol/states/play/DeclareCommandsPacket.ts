@@ -26,8 +26,6 @@ interface CommandNode {
 export class DeclareCommandsPacket implements IClientboundPacket {
     private _Client: Client;
 
-    public PacketID: number = 0x12;
-
     constructor(client: Client) {
         this._Client = client;
     }

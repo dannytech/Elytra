@@ -6,8 +6,6 @@ import { WritableBuffer } from "../../WritableBuffer";
 export class TagsPacket implements IClientboundPacket {
     private _Client: Client;
 
-    public PacketID: number = 0x5C;
-
     constructor(client: Client) {
         this._Client = client;
     }

@@ -7,8 +7,6 @@ export class PongPacket implements IClientboundPacket {
     private _Client: Client;
     private _Payload: bigint;
 
-    public PacketID: number = 0x01;
-
     constructor(client: Client, payload: bigint) {
         this._Client = client;
         this._Payload = payload;
