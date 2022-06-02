@@ -10,6 +10,7 @@ import { HeldItemChangePacket } from "../play/HeldItemChangePacket";
 import { DeclareRecipesPacket } from "../play/DeclareRecipesPacket";
 import { TagsPacket } from "../play/TagsPacket";
 import { EntityStatus, EntityStatusPacket } from "../play/EntityStatusPacket";
+import { DeclareCommandsPacket } from "../play/DeclareCommandsPacket";
 
 export class LoginSuccessPacket implements IClientboundPacket {
     private _Client: Client;
@@ -49,9 +50,11 @@ export class LoginSuccessPacket implements IClientboundPacket {
         pluginMessage.WriteVarChar(Constants.ServerName);
         this._Client.Queue(new ServerPluginMessagePacket(this._Client, "minecraft:brand", pluginMessage.Buffer));
 
+        // Send the current server/last player state to the client
         this._Client.Queue(new HeldItemChangePacket(this._Client, 0));
         this._Client.Queue(new DeclareRecipesPacket(this._Client));
         this._Client.Queue(new TagsPacket(this._Client));
         this._Client.Queue(new EntityStatusPacket(this._Client, 0, EntityStatus.PlayerPermissionsLevel4)); // TODO: Properly set entity ID and state
+        this._Client.Queue(new DeclareCommandsPacket(this._Client));
     }
 }
