@@ -1,5 +1,6 @@
 import { EventEmitter } from "events";
 import { Settings, MinecraftConfigs } from "../Configuration";
+import * as Colors from "colors/safe";
 
 export class StandardConsole extends EventEmitter {
     private debug: boolean = false;
@@ -20,15 +21,15 @@ export class StandardConsole extends EventEmitter {
     }
 
     public Info(...message: any[]) {
-        this.Log("[INFO]", ...message);
+        this.Log(Colors.blue("[INFO]"), ...message);
     }
 
     public Error(...message: any[]) {
-        this.Log("[ERROR]", ...message);
+        this.Log(Colors.red("[ERROR]"), ...message);
     }
 
     public Warn(...message: any[]) {
-        this.Log("[WARN]", ...message);
+        this.Log(Colors.yellow("[WARN]"), ...message);
     }
 
     /**
@@ -38,7 +39,7 @@ export class StandardConsole extends EventEmitter {
     public async Debug(...message: any[]) {
         const debug: boolean = await Settings.Get(MinecraftConfigs.Debug);
         if (debug)
-            this.Log("[DEBUG]", ...message);
+            this.Log(Colors.green("[DEBUG]"), ...message);
     }
 }
 
