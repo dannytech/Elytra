@@ -90,7 +90,8 @@ export class EncryptionResponsePacket implements IServerboundPacket {
 
             // Ensures the client authentication and joining client originate from the same source
             const preventProxy: boolean = await Settings.Get(MinecraftConfigs.PreventProxy);
-            if (preventProxy) params["ip"] = this._Client.IP;
+            const debug: boolean = await Settings.Get(MinecraftConfigs.Debug);
+            if (preventProxy && !debug) params["ip"] = this._Client.IP;
 
             // Authenticate the client
             Console.Debug(`(${this._Client.ClientId})`, "[C → S]", "[EncryptionResponsePacket]", "Authenticating client against Mojang servers");
