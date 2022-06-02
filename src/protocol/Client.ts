@@ -175,6 +175,7 @@ export class Client extends EventEmitter {
         // Flush the clientbound queue
         this._ClientboundQueue.splice(0, this._ClientboundQueue.length);
 
+        Console.Debug(`(${this.ClientId})`, "Disconnecting...");
         this._Socket.destroy();
 
         // Save the player state before destroying the client
