@@ -21,7 +21,8 @@ export class HandshakePacket implements IServerboundPacket {
      */
     public async Parse(buf: ReadableBuffer) : Promise<boolean> {
         // First, read the protocol version
-        buf.ReadVarInt();
+        this._Client.ProtocolVersion = buf.ReadVarInt();
+        Console.Debug(`(${this._Client.ClientId})`, "[C → S]", "[HandshakePacket]", `Protocol version: ${this._Client.ProtocolVersion}`);
 
         // Then, the hostname
         buf.ReadVarChar();

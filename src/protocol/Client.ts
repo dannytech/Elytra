@@ -38,6 +38,7 @@ export class Client extends EventEmitter {
     private _Cipher: Cipher;
 
     public ClientId: number;
+    public ProtocolVersion: number;
     public State: ClientState;
     public Compression: CompressionState;
     public Encryption: IEncryptionState;

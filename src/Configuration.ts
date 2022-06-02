@@ -7,6 +7,7 @@ import { World } from "./game/World";
 export enum MinecraftConfigs {
     ServerIP = "serverIP",
     ServerPort = "serverPort",
+    ServerVersion = "serverVersion",
     Online = "online",
     PreventProxy = "preventProxy",
     MaximumPlayers = "maximumPlayers",
@@ -33,6 +34,9 @@ export class Settings {
         minecraft: {
             [MinecraftConfigs.ServerIP]: "0.0.0.0",
             [MinecraftConfigs.ServerPort]: 25565,
+            [MinecraftConfigs.ServerVersion]: [{
+                start: 578
+            }],
             [MinecraftConfigs.Online]: true,
             [MinecraftConfigs.PreventProxy]: true,
             [MinecraftConfigs.MaximumPlayers]: 20,
@@ -134,7 +138,6 @@ export class State {
 
 export class Constants {
     public static ServerName: string = "Elytra";
-    public static MinecraftVersion: string = "1.15.2";
     public static ConfigNamespace: string = "minecraft";
     public static ProtocolVersion: number = 578;
     public static CompressionThreshold: number = 64;

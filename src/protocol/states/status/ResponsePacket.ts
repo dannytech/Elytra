@@ -4,6 +4,7 @@ import { WritableBuffer } from "../../WritableBuffer";
 import { Client } from "../../Client";
 import { ChatComponentFactory } from "../../../game/chat/ChatComponentFactory";
 import { Console } from "../../../game/Console";
+import { checkVersion, VersionSpec } from "../../../Masking";
 
 export class ResponsePacket implements IClientboundPacket {
     private _Client: Client;
@@ -24,12 +25,23 @@ export class ResponsePacket implements IClientboundPacket {
         const maximumPlayers: number = await Settings.Get(MinecraftConfigs.MaximumPlayers);
         const motd: string = await Settings.Get(MinecraftConfigs.MOTD);
 
+        // Either echo the protocol version if supported or tell the client to update to a newer version
+        const serverVersionSpec: VersionSpec[] = await Settings.Get(MinecraftConfigs.ServerVersion);
+        let protocolVersion: number = this._Client.ProtocolVersion;
+        if (!checkVersion(this._Client.ProtocolVersion, serverVersionSpec)) {
+            const lastVersionSpec = serverVersionSpec[serverVersionSpec.length - 1];
+
+            // Set protocol to the latest supported version
+            if (lastVersionSpec.end) protocolVersion = lastVersionSpec.end;
+            else protocolVersion = Constants.ProtocolVersion;
+        }
+
         // Send back server information
         Console.Debug(`(${this._Client.ClientId})`, "[S → C]", "[ResponsePacket]", "Sending server list information");
         buf.WriteJSON({
             version: {
-                name: `${Constants.ServerName} ${Constants.MinecraftVersion}`,
-                protocol: Constants.ProtocolVersion
+                name: `${Constants.ServerName}`,
+                protocol: protocolVersion
             },
             players: {
                 max: maximumPlayers,
