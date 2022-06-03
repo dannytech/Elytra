@@ -1,5 +1,6 @@
 import { Socket, Server } from "net";
 import { Client } from "./Client";
+import { ClientboundPacket } from "./Packet";
 import { ReadableBuffer } from "./ReadableBuffer";
 
 export class ClientBus {
@@ -42,6 +43,30 @@ export class ClientBus {
         // Handle errors and disconnects
         socket.once("end", client.Disconnect.bind(client));
         socket.once("error", client.Disconnect.bind(client));
+    }
+
+    /**
+     * Send one or more packets to all clients.
+     * @param {function} callback A callback to generate per-client packets.
+     */
+    public async Broadcast(callback: (client: Client) => ClientboundPacket[]) {
+        return new Promise<void>((resolve) => {
+            this.Clients.forEach(async (client: Client) => {
+                const packets = callback(client);
+
+                // Enqueue all broadcasted packets
+                if (packets && packets.length > 0) {
+                    packets.forEach((packet: ClientboundPacket) => {
+                        client.Queue(packet);
+                    });
+
+                    // Send all queued packets
+                    await client.Send();
+                }
+
+                resolve();
+            });
+        });
     }
 
     /**

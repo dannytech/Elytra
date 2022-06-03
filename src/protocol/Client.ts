@@ -9,6 +9,7 @@ import { WritableBuffer } from "./WritableBuffer";
 import { Zlib } from "./Zlib";
 import { Player } from "../game/Player";
 import { Console } from "../game/Console";
+import { PlayerInfoActions, PlayerInfoPacket } from "./states/play/PlayerInfoPacket";
 
 export enum ClientState {
     Handshaking = "handshaking",
@@ -179,7 +180,14 @@ export class Client extends EventEmitter {
         this._Socket.destroy();
 
         // Save the player state before destroying the client
-        if (this.Player) this.Player.Save();
+        if (this.Player) {
+            State.ClientBus.Broadcast((client: Client ) => {
+                // Remove the player from the list of online players
+                if (client.State == ClientState.Play)
+                    return [new PlayerInfoPacket(client, PlayerInfoActions.RemovePlayer, [this.Player])];
+            })
+            this.Player.Save();
+        }
 
         this.emit("disconnected");
     }
