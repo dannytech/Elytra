@@ -32,7 +32,7 @@ export class UnlockRecipesPacket extends ClientboundPacket {
      * @property {string[]} Recipes Addition recipes to add to the recipe book.
      * @async
      */
-    public async Write(buf: WritableBuffer): Promise<void> {
+    public async Write(buf: WritableBuffer) {
         // Whether to init, add, or remove recipes
         buf.WriteVarInt(this._State);
 

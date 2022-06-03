@@ -22,7 +22,7 @@ export class ServerPluginMessagePacket extends ClientboundPacket {
      * @property {Buffer} Data The message data.
      * @async
      */
-    public async Write(buf: WritableBuffer): Promise<void> {
+    public async Write(buf: WritableBuffer) {
         // Write the plugin channel
         Console.DebugPacket(this, "Sending plugin message on channel", this._Channel.green);
         buf.WriteVarChar(this._Channel);

@@ -13,7 +13,7 @@ export class TagsPacket extends ClientboundPacket {
      * @property {number} EntityTags An array of entity identifiers.
      * @async
      */
-    public async Write(buf: WritableBuffer): Promise<void> {
+    public async Write(buf: WritableBuffer) {
         // TODO Add tags
         Console.DebugPacket(this, "Sending dummy tags");
         buf.WriteVarInt(0); // Block tags

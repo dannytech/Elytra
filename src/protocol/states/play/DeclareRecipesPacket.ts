@@ -10,7 +10,7 @@ export class DeclareRecipesPacket extends ClientboundPacket {
      * @property {number} RecipeCount The number of recipes to send.
      * @async
      */
-    public async Write(buf: WritableBuffer): Promise<void> {
+    public async Write(buf: WritableBuffer) {
         // TODO Add recipes
         Console.DebugPacket(this, "Sending dummy recipes");
         buf.WriteVarInt(0);

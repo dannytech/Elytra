@@ -19,7 +19,7 @@ export class HeldItemChangePacket extends ClientboundPacket {
      * @property {number} Slot The slot the player is holding.
      * @async
      */
-    public async Write(buf: WritableBuffer): Promise<void> {
+    public async Write(buf: WritableBuffer) {
         // Set the currently held slot
         Console.DebugPacket(this, "Sending held item slot", this._Slot.toString().green);
         buf.WriteByte(this._Slot);

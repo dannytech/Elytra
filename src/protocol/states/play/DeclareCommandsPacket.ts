@@ -32,7 +32,7 @@ export class DeclareCommandsPacket extends ClientboundPacket {
      * @property {number} RootIndex The index of the root command.
      * @async
      */
-    public async Write(buf: WritableBuffer): Promise<void> {
+    public async Write(buf: WritableBuffer) {
         // TODO Add commands
         Console.DebugPacket(this, "Sending dummy commands");
 

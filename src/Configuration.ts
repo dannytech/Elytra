@@ -105,7 +105,7 @@ export class Settings {
      */
     public static async Set(name: string, value: any) : Promise<void>;
     public static async Set(namespace: string, name: string, value: any) : Promise<void>;
-    public static async Set(namespaceOrName: string, nameOrValue: any, value?: any) : Promise<void> {
+    public static async Set(namespaceOrName: string, nameOrValue: any, value?: any) {
         // support an overload which assumes the namespace as the first parameter is not necessary
         if (value === undefined) {
             value = nameOrValue;
