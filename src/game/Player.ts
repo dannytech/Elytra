@@ -86,7 +86,7 @@ export class Player extends Entity {
      * Load a player object from the database.
      * @async
      */
-    public async Load() : Promise<void> {
+    public async Load() {
         // Retrieve state and update the username history
         const playerDocument: IPlayerDocument = await PlayerModel.findOneAndUpdate({
             uuid: this.UUID.Format()

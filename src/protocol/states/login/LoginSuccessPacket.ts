@@ -33,8 +33,7 @@ export class LoginSuccessPacket implements IClientboundPacket {
     public async Write(buf: WritableBuffer) {
         // Write the player UUID
         Console.Debug(`(${this._Client.ClientId})`, "[S → C]", "[LoginSuccessPacket]", "Sending logged-in UUID");
-        const uuid: UUID = this._Client.Player.UUID || UUID.Generate();
-        buf.WriteVarChar(uuid.Format(true));
+        buf.WriteVarChar(this._Client.Player.UUID.Format(true));
 
         // Write the username
         buf.WriteVarChar(this._Client.Player.Username);

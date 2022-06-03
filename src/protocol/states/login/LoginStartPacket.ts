@@ -7,6 +7,7 @@ import { LoginSuccessPacket } from "./LoginSuccessPacket";
 import { EncryptionRequestPacket } from "./EncryptionRequestPacket";
 import { Settings, MinecraftConfigs } from "../../../Configuration";
 import { Console } from "../../../game/Console";
+import { UUID } from "../../../game/UUID";
 
 export class LoginStartPacket implements IServerboundPacket {
     private _Client: Client;
@@ -39,6 +40,9 @@ export class LoginStartPacket implements IServerboundPacket {
             const debug: boolean = await Settings.Get(MinecraftConfigs.Debug);
             if (!debug)
                 this._Client.Queue(new SetCompressionPacket(this._Client));
+
+            // Generate a random UUID to utilize for this session
+            this._Client.Player.UUID = UUID.Generate();
 
             Console.Debug(`(${this._Client.ClientId})`, "[C → S]", "[LoginStartPacket]", "Bypassing login due to online mode being off");
             this._Client.Queue(new LoginSuccessPacket(this._Client));
