@@ -29,10 +29,7 @@ export class TeleportConfirmPacket extends ServerboundPacket {
 
     public async AfterReceive() {
         // Filter all the online players
-        const onlinePlayers: Player[] = State.ClientBus.Clients.reduce((players: Player[], client: Client) => {
-            if (client.Player) players.push(client.Player);
-            return players;
-        }, []);
+        const onlinePlayers: Player[] = State.ClientBus.OnlinePlayers();
 
         // Send further information like chunk lighting
         this._Client.Queue(new PlayerInfoPacket(this._Client, PlayerInfoActions.AddPlayer, onlinePlayers));

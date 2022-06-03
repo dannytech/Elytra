@@ -146,4 +146,5 @@ export class Constants {
     public static KeyLength: number = 1024;
     public static VerificationTokenLength: number = 8;
     public static MessageBufferSize: number = 1000000;
+    public static KeepAliveInterval: number = 5000;
 }

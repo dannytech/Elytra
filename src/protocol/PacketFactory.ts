@@ -13,6 +13,7 @@ import { EncryptionResponsePacket } from "./states/login/EncryptionResponsePacke
 import { ClientPluginMessagePacket } from "./states/play/PluginMessagePacket";
 import { TeleportConfirmPacket } from "./states/play/TeleportConfirmPacket";
 import { ClientSettingsPacket } from "./states/play/ClientSettingsPacket";
+import { ClientKeepAlivePacket } from "./states/play/KeepAlivePacket";
 
 export class PacketFactory {
     private _PacketSpec: {
@@ -111,6 +112,9 @@ export class PacketFactory {
                         break;
                     case this.Lookup(client, ClientPluginMessagePacket.name):
                         packet = new ClientPluginMessagePacket(client);
+                        break;
+                    case this.Lookup(client, ClientKeepAlivePacket.name):
+                        packet = new ClientKeepAlivePacket(client);
                         break;
                 }
         }

@@ -35,7 +35,7 @@ export class PlayerInfoPacket extends ClientboundPacket {
         buf.WriteVarInt(this._Action);
 
         // List of players
-        Console.DebugPacket(this, "Sending player information for", this._Players.length.toString().green, "player(s)");
+        Console.DebugPacket(this, "Sending", PlayerInfoActions[this._Action].green, "player information for", this._Players.length.toString().blue, "player(s)");
         buf.WriteVarInt(this._Players.length);
         this._Players.forEach((player: Player) => {
             // Write each player UUID
@@ -43,7 +43,6 @@ export class PlayerInfoPacket extends ClientboundPacket {
 
             switch(this._Action) {
                 case PlayerInfoActions.AddPlayer:
-                    Console.DebugPacket(this, "Adding player", player.Username.green);
                     buf.WriteVarChar(player.Username);
 
                     // Write player properties such as skin and cape
@@ -63,7 +62,7 @@ export class PlayerInfoPacket extends ClientboundPacket {
                     buf.WriteVarInt(player.Gamemode);
 
                     // Write the current player latency
-                    buf.WriteVarInt(-1);
+                    buf.WriteVarInt(player.Latency || -1);
 
                     // Indicates whether the player has a custom nickname
                     buf.WriteBool(false);
@@ -71,23 +70,16 @@ export class PlayerInfoPacket extends ClientboundPacket {
 
                     break;
                 case PlayerInfoActions.UpdateGamemode:
-                    Console.DebugPacket(this, "Updating gamemode for", player.Username.green);
+                    // Send a gamemode update for a player
                     buf.WriteVarInt(player.Gamemode);
-
                     break;
                 case PlayerInfoActions.UpdateLatency:
-                    Console.DebugPacket(this, "Updating latency for", player.Username.green);
-                    buf.WriteVarInt(-1);
-
+                    // Send a latency update for a player
+                    buf.WriteVarInt(player.Latency || -1);
                     break;
                 case PlayerInfoActions.UpdateDisplayName:
-                    Console.DebugPacket(this, "Updating display name for", player.Username.green);
                     buf.WriteBool(false);
                     // TODO Add display name support (using chat components)
-
-                    break;
-                case PlayerInfoActions.RemovePlayer:
-                    Console.DebugPacket(this, "Removing player", player.Username.green);
                     break;
             }
         });

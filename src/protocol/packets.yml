@@ -17,6 +17,7 @@ play:
   # TODO Add versioning for the below
   TeleportConfirmPacket: 0x00
   ClientSettingsPacket: 0x05
+  ClientKeepAlivePacket: 0x0F
   DeclareCommandsPacket: 0x12
   ClientPluginMessagePacket:
     464: 0x0B
@@ -26,6 +27,7 @@ play:
     755: 0x18
   DisconnectPacket: 0x1B
   EntityStatusPacket: 0x1C
+  ServerKeepAlivePacket: 0x21
   JoinGamePacket: 0x26
   PlayerInfoPacket: 0x34
   PlayerPositionAndLookPacket: 0x36

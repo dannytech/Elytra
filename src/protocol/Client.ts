@@ -41,8 +41,13 @@ export class Client extends EventEmitter {
     public State: ClientState;
     public Compression: CompressionState;
     public Encryption: IEncryptionState;
-    public Player: Player;
+    public KeepAlive: {
+        id?: bigint;
+        sent?: number;
+        last?: number;
+    };
     public IP: string;
+    public Player: Player;
 
     constructor(socket: Socket, id: number) {
         super();
@@ -57,6 +62,7 @@ export class Client extends EventEmitter {
         this.Encryption = {
             Enabled: false
         };
+        this.KeepAlive = {};
         this.IP = this._Socket.remoteAddress;
     }
 
@@ -184,7 +190,7 @@ export class Client extends EventEmitter {
             State.ClientBus.Broadcast((client: Client ) => {
                 // Remove the player from the list of online players
                 if (client.State == ClientState.Play)
-                    return [new PlayerInfoPacket(client, PlayerInfoActions.RemovePlayer, [this.Player])];
+                    client.Queue(new PlayerInfoPacket(client, PlayerInfoActions.RemovePlayer, [this.Player]));
             })
             this.Player.Save();
         }

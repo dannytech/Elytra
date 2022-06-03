@@ -1,7 +1,12 @@
 import { Socket, Server } from "net";
-import { Client } from "./Client";
+import { Constants } from "../Configuration";
+import { Console } from "../game/Console";
+import { Player } from "../game/Player";
+import { Client, ClientState } from "./Client";
 import { ClientboundPacket } from "./Packet";
 import { ReadableBuffer } from "./ReadableBuffer";
+import { ServerKeepAlivePacket } from "./states/play/KeepAlivePacket";
+import { PlayerInfoActions, PlayerInfoPacket } from "./states/play/PlayerInfoPacket";
 
 export class ClientBus {
     private _Server: Server;
@@ -43,30 +48,59 @@ export class ClientBus {
         // Handle errors and disconnects
         socket.once("end", client.Disconnect.bind(client));
         socket.once("error", client.Disconnect.bind(client));
+
+        // Send and check for keepalives
+        setInterval(() => {
+            Console.Debug("Sending keepalives to clients");
+            this.Broadcast((client: Client) => {
+                if (client.State = ClientState.Play) {
+                    // If the client keepalive has expired, disconnect it uncleanly
+                    if (client.KeepAlive?.last && Date.now() - client.KeepAlive.last > 20000)
+                        client.Disconnect();
+                    else
+                        client.Queue(new ServerKeepAlivePacket(client));
+                }
+            });
+        }, Constants.KeepAliveInterval);
+
+        // Send regular client latency updates
+        setInterval(() => {
+            Console.Debug("Sending client latency updates");
+            this.Broadcast((client: Client) => {
+                if (client.State = ClientState.Play) {
+                    client.Queue(new PlayerInfoPacket(client, PlayerInfoActions.UpdateLatency, this.OnlinePlayers()));
+                }
+            });
+        }, Constants.KeepAliveInterval * 2);
     }
 
     /**
      * Send one or more packets to all clients.
      * @param {function} callback A callback to generate per-client packets.
      */
-    public async Broadcast(callback: (client: Client) => ClientboundPacket[]) {
+    public async Broadcast(callback: (client: Client) => void) {
         return new Promise<void>((resolve) => {
             this.Clients.forEach(async (client: Client) => {
-                const packets = callback(client);
+                callback(client);
 
-                // Enqueue all broadcasted packets
-                if (packets && packets.length > 0) {
-                    packets.forEach((packet: ClientboundPacket) => {
-                        client.Queue(packet);
-                    });
-
-                    // Send all queued packets
-                    await client.Send();
-                }
+                // Send any queued packets
+                await client.Send();
 
                 resolve();
             });
         });
+    }
+
+    /**
+     * Get a list of all players currently online.
+     * @returns {Player[]} A list of all players currently online.
+     */
+    public OnlinePlayers() : Player[] {
+        return this.Clients.reduce((players: Player[], client: Client) => {
+            if (client.Player && client.State == ClientState.Play)
+                players.push(client.Player);
+            return players;
+        }, []);
     }
 
     /**

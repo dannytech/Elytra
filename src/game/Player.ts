@@ -45,6 +45,8 @@ export class Player extends Entity {
     public Op: PermissionLevel;
     public Position: PlayerPositionAndLook;
 
+    public Latency: number;
+
     public Properties: PlayerProperty[];
 
     constructor(username: string, uuid?: UUID) {
