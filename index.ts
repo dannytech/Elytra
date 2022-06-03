@@ -28,7 +28,7 @@ async function bootstrap() {
         .update(publicKey)
         .digest("hex")
         .replace(/(\w{2})(?!$)/g, "$1:");
-    Console.Info(`Server public key has fingerprint ${fingerprint.green}`);
+    Console.Info("Server public key has fingerprint", fingerprint.green);
 
     // Connect to the database
     await Database.Connect(process.env.MONGO_URI);
@@ -55,7 +55,7 @@ async function startListener() {
     const port: number = await Settings.Get(MinecraftConfigs.ServerPort);
     const ip: number = await Settings.Get(MinecraftConfigs.ServerIP);
     server.listen(port, ip, () => {
-        Console.Info(`Server listening on ${(ip + ":" + port).green}`);
+        Console.Info("Server listening on", `${ip}:${port}`.green);
     });
 }
 

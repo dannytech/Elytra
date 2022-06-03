@@ -64,7 +64,7 @@ function cast(value: any) : any {
 
                 // Set the value
                 await Settings.Set(namespace, name, value);
-                Console.Info(`Set ${(namespace + ":" + name).green} = ${value.toString().blue}`);
+                Console.Info("Set", `${namespace}:${name}`.green = value.toString().blue);
             }
             break;
         case "get":
@@ -83,7 +83,7 @@ function cast(value: any) : any {
 
                 // Extract the value
                 const value: string = await Settings.Get(namespace, name);
-                Console.Info(`Got ${(namespace + ":" + name).green} = ${value.toString().blue}`);
+                Console.Info("Got", `${namespace}:${name}`.green, "=", value.toString().blue);
             }
             break;
         case "filter":
@@ -119,8 +119,8 @@ function cast(value: any) : any {
                                     "value.players": uuid
                                 }
                             }, { upsert: true });
-                            Console.Info(`Added/removed ${usernameOrMode.green}/${uuid.blue} from filter`);
-                        } else Console.Error(`Failed to get UUID for ${usernameOrMode.green}`);
+                            Console.Info("Added/removed", usernameOrMode.green, "→", uuid.blue, "to/from filter");
+                        } else Console.Error("Failed to get UUID for", usernameOrMode.green);
                         break;
                     case "mode":
                         if (["allow", "deny"].includes(usernameOrMode)) {
@@ -135,11 +135,11 @@ function cast(value: any) : any {
                                     "value.players": []
                                 }
                             }, { upsert: true });
-                            Console.Info(`Set filter mode to ${usernameOrMode.green}`);
-                        } else Console.Error(`Invalid mode ${usernameOrMode.green}`);
+                            Console.Info("Set filter mode to", usernameOrMode.green);
+                        } else Console.Error("Invalid mode", usernameOrMode.green);
                         break;
                     default:
-                        Console.Error(`Invalid filter action: ${action.green}`);
+                        Console.Error("Invalid filter action", action.green);
                 }
             }
             break;
@@ -160,7 +160,7 @@ function cast(value: any) : any {
                                 gamemode: value
                             }
                         });
-                        Console.Info(`Set ${username.green}'s gamemode to ${value.blue}`);
+                        Console.Info("Set gamemode for", username.green, "to", value.blue);
 
                         break;
                     case "op":
@@ -172,12 +172,12 @@ function cast(value: any) : any {
                                     op: value
                                 }
                             });
-                            Console.Info(`Set ${username.green}'s op level to ${value.blue}`);
-                        } else Console.Error(`Invalid op level ${value.blue}`);
+                            Console.Info("Set op level for", username.green, "to", value.toString().blue);
+                        } else Console.Error("Invalid op level", value.toString().blue);
 
                         break;
                     default:
-                        Console.Error(`Invalid attribute ${attribute.green}`);
+                        Console.Error("Invalid attribute", attribute.green);
                 }
             }
             break;

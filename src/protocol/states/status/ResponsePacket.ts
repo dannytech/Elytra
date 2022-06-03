@@ -33,7 +33,7 @@ export class ResponsePacket extends ClientboundPacket {
         Console.DebugPacket(this, "Sending server information");
         buf.WriteJSON({
             version: {
-                name: `${Constants.ServerName}`,
+                name: Constants.ServerName,
                 protocol: protocolVersion
             },
             players: {

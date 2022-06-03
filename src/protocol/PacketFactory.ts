@@ -57,7 +57,7 @@ export class PacketFactory {
                 }
             }
         }
-        Console.Error(`Unable to resolve packet ID for ${packetName.green}, please report this to the developer`);
+        Console.Error("Unable to resolve packet ID for", packetName.green, "(please report this to the developer)");
     }
 
     /**

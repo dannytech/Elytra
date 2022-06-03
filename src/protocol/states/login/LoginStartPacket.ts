@@ -28,7 +28,7 @@ export class LoginStartPacket extends ServerboundPacket {
             Console.DebugPacket(this, "Beginning encryption/authentication process");
             this._Client.Queue(new EncryptionRequestPacket(this._Client));
         } else {
-            Console.Warn(`Online mode is off, allowing alleged player ${this._Client.Player.Username.green} to connect`);
+            Console.Warn("Online mode is off, allowing alleged player", this._Client.Player.Username.green, "to connect");
 
             // Prepare the player to join
             const debug: boolean = await Settings.Get(MinecraftConfigs.Debug);
