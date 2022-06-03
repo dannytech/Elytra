@@ -13,7 +13,7 @@ import { EncryptionResponsePacket } from "./states/login/EncryptionResponsePacke
 import { ClientPluginMessagePacket } from "./states/play/PluginMessagePacket";
 import { TeleportConfirmPacket } from "./states/play/TeleportConfirmPacket";
 import { ClientSettingsPacket } from "./states/play/ClientSettingsPacket";
-import { ClientKeepAlivePacket } from "./states/play/KeepAlivePacket";
+import { ClientKeepAlivePacket } from "./states/play/ClientKeepAlivePacket";
 import { checkVersion, VersionSpec } from "../Masking";
 
 export enum PacketDirection {
