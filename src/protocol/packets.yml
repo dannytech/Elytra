@@ -27,6 +27,7 @@ play:
   DisconnectPacket: 0x1B
   EntityStatusPacket: 0x1C
   JoinGamePacket: 0x26
+  PlayerInfoPacket: 0x34
   PlayerPositionAndLookPacket: 0x36
   UnlockRecipesPacket: 0x37
   HeldItemChangePacket: 0x40

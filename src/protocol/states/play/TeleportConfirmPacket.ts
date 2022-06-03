@@ -1,7 +1,10 @@
+import { State } from "../../../Configuration";
 import { Console } from "../../../game/Console";
+import { Player } from "../../../game/Player";
 import { Client } from "../../Client";
 import { ServerboundPacket } from "../../Packet";
 import { ReadableBuffer } from "../../ReadableBuffer";
+import { PlayerInfoActions, PlayerInfoPacket } from "./PlayerInfoPacket";
 
 export class TeleportConfirmPacket extends ServerboundPacket {
     private _TeleportId: number;
@@ -24,6 +27,13 @@ export class TeleportConfirmPacket extends ServerboundPacket {
     }
 
     public async AfterReceive() {
+        // Filter all the online players
+        const onlinePlayers: Player[] = State.ClientBus.Clients.reduce((players: Player[], client: Client) => {
+            if (client.Player) players.push(client.Player);
+            return players;
+        }, []);
+
         // Send further information like chunk lighting
+        this._Client.Queue(new PlayerInfoPacket(this._Client, PlayerInfoActions.AddPlayer, onlinePlayers));
     }
 }
