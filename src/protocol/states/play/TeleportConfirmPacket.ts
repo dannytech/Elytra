@@ -5,6 +5,7 @@ import { Client } from "../../Client";
 import { ServerboundPacket } from "../../Packet";
 import { ReadableBuffer } from "../../ReadableBuffer";
 import { PlayerInfoActions, PlayerInfoPacket } from "./PlayerInfoPacket";
+import { UpdateViewPositionPacket } from "./UpdateViewPositionPacket";
 
 export class TeleportConfirmPacket extends ServerboundPacket {
     private _TeleportId: number;
@@ -35,5 +36,6 @@ export class TeleportConfirmPacket extends ServerboundPacket {
 
         // Send further information like chunk lighting
         this._Client.Queue(new PlayerInfoPacket(this._Client, PlayerInfoActions.AddPlayer, onlinePlayers));
+        this._Client.Queue(new UpdateViewPositionPacket(this._Client));
     }
 }

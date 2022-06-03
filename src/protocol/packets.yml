@@ -31,5 +31,6 @@ play:
   PlayerPositionAndLookPacket: 0x36
   UnlockRecipesPacket: 0x37
   HeldItemChangePacket: 0x40
+  UpdateViewPositionPacket: 0x41
   DeclareRecipesPacket: 0x5B
   TagsPacket: 0x5C
