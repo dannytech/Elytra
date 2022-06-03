@@ -1,16 +1,10 @@
 import { Constants } from "../../../Configuration";
-import { IClientboundPacket } from "../../Packet";
+import { ClientboundPacket } from "../../Packet";
 import { WritableBuffer } from "../../WritableBuffer";
 import { Client, CompressionState } from "../../Client";
 import { Console } from "../../../game/Console";
 
-export class SetCompressionPacket implements IClientboundPacket {
-    private _Client: Client;
-
-    constructor(client: Client) {
-        this._Client = client;
-    }
-
+export class SetCompressionPacket extends ClientboundPacket {
     /**
      * Tell the client to enable compression.
      * @param {WritableBuffer} buf The outgoing packet buffer.

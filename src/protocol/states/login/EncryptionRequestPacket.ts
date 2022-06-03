@@ -1,6 +1,6 @@
 import { promisify } from "util";
 import * as crypto from "crypto";
-import { IClientboundPacket } from "../../Packet";
+import { ClientboundPacket } from "../../Packet";
 import { WritableBuffer } from "../../WritableBuffer";
 import { Client } from "../../Client";
 import { State, Constants } from "../../../Configuration";
@@ -8,13 +8,7 @@ import { Console } from "../../../game/Console";
 
 const randomBytesAsync = promisify(crypto.randomBytes);
 
-export class EncryptionRequestPacket implements IClientboundPacket {
-    private _Client: Client;
-
-    constructor(client: Client) {
-        this._Client = client;
-    }
-
+export class EncryptionRequestPacket extends ClientboundPacket {
     /**
      * Tell the client to authenticate and negotiate encryption.
      * @param {WritableBuffer} buf The outgoing packet buffer.

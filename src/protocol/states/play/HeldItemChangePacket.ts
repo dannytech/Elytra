@@ -1,13 +1,14 @@
 import { Console } from "../../../game/Console";
 import { Client } from "../../Client";
-import { IClientboundPacket } from "../../Packet";
+import { ClientboundPacket } from "../../Packet";
 import { WritableBuffer } from "../../WritableBuffer";
 
-export class HeldItemChangePacket implements IClientboundPacket {
-    private _Client: Client;
+export class HeldItemChangePacket extends ClientboundPacket {
     private _Slot: number;
 
     constructor(client: Client, slot: number) {
+        super(client);
+
         this._Client = client;
         this._Slot = slot;
     }

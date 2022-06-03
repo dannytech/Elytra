@@ -1,15 +1,9 @@
 import { Console } from "../../../game/Console";
 import { Client } from "../../Client";
-import { IClientboundPacket } from "../../Packet";
+import { ClientboundPacket } from "../../Packet";
 import { WritableBuffer } from "../../WritableBuffer";
 
-export class TagsPacket implements IClientboundPacket {
-    private _Client: Client;
-
-    constructor(client: Client) {
-        this._Client = client;
-    }
-
+export class TagsPacket extends ClientboundPacket {
     /**
      * Tell the client all the identifiers for the tags they can use.
      * @param {WritableBuffer} buf The outgoing packet buffer.

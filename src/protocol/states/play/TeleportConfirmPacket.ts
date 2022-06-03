@@ -1,14 +1,14 @@
 import { Console } from "../../../game/Console";
 import { Client } from "../../Client";
-import { IServerboundPacket } from "../../Packet";
+import { ServerboundPacket } from "../../Packet";
 import { ReadableBuffer } from "../../ReadableBuffer";
 
-export class TeleportConfirmPacket implements IServerboundPacket {
-    private _Client: Client;
+export class TeleportConfirmPacket extends ServerboundPacket {
     private _TeleportId: number;
 
     constructor(client: Client) {
-        this._Client = client;
+        super(client);
+
         this._TeleportId = 0;
     }
 

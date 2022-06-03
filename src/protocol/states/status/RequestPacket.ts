@@ -1,15 +1,9 @@
 import { Client } from "../../Client";
-import { IServerboundPacket } from "../../Packet";
+import { ServerboundPacket } from "../../Packet";
 import { ResponsePacket } from "./ResponsePacket";
 import { Console } from "../../../game/Console";
 
-export class RequestPacket implements IServerboundPacket {
-    private _Client: Client;
-
-    constructor(client: Client) {
-        this._Client = client;
-    }
-
+export class RequestPacket extends ServerboundPacket {
     /**
      * Handle requests for server information.
      * @async

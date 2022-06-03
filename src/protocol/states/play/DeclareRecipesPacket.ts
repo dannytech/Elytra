@@ -1,15 +1,9 @@
 import { Console } from "../../../game/Console";
 import { Client } from "../../Client";
-import { IClientboundPacket } from "../../Packet";
+import { ClientboundPacket } from "../../Packet";
 import { WritableBuffer } from "../../WritableBuffer";
 
-export class DeclareRecipesPacket implements IClientboundPacket {
-    private _Client: Client;
-
-    constructor(client: Client) {
-        this._Client = client;
-    }
-
+export class DeclareRecipesPacket extends ClientboundPacket {
     /**
      * Tell the client which recipes they can craft.
      * @param {WritableBuffer} buf The outgoing packet buffer.

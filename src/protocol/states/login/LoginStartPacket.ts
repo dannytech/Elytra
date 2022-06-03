@@ -1,5 +1,5 @@
 import { Client } from "../../../protocol/Client";
-import { IServerboundPacket } from "../../Packet";
+import { ServerboundPacket } from "../../Packet";
 import { ReadableBuffer } from "../../ReadableBuffer";
 import { SetCompressionPacket } from "./SetCompressionPacket";
 import { Player } from "../../../game/Player";
@@ -9,13 +9,7 @@ import { Settings, MinecraftConfigs } from "../../../Configuration";
 import { Console } from "../../../game/Console";
 import { UUID } from "../../../game/UUID";
 
-export class LoginStartPacket implements IServerboundPacket {
-    private _Client: Client;
-
-    constructor(client: Client) {
-        this._Client = client;
-    }
-
+export class LoginStartPacket extends ServerboundPacket {
     /**
      * Parse requests to begin the login process.
      * @param {ReadableBuffer} buf The incoming packet buffer.

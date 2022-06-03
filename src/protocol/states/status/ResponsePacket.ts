@@ -1,18 +1,12 @@
 import { Settings, Constants, State, MinecraftConfigs } from "../../../Configuration";
-import { IClientboundPacket } from "../../Packet";
+import { ClientboundPacket } from "../../Packet";
 import { WritableBuffer } from "../../WritableBuffer";
 import { Client } from "../../Client";
 import { ChatComponentFactory } from "../../../game/chat/ChatComponentFactory";
 import { Console } from "../../../game/Console";
 import { checkVersion, VersionSpec } from "../../../Masking";
 
-export class ResponsePacket implements IClientboundPacket {
-    private _Client: Client;
-
-    constructor(client: Client) {
-        this._Client = client;
-    }
-
+export class ResponsePacket extends ClientboundPacket {
     /**
      * Send the client the server's current status.
      * @param {WritableBuffer} buf The outgoing packet buffer.

@@ -1,6 +1,6 @@
 import { Console } from "../../../game/Console";
 import { Client } from "../../Client";
-import { IClientboundPacket } from "../../Packet";
+import { ClientboundPacket } from "../../Packet";
 import { WritableBuffer } from "../../WritableBuffer";
 
 enum CommandFlags {
@@ -23,13 +23,7 @@ interface CommandNode {
     suggestions?: string; // identifier for suggestions type (optional)
 }
 
-export class DeclareCommandsPacket implements IClientboundPacket {
-    private _Client: Client;
-
-    constructor(client: Client) {
-        this._Client = client;
-    }
-
+export class DeclareCommandsPacket extends ClientboundPacket {
     /**
      * Tell the client which commands are available.
      * @param {WritableBuffer} buf The outgoing packet buffer.

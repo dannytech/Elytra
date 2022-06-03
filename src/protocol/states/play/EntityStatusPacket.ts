@@ -1,6 +1,6 @@
 import { Console } from "../../../game/Console";
 import { Client } from "../../Client";
-import { IClientboundPacket } from "../../Packet";
+import { ClientboundPacket } from "../../Packet";
 import { WritableBuffer } from "../../WritableBuffer";
 
 export enum EntityStatus {
@@ -14,13 +14,13 @@ export enum EntityStatus {
     PlayerPermissionsLevel4 = 28
 }
 
-export class EntityStatusPacket implements IClientboundPacket {
-    private _Client: Client;
+export class EntityStatusPacket extends ClientboundPacket {
     private _EntityId: number;
     private _Status: number;
 
     constructor(client: Client, entityId: number, status: EntityStatus) {
-        this._Client = client;
+        super(client);
+
         this._EntityId = entityId;
         this._Status = status;
     }

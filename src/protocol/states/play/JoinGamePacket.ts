@@ -1,16 +1,10 @@
-import { IClientboundPacket } from "../../Packet";
+import { ClientboundPacket } from "../../Packet";
 import { WritableBuffer } from "../../WritableBuffer";
 import { Client } from "../../Client";
 import { State, Settings, MinecraftConfigs } from "../../../Configuration";
 import { Console } from "../../../game/Console";
 
-export class JoinGamePacket implements IClientboundPacket {
-    private _Client: Client;
-
-    constructor(client: Client) {
-        this._Client = client;
-    }
-
+export class JoinGamePacket extends ClientboundPacket {
     /**
      * Tell the client their game status.
      * @param {WritableBuffer} buf The outgoing packet buffer.

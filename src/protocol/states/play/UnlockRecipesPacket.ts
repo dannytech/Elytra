@@ -1,6 +1,6 @@
 import { Console } from "../../../game/Console";
 import { Client } from "../../Client";
-import { IClientboundPacket } from "../../Packet";
+import { ClientboundPacket } from "../../Packet";
 import { WritableBuffer } from "../../WritableBuffer";
 
 export enum UnlockRecipesAction {
@@ -9,13 +9,13 @@ export enum UnlockRecipesAction {
     Remove = 2
 }
 
-export class UnlockRecipesPacket implements IClientboundPacket {
-    private _Client: Client;
+export class UnlockRecipesPacket extends ClientboundPacket {
     private _State: UnlockRecipesAction;
     private _Displayed: string[] = [];
 
     constructor(client: Client, action: UnlockRecipesAction, displayed: string[] = []) {
-        this._Client = client;
+        super(client);
+
         this._State = action;
         this._Displayed = displayed;
     }

@@ -1,16 +1,10 @@
 import { Client } from "../../Client";
-import { IServerboundPacket } from "../../Packet";
+import { ServerboundPacket } from "../../Packet";
 import { PongPacket } from "./PongPacket";
 import { ReadableBuffer } from "../../ReadableBuffer";
 import { Console } from "../../../game/Console";
 
-export class PingPacket implements IServerboundPacket {
-    private _Client: Client;
-
-    constructor(client: Client) {
-        this._Client = client;
-    }
-
+export class PingPacket extends ServerboundPacket {
     /**
      * Parse server pings.
      * @param {ReadableBuffer} buf The incoming packet buffer.

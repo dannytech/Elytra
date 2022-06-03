@@ -1,16 +1,16 @@
-import { IClientboundPacket } from "../../Packet";
+import { ClientboundPacket } from "../../Packet";
 import { WritableBuffer } from "../../WritableBuffer";
 import { ChatComponent } from "../../../game/chat/ChatComponent";
 import { Console } from "../../../game/Console";
 import { Client } from "../../Client";
 import { ChatComponentFactory } from "../../../game/chat/ChatComponentFactory";
 
-export class DisconnectPacket implements IClientboundPacket {
-    private _Client: Client;
+export class DisconnectPacket extends ClientboundPacket {
     private _Reason: ChatComponent;
 
     constructor(client: Client, reason: ChatComponent) {
-        this._Client = client;
+        super(client);
+
         this._Reason = reason;
     }
 

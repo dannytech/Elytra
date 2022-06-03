@@ -1,15 +1,9 @@
-import { IServerboundPacket } from "../../Packet";
+import { ServerboundPacket } from "../../Packet";
 import { ReadableBuffer } from "../../ReadableBuffer";
-import { Client, ClientState } from "../../Client";
+import { ClientState } from "../../Client";
 import { Console } from "../../../game/Console";
 
-export class HandshakePacket implements IServerboundPacket {
-    private _Client: Client;
-
-    constructor(client: Client) {
-        this._Client = client;
-    }
-
+export class HandshakePacket extends ServerboundPacket {
     /**
      * Parse requests to switch client states.
      * @param {ReadableBuffer} buf The incoming packet buffer.

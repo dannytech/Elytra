@@ -1,16 +1,16 @@
 import { Console } from "../../../game/Console";
 import { Client } from "../../Client";
-import { IClientboundPacket, IServerboundPacket } from "../../Packet";
+import { ClientboundPacket, ServerboundPacket } from "../../Packet";
 import { ReadableBuffer } from "../../ReadableBuffer";
 import { WritableBuffer } from "../../WritableBuffer";
 
-export class ServerPluginMessagePacket implements IClientboundPacket {
-    private _Client: Client;
+export class ServerPluginMessagePacket extends ClientboundPacket {
     private _Channel: string;
     private _Message: Buffer;
 
     constructor(client: Client, channel: string, message: any) {
-        this._Client = client;
+        super(client);
+
         this._Channel = channel;
         this._Message = Buffer.from(message);
     }

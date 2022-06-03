@@ -1,7 +1,7 @@
 import { Console } from "../../../game/Console";
 import { PlayerPositionAndLook } from "../../../game/Player";
 import { Client } from "../../Client";
-import { IClientboundPacket } from "../../Packet";
+import { ClientboundPacket } from "../../Packet";
 import { WritableBuffer } from "../../WritableBuffer";
 
 export enum PlayerPositionAndLookFlags {
@@ -12,13 +12,13 @@ export enum PlayerPositionAndLookFlags {
     PitchRelative = 0x10
 }
 
-export class PlayerPositionAndLookPacket implements IClientboundPacket {
-    private _Client: Client;
+export class PlayerPositionAndLookPacket extends ClientboundPacket {
     private _PositionAndLook: PlayerPositionAndLook;
     private _Flags: PlayerPositionAndLookFlags;
 
     constructor(client: Client, positionAndLook: PlayerPositionAndLook, flags: PlayerPositionAndLookFlags = 0x00) {
-        this._Client = client;
+        super(client);
+
         this._PositionAndLook = positionAndLook;
         this._Flags = flags;
     }

@@ -1,7 +1,7 @@
 import axios, { AxiosResponse } from "axios";
 import { State, Settings, MinecraftConfigs, Constants } from "../../../Configuration";
 import { Client } from "../../Client";
-import { IServerboundPacket } from "../../Packet";
+import { ServerboundPacket } from "../../Packet";
 import { ReadableBuffer } from "../../ReadableBuffer";
 import { SetCompressionPacket } from "./SetCompressionPacket";
 import { LoginSuccessPacket } from "./LoginSuccessPacket";
@@ -37,13 +37,7 @@ interface FilterList {
     players: [string]
 }
 
-export class EncryptionResponsePacket implements IServerboundPacket {
-    private _Client: Client;
-
-    constructor(client: Client) {
-        this._Client = client;
-    }
-
+export class EncryptionResponsePacket extends ServerboundPacket {
     /**
      * Parse a response to the server's encryption request.
      * @param {ReadableBuffer} buf The incoming packet buffer.

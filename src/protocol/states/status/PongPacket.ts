@@ -1,14 +1,14 @@
 import { Console } from "../../../game/Console";
 import { Client } from "../../Client";
-import { IClientboundPacket } from "../../Packet";
+import { ClientboundPacket } from "../../Packet";
 import { WritableBuffer } from "../../WritableBuffer";
 
-export class PongPacket implements IClientboundPacket {
-    private _Client: Client;
+export class PongPacket extends ClientboundPacket {
     private _Payload: bigint;
 
     constructor(client: Client, payload: bigint) {
-        this._Client = client;
+        super(client);
+
         this._Payload = payload;
     }
 

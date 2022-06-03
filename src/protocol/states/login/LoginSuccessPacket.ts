@@ -1,7 +1,6 @@
-import { IClientboundPacket } from "../../Packet";
+import { ClientboundPacket } from "../../Packet";
 import { WritableBuffer } from "../../WritableBuffer";
 import { Client, ClientState } from "../../Client";
-import { UUID } from "../../../game/UUID";
 import { Console } from "../../../game/Console";
 import { JoinGamePacket } from "../play/JoinGamePacket";
 import { Constants } from "../../../Configuration";
@@ -14,15 +13,7 @@ import { DeclareCommandsPacket } from "../play/DeclareCommandsPacket";
 import { UnlockRecipesAction, UnlockRecipesPacket } from "../play/UnlockRecipesPacket";
 import { PlayerPositionAndLookPacket } from "../play/PlayerPositionAndLookPacket";
 
-export class LoginSuccessPacket implements IClientboundPacket {
-    private _Client: Client;
-
-    public PacketID: number = 0x02;
-
-    constructor(client: Client) {
-        this._Client = client;
-    }
-
+export class LoginSuccessPacket extends ClientboundPacket {
     /**
      * Tell the client that the login process was successful.
      * @param {WritableBuffer} buf The outgoing packet buffer.

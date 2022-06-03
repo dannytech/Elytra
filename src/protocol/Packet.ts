@@ -2,33 +2,40 @@ import { ReadableBuffer } from "./ReadableBuffer";
 import { WritableBuffer } from "./WritableBuffer";
 import { Client } from "./Client";
 
-export interface IServerboundPacket {
+export abstract class ServerboundPacket {
+    protected _Client: Client;
+
+    constructor(client: Client) {
+        this._Client = client;
+    }
+
     /**
      * Parses the packet, modifying game state and responding as needed.
      * @param {ReadableBuffer} buf The packet contents to parse.
      * @async
      */
-    Parse(buf: ReadableBuffer) : Promise<void>;
+    public abstract Parse(buf: ReadableBuffer) : Promise<void>;
 
-    AfterReceive?() : Promise<void>;
-}
-
-export interface IClientboundPacket {
     /**
-     * Writes the packet to a buffer.
-     * @param {WritableBuffer} buf The buffer to be sent to the client.
+     * Return the embedded client (mainly for logging purposes).
+     * @returns {Client} The client.
+     */
+    public GetClient() : Client {
+        return this._Client;
+    }
+
+    /**
+     * Post-receive hook.
      * @async
      */
-    Write(buf: WritableBuffer) : Promise<void>;
-
-    AfterSend?() : Promise<void>;
+    public AfterReceive?() : Promise<void>;
 }
 
 export abstract class ClientboundPacket {
-    public Client: Client;
+    protected _Client: Client;
 
     constructor(client: Client) {
-        this.Client = client;
+        this._Client = client;
     }
 
     /**
@@ -38,5 +45,17 @@ export abstract class ClientboundPacket {
      */
     public abstract Write(buf: WritableBuffer) : Promise<void>;
 
+    /**
+     * Return the embedded client (mainly for logging purposes).
+     * @returns {Client} The client.
+     */
+     public GetClient() : Client {
+        return this._Client;
+    }
+
+    /**
+     * Post-send hook.
+     * @async
+     */
     public AfterSend?() : Promise<void>;
 }

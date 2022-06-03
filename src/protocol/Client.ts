@@ -3,7 +3,7 @@ import * as crypto from "crypto";
 import { Decipher, Cipher } from "crypto";
 import { EventEmitter } from "events";
 import { Constants, State } from "../Configuration";
-import { IClientboundPacket } from "./Packet";
+import { ClientboundPacket } from "./Packet";
 import { ReadableBuffer } from "./ReadableBuffer";
 import { WritableBuffer } from "./WritableBuffer";
 import { Zlib } from "./Zlib";
@@ -31,7 +31,7 @@ export interface IEncryptionState {
 
 export class Client extends EventEmitter {
     private _Socket: Socket;
-    private _ClientboundQueue: Array<IClientboundPacket>;
+    private _ClientboundQueue: Array<ClientboundPacket>;
     private _Decipher: Decipher;
     private _Cipher: Cipher;
 
@@ -48,7 +48,7 @@ export class Client extends EventEmitter {
 
         // Set initial values
         this._Socket = socket;
-        this._ClientboundQueue = Array<IClientboundPacket>();
+        this._ClientboundQueue = Array<ClientboundPacket>();
 
         this.ClientId = id;
         this.State = ClientState.Handshaking;
@@ -109,7 +109,7 @@ export class Client extends EventEmitter {
      */
     public async Send() {
         while (this._ClientboundQueue.length > 0) {
-            let packet: IClientboundPacket = this._ClientboundQueue.shift();
+            let packet: ClientboundPacket = this._ClientboundQueue.shift();
 
             // Export the fields to the completed packet
             let payload: WritableBuffer = new WritableBuffer();
@@ -189,7 +189,7 @@ export class Client extends EventEmitter {
      * Appends a clientbound packet to the client queue.
      * @param {IClientboundPacket} packet The packet to queue.
      */
-    public Queue(packet: IClientboundPacket, priority: boolean = false) {
+    public Queue(packet: ClientboundPacket, priority: boolean = false) {
         if (priority) this._ClientboundQueue.unshift(packet);
         else this._ClientboundQueue.push(packet);
     }
