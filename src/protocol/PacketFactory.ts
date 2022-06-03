@@ -122,7 +122,7 @@ export class PacketFactory {
             // Dispatch packets if a send is needed
             client.Send();
         } else
-            Console.Debug(`(${client.ClientId})`.magenta, "Unrecognized packet",
-                `0x${packetId.toString(16).padStart(2, "0")}`.green, buf.Read().toString("hex").blue);
+            Console.Debug(`(${client.ClientId})`.magenta, "Unrecognized", client.State.green, "packet",
+                `0x${packetId.toString(16).padStart(2, "0")}`.blue, buf.Read().toString("hex").yellow);
     }
 }
