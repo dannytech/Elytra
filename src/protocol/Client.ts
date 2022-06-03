@@ -10,6 +10,7 @@ import { Zlib } from "./Zlib";
 import { Player } from "../game/Player";
 import { Console } from "../game/Console";
 import { PlayerInfoActions, PlayerInfoPacket } from "./states/play/PlayerInfoPacket";
+import { PacketDirection } from "./PacketFactory";
 
 export enum ClientState {
     Handshaking = "handshaking",
@@ -126,7 +127,7 @@ export class Client extends EventEmitter {
             await packet.Write(payload);
 
             // Resolve the packet ID
-            const packetId: number = State.PacketFactory.Lookup(this, packet.constructor.name);
+            const packetId: number = State.PacketFactory.Lookup(PacketDirection.Clientbound, this, packet.constructor.name) as number;
             if (packetId == null) {
                 Console.DebugPacket(packet, "Not sending due to missing packet ID");
                 continue;

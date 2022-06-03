@@ -133,30 +133,41 @@ export class PacketFactory {
      * @param {string|number} packetNameOrId The name of the packet to convert.
      * @returns {string|number} The packet ID.
      */
-    public Lookup(direction: "serverbound" | "clientbound", client: Client, packetNameOrId: string | number) : string | number {
+    public Lookup(direction: PacketDirection, client: Client, packetNameOrId: string | number) : string | number {
         // Load the mappings for the current state
         const statePackets = this._PacketSpec.find(spec => spec.direction == direction && spec.state == client.State);
 
-        // Get the packet ID or index to search for
-        let search: number;
-        if (direction == "serverbound")
-            search = packetNameOrId as number;
-        else
-            search = statePackets.names.indexOf(packetNameOrId as string);
+        if (statePackets) {
+            // Get the packet ID or index to search for
+            let search: number;
+            if (direction == PacketDirection.Serverbound)
+                search = packetNameOrId as number;
+            else
+                search = statePackets.names.indexOf(packetNameOrId as string);
 
-        // Get the result of the search
-        const query: any[] = statePackets.mappings[search];
+            // Get the result of the search
+            const result: any[] = statePackets.mappings[search];
 
-        // Find a matching version specification
-        for (const mapping of query) {
-            if (checkVersion(client.ProtocolVersion, [mapping.version])) {
-                if (direction == "serverbound")
-                    return mapping.id;
-                else
-                    return statePackets.names[mapping.id];
+            // Find a matching version specification
+            if (result) {
+                for (const mapping of result) {
+                    if (checkVersion(client.ProtocolVersion || 0, [mapping.version])) {
+                        if (direction == PacketDirection.Serverbound)
+                            return statePackets.names[mapping.id];
+                        else
+                            return mapping.id;
+                    }
+                }
             }
         }
-        Console.Error("Unable to resolve", direction.green, "packet for", packetNameOrId.toString().blue, "(please report this to the developer)");
+
+        let diagnosticName: string;
+        if (direction == PacketDirection.Serverbound) {
+            const packetId = packetNameOrId as number;
+            diagnosticName = `0x${packetId.toString(16).padStart(2, "0")}`;
+        } else
+            diagnosticName = packetNameOrId as string;
+        Console.Error("Unable to resolve", direction.green, client.State.green, "packet", diagnosticName.blue, "(please report this to the developer)");
     }
 
     /**
@@ -170,47 +181,48 @@ export class PacketFactory {
         const packetId: number = buf.ReadVarInt();
 
         // Determine the incoming packet identity based on current state and the packet ID
+        const packetName: string = this.Lookup(PacketDirection.Serverbound, client, packetId) as string;
         let packet: ServerboundPacket;
         switch (client.State) {
             case ClientState.Handshaking:
-                switch (packetId) {
-                    case this.Lookup(client, HandshakePacket.name):
+                switch (packetName) {
+                    case HandshakePacket.name:
                         packet = new HandshakePacket(client);
                         break;
                 }
                 break;
             case ClientState.Status:
-                switch (packetId) {
-                    case this.Lookup(client, RequestPacket.name):
+                switch (packetName) {
+                    case RequestPacket.name:
                         packet = new RequestPacket(client);
                         break;
-                    case this.Lookup(client, PingPacket.name):
+                    case PingPacket.name:
                         packet = new PingPacket(client);
                         break;
                 }
                 break;
             case ClientState.Login:
-                switch (packetId) {
-                    case this.Lookup(client, LoginStartPacket.name):
+                switch (packetName) {
+                    case LoginStartPacket.name:
                         packet = new LoginStartPacket(client);
                         break;
-                    case this.Lookup(client, EncryptionResponsePacket.name):
+                    case EncryptionResponsePacket.name:
                         packet = new EncryptionResponsePacket(client);
                         break;
                 }
                 break;
             case ClientState.Play:
-                switch (packetId) {
-                    case this.Lookup(client, ClientSettingsPacket.name):
+                switch (packetName) {
+                    case ClientSettingsPacket.name:
                         packet = new ClientSettingsPacket(client);
                         break;
-                    case this.Lookup(client, TeleportConfirmPacket.name):
+                    case TeleportConfirmPacket.name:
                         packet = new TeleportConfirmPacket(client);
                         break;
-                    case this.Lookup(client, ClientPluginMessagePacket.name):
+                    case ClientPluginMessagePacket.name:
                         packet = new ClientPluginMessagePacket(client);
                         break;
-                    case this.Lookup(client, ClientKeepAlivePacket.name):
+                    case ClientKeepAlivePacket.name:
                         packet = new ClientKeepAlivePacket(client);
                         break;
                 }
