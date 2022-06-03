@@ -116,6 +116,9 @@ export class Client extends EventEmitter {
      */
     public async Send() {
         while (this._ClientboundQueue.length > 0) {
+            // Prevent writing to a closed socket in most cases
+            if (!this._Socket.writable) return;
+
             let packet: ClientboundPacket = this._ClientboundQueue.shift();
 
             // Export the fields to the completed packet
