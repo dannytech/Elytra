@@ -4,6 +4,7 @@ import { Keypair } from "./protocol/Encryption";
 import { ClientBus } from "./protocol/ClientBus";
 import { World } from "./game/World";
 import { PacketFactory } from "./protocol/PacketFactory";
+import { versionSpec } from "./Masking";
 
 export enum MinecraftConfigs {
     ServerIP = "serverIP",
@@ -35,9 +36,7 @@ export class Settings {
         minecraft: {
             [MinecraftConfigs.ServerIP]: "0.0.0.0",
             [MinecraftConfigs.ServerPort]: 25565,
-            [MinecraftConfigs.ServerVersion]: [{
-                start: 578
-            }],
+            [MinecraftConfigs.ServerVersion]: [versionSpec("578")],
             [MinecraftConfigs.Online]: true,
             [MinecraftConfigs.PreventProxy]: true,
             [MinecraftConfigs.MaximumPlayers]: 20,
