@@ -17,7 +17,6 @@ serverbound:
       464: 0x0B
       755: 0x0A
 clientbound:
-  handshaking:
   status:
     ResponsePacket: 0x00
     PongPacket: 0x01

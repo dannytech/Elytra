@@ -16,6 +16,11 @@ import { ClientSettingsPacket } from "./states/play/ClientSettingsPacket";
 import { ClientKeepAlivePacket } from "./states/play/KeepAlivePacket";
 import { checkVersion, VersionSpec } from "../Masking";
 
+export enum PacketDirection {
+    Serverbound = "serverbound",
+    Clientbound = "clientbound"
+}
+
 interface VersionedMapping {
     [id: number]: [{
         version: VersionSpec,
@@ -24,7 +29,7 @@ interface VersionedMapping {
 }
 
 interface PacketSpec {
-    direction: "serverbound" | "clientbound";
+    direction: PacketDirection;
     state: ClientState;
     names: string[];
     mappings: VersionedMapping;
@@ -43,74 +48,83 @@ export class PacketFactory {
         const def: any = parse(packets);
 
         // Parse the packet names/IDs into a versioned lookup table
-        this._LoadServerbound(def["serverbound"]);
-        this._LoadClientbound(def["clientbound"]);
+        for (const direction of Object.values(PacketDirection))
+            for (const state in def[direction])
+                this._LoadPacketSpec(direction as PacketDirection, state as ClientState, def[direction][state]);
     }
 
-    /**
-     * Loads the serverbound packet mappings into a versioned lookup table.
-     * @param {object} def The YAML object containing the packet mappings.
-     * @private
-     */
-    private _LoadServerbound(def: any) {
-        // Add the mappings for each state
-        Object.keys(def).forEach((state: ClientState) => {
-            const stateDef = def[state];
-            const serverboundSpec: PacketSpec = {
-                direction: "serverbound",
-                state: state,
-                names: [],
-                mappings: []
-            };
+    private _LoadPacketSpec(direction: PacketDirection, state: ClientState, def: any) {
+        const spec: PacketSpec = {
+            direction: direction,
+            state: state,
+            names: [],
+            mappings: {}
+        };
 
-            Object.entries(stateDef).forEach(([packetName, packetId]) => {
-                const index: number = serverboundSpec.names.push(packetName) - 1;
+        Object.entries(def).forEach(([packetName, packetId]) => {
+            const index: number = spec.names.push(packetName) - 1;
 
-                if (typeof packetId == "number")
-                    // Add a mapping from the packet ID to the packet name (by index)
-                    serverboundSpec.mappings[packetId] = [{ version: { start: 0 }, id: index }];
-                else {
-                    // Find all the packet ID versions (list them in reverse so that range can be set from the upper end)
-                    const versions: number[] = Object.keys(packetId).map(Number);
-                    versions.sort().reverse();
+            // Dynamically set the direction of the search
+            let query: number;
+            let result: number;
+            if (direction == PacketDirection.Serverbound)
+                result = index;
+            else
+                query = index;
 
-                    // Iterate through all the versions and add a mapping for each
-                    versions.reduce((previousVersion, currentVersion) => {
-                        const currentId: number = (packetId as any)[currentVersion];
+            if (typeof packetId == "number") {
+                // If serverbound, the search is done by packet ID, otherwise the packet ID is the result
+                if (direction == PacketDirection.Serverbound) {
+                    query = packetId as number;
+                } else
+                    result = packetId as number;
 
-                        // Allow for packets to be removed in later versions (set an upper limit on the previous version)
-                        if (currentId == null)
-                            return currentVersion;
+                // Add a mapping from the packet ID to the packet name (by index)
+                spec.mappings[query] = [{ version: { start: 0 }, id: result }];
+            } else {
+                // Find all the packet ID versions (list them in reverse so that range can be set from the upper end)
+                const versions: number[] = Object.keys(packetId).map(Number);
+                versions.sort().reverse();
 
-                        // Generate the version specification matching the given range (either open-ended or at the end of the previous range)
-                        const currentSpec: VersionSpec = { start: previousVersion };
-                        if (previousVersion)
-                            currentSpec.end = previousVersion - 1;
+                // Iterate through all the versions and add a mapping for each
+                versions.reduce((previousVersion, currentVersion) => {
+                    const currentId: number = (packetId as any)[currentVersion];
 
-                        // Create a mapping for the current version
-                        const mapping: { version: VersionSpec, id: number } = {
-                            version: currentSpec,
-                            id: index
-                        };
-
-                        // Set or add the mapping to the packet ID
-                        if (!(currentId in serverboundSpec.mappings))
-                            serverboundSpec.mappings[currentId] = [mapping];
-                        else
-                            serverboundSpec.mappings[currentId].push(mapping);
-
+                    // Allow for packets to be removed in later versions (set an upper limit on the previous version)
+                    if (currentId == null)
                         return currentVersion;
-                    });
-                }
-            });
 
-            // Add the compiled specification
-            this._PacketSpec.push(serverboundSpec);
+                    // Generate the version specification matching the given range (either open-ended or at the end of the previous range)
+                    const currentSpec: VersionSpec = { start: currentVersion };
+                    if (previousVersion)
+                        currentSpec.end = previousVersion - 1;
+
+                    // If serverbound, the search is done by packet ID, otherwise the packet ID is the result
+                    if (direction == PacketDirection.Serverbound)
+                        query = currentId;
+                    else
+                        result = currentId;
+
+                    // Create a mapping for the current version
+                    const mapping: { version: VersionSpec, id: number } = {
+                        version: currentSpec,
+                        id: result
+                    };
+
+                    // Set or add the mapping to the packet ID
+                    if (!(query in spec.mappings))
+                        spec.mappings[query] = [mapping];
+                    else {
+                        spec.mappings[query].push(mapping);
+                    }
+
+                    return currentVersion;
+                }, null);
+            }
         });
-    }
 
-    private _LoadClientbound(spec: any) {
-
+        // Add the compiled specification
+        this._PacketSpec.push(spec);
     }
 
     /**
