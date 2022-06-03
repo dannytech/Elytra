@@ -22,7 +22,8 @@ export class HandshakePacket implements IServerboundPacket {
     public async Parse(buf: ReadableBuffer) {
         // First, read the protocol version
         this._Client.ProtocolVersion = buf.ReadVarInt();
-        Console.Debug(`(${this._Client.ClientId})`, "[C → S]", "[HandshakePacket]", `Protocol version: ${this._Client.ProtocolVersion}`);
+        Console.Debug(`(${this._Client.ClientId})`.magenta, "[C → S]".blue, "[HandshakePacket]".green,
+            `Protocol version: ${this._Client.ProtocolVersion.toString().green}`);
 
         // Then, the hostname
         buf.ReadVarChar();
@@ -31,15 +32,16 @@ export class HandshakePacket implements IServerboundPacket {
         buf.ReadUint16();
 
         // Switch to the requested state
-        switch (buf.ReadVarInt()) {
+        const nextState = buf.ReadVarInt();
+        switch (nextState) {
             case 1:
-                Console.Debug(`(${this._Client.ClientId})`, "[C → S]", "[HandshakePacket]", "Switching to state: Status");
                 this._Client.State = ClientState.Status;
                 break;
             case 2:
-                Console.Debug(`(${this._Client.ClientId})`, "[C → S]", "[HandshakePacket]", "Switching to state: Login");
                 this._Client.State = ClientState.Login;
                 break;
         }
+        Console.Debug(`(${this._Client.ClientId})`.magenta, "[C → S]".blue, "[HandshakePacket]".green,
+            `Switching to state ${this._Client.State.green}`);
     }
 }

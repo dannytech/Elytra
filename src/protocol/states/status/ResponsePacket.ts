@@ -36,7 +36,8 @@ export class ResponsePacket implements IClientboundPacket {
         }
 
         // Send back server information
-        Console.Debug(`(${this._Client.ClientId})`, "[S → C]", "[ResponsePacket]", "Sending server list information");
+        Console.Debug(`(${this._Client.ClientId})`.magenta, "[S → C]".blue, "[ResponsePacket]".green,
+            "Sending server list information");
         buf.WriteJSON({
             version: {
                 name: `${Constants.ServerName}`,

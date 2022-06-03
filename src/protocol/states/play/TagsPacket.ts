@@ -21,7 +21,8 @@ export class TagsPacket implements IClientboundPacket {
      */
     public async Write(buf: WritableBuffer): Promise<void> {
         // TODO Add tags
-        Console.Debug(`(${this._Client.ClientId})`, "[S → C]", "[TagsPacket]", "Sending dummy tags");
+        Console.Debug(`(${this._Client.ClientId})`.magenta, "[S → C]".blue, "[TagsPacket]".green,
+            "Sending dummy tags");
         buf.WriteVarInt(0); // Block tags
         buf.WriteVarInt(0); // Item tags
         buf.WriteVarInt(0); // Fluid tags

@@ -1,14 +1,7 @@
 import { EventEmitter } from "events";
 import { Settings, MinecraftConfigs } from "../Configuration";
-import * as Colors from "colors/safe";
 
 export class StandardConsole extends EventEmitter {
-    private debug: boolean = false;
-
-    constructor() {
-        super();
-    }
-
     /**
      * Log to the console.
      * @param {...any} message The message to write to the console.
@@ -21,15 +14,15 @@ export class StandardConsole extends EventEmitter {
     }
 
     public Info(...message: any[]) {
-        this.Log(Colors.blue("[INFO]"), ...message);
+        this.Log("[INFO]".black.bgBlue, ...message);
     }
 
     public Error(...message: any[]) {
-        this.Log(Colors.red("[ERROR]"), ...message);
+        this.Log("[ERROR]".white.bgRed, ...message);
     }
 
     public Warn(...message: any[]) {
-        this.Log(Colors.yellow("[WARN]"), ...message);
+        this.Log("[WARN]".black.bgYellow, ...message);
     }
 
     /**
@@ -39,7 +32,7 @@ export class StandardConsole extends EventEmitter {
     public async Debug(...message: any[]) {
         const debug: boolean = await Settings.Get(MinecraftConfigs.Debug);
         if (debug)
-            this.Log(Colors.green("[DEBUG]"), ...message);
+            this.Log("[DEBUG]".black.bgGreen, ...message);
     }
 }
 

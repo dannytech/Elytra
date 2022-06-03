@@ -20,7 +20,8 @@ export class PongPacket implements IClientboundPacket {
      */
     public async Write(buf: WritableBuffer) {
         // Echo back the contents of the ping
-        Console.Debug(`(${this._Client.ClientId})`, "[S → C]", "[PongPacket]", "Pong!");
+        Console.Debug(`(${this._Client.ClientId})`.magenta, "[S → C]".blue, "[PongPacket]".green,
+            "Pong!".yellow);
         buf.WriteInt64(this._Payload);
     }
 }

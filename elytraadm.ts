@@ -1,6 +1,8 @@
 #!/usr/bin/env -S yarn run ts-node
 
 import axios from "axios";
+import "colors";
+
 import { Database } from "./src/Database";
 import { Settings, Constants, MinecraftConfigs } from "./src/Configuration";
 import { Console } from "./src/game/Console";
@@ -62,7 +64,7 @@ function cast(value: any) : any {
 
                 // Set the value
                 await Settings.Set(namespace, name, value);
-                Console.Info(`Set ${namespace}:${name} = ${value}`);
+                Console.Info(`Set ${(namespace + ":" + name).green} = ${value.toString().blue}`);
             }
             break;
         case "get":
@@ -81,7 +83,7 @@ function cast(value: any) : any {
 
                 // Extract the value
                 const value: string = await Settings.Get(namespace, name);
-                Console.Info(`Got ${namespace}:${name} = ${value}`);
+                Console.Info(`Got ${(namespace + ":" + name).green} = ${value.toString().blue}`);
             }
             break;
         case "filter":
@@ -117,8 +119,8 @@ function cast(value: any) : any {
                                     "value.players": uuid
                                 }
                             }, { upsert: true });
-                            Console.Info(`Added/removed ${usernameOrMode} -> ${uuid} from filter`);
-                        } else Console.Error(`Failed to get UUID for ${usernameOrMode}`);
+                            Console.Info(`Added/removed ${usernameOrMode.green}/${uuid.blue} from filter`);
+                        } else Console.Error(`Failed to get UUID for ${usernameOrMode.green}`);
                         break;
                     case "mode":
                         if (["allow", "deny"].includes(usernameOrMode)) {
@@ -133,11 +135,11 @@ function cast(value: any) : any {
                                     "value.players": []
                                 }
                             }, { upsert: true });
-                            Console.Info(`Set filter mode to ${usernameOrMode}`);
-                        } else Console.Error(`Invalid mode ${usernameOrMode}`);
+                            Console.Info(`Set filter mode to ${usernameOrMode.green}`);
+                        } else Console.Error(`Invalid mode ${usernameOrMode.green}`);
                         break;
                     default:
-                        Console.Error(`Invalid filter action: ${action}`);
+                        Console.Error(`Invalid filter action: ${action.green}`);
                 }
             }
             break;
@@ -158,7 +160,7 @@ function cast(value: any) : any {
                                 gamemode: value
                             }
                         });
-                        Console.Info(`Set ${username}'s gamemode to ${value}`);
+                        Console.Info(`Set ${username.green}'s gamemode to ${value.blue}`);
 
                         break;
                     case "op":
@@ -170,12 +172,12 @@ function cast(value: any) : any {
                                     op: value
                                 }
                             });
-                            Console.Info(`Set ${username}'s op level to ${value}`);
-                        } else Console.Error(`Invalid op level ${value}`);
+                            Console.Info(`Set ${username.green}'s op level to ${value.blue}`);
+                        } else Console.Error(`Invalid op level ${value.blue}`);
 
                         break;
                     default:
-                        Console.Error(`Invalid attribute ${attribute}`);
+                        Console.Error(`Invalid attribute ${attribute.green}`);
                 }
             }
             break;

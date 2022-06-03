@@ -118,7 +118,8 @@ export class Client extends EventEmitter {
             // Resolve the packet ID
             const packetId: number = State.PacketFactory.Lookup(this, packet.constructor.name);
             if (packetId == null) {
-                Console.Debug(`(${this.ClientId})`, "[S → C]", `[${packet.constructor.name}]`, "Not sending due to missing packet ID.");
+                Console.Debug(`(${this.ClientId})`.magenta, "[S → C]".blue, `[${packet.constructor.name}]`.green,
+                    "Not sending due to missing packet ID");
                 continue;
             }
 
@@ -175,7 +176,7 @@ export class Client extends EventEmitter {
         // Flush the clientbound queue
         this._ClientboundQueue.splice(0, this._ClientboundQueue.length);
 
-        Console.Debug(`(${this.ClientId})`, "Disconnecting...");
+        Console.Debug(`(${this.ClientId})`.magenta, "Disconnecting");
         this._Socket.destroy();
 
         // Save the player state before destroying the client

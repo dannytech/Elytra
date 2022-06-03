@@ -40,7 +40,8 @@ export class DeclareCommandsPacket implements IClientboundPacket {
      */
     public async Write(buf: WritableBuffer): Promise<void> {
         // TODO Add commands
-        Console.Debug(`(${this._Client.ClientId})`, "[S → C]", "[DeclareCommandsPacket]", "Sending dummy commands");
+        Console.Debug(`(${this._Client.ClientId})`.magenta, "[S → C]".blue, "[DeclareCommandsPacket]".green,
+            "Sending dummy commands");
 
         // Command graph
         const nodes: CommandNode[] = [];

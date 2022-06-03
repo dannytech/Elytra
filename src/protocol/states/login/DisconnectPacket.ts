@@ -22,7 +22,8 @@ export class DisconnectPacket implements IClientboundPacket {
      */
     public async Write(buf: WritableBuffer) {
         const reason: string = ChatComponentFactory.GetRaw(this._Reason);
-        Console.Debug(`(${this._Client.ClientId})`, "[S → C]", "[DisconnectPacket]", `Disconnecting client for "${reason}".`);
+        Console.Debug(`(${this._Client.ClientId})`.magenta, "[S → C]".blue, "[DisconnectPacket]".green,
+            `Disconnecting client for ${reason.green}.`);
 
         // Chat component containing reason for disconnect
         buf.WriteJSON(this._Reason);

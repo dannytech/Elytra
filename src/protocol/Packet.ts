@@ -79,7 +79,7 @@ export class PacketFactory {
                 }
             }
         }
-        Console.Error(`Unable to resolve packet ID for ${packetName}, please report this to the developer`);
+        Console.Error(`Unable to resolve packet ID for ${packetName.green}, please report this to the developer`);
     }
 
     /**
@@ -144,6 +144,8 @@ export class PacketFactory {
             // Dispatch packets if a send is needed
             client.Send();
         } else
-            Console.Debug(`(${client.ClientId})`, "[C → S]", "[PacketFactory]", `Unrecognized packet: ${packetId.toString(16).padStart(2, "0")}`, buf.Read().toString("hex"));
+            Console.Debug(`(${client.ClientId})`.magenta, "[C → S]".blue, "[PacketFactory]".green,
+                "Unrecognized packet", `0x${packetId.toString(16).padStart(2, "0")}`.green,
+                buf.Read().toString("hex").blue);
     }
 }

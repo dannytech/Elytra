@@ -20,7 +20,8 @@ export class TeleportConfirmPacket implements IServerboundPacket {
      */
     public async Parse(buf: ReadableBuffer) {
         this._TeleportId = buf.ReadVarInt();
-        Console.Debug(`(${this._Client.ClientId})`, "[C → S]", "[TeleportConfirmPacket]", `Teleport confirmed with ID ${this._TeleportId}`);
+        Console.Debug(`(${this._Client.ClientId})`.magenta, "[C → S]".blue, "[TeleportConfirmPacket]".green,
+            `Teleport confirmed with ID ${this._TeleportId.toString().green}`);
     }
 
     public async AfterReceive() {

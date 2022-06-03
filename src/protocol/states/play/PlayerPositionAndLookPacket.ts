@@ -47,7 +47,8 @@ export class PlayerPositionAndLookPacket implements IClientboundPacket {
         buf.WriteByte(this._Flags);
 
         // Teleport ID (dummy value)
-        Console.Debug(`(${this._Client.ClientId})`, "[S → C]", "[PlayerPositionAndLookPacket]", "Sending teleport request");
+        Console.Debug(`(${this._Client.ClientId})`.magenta, "[S → C]".blue, "[PlayerPositionAndLookPacket]".green,
+            "Sending position/look and teleport request");
         buf.WriteVarInt(0);
     }
 }

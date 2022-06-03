@@ -24,7 +24,8 @@ export class ServerPluginMessagePacket implements IClientboundPacket {
      */
     public async Write(buf: WritableBuffer): Promise<void> {
         // Write the plugin channel
-        Console.Debug(`(${this._Client.ClientId})`, "[S → C]", "[ServerPluginMessagePacket]", `Sending plugin message on channel "${this._Channel}"`);
+        Console.Debug(`(${this._Client.ClientId})`.magenta, "[S → C]".blue, "[ServerPluginMessagePacket]".green,
+            `Sending plugin message on channel ${this._Channel.green}`);
         buf.WriteVarChar(this._Channel);
 
         // Write the arbitrary data for the plugin
@@ -49,7 +50,8 @@ export class ClientPluginMessagePacket implements IServerboundPacket {
     public async Parse(buf: ReadableBuffer) {
         // Read the plugin channel
         const channel: string = buf.ReadVarChar();
-        Console.Debug(`(${this._Client.ClientId})`, "[C → S]", "[ClientPluginMessagePacket]", `Received plugin message on channel "${channel}"`);
+        Console.Debug(`(${this._Client.ClientId})`.magenta, "[C → S]".blue, "[ClientPluginMessagePacket]".green,
+            `Received plugin message on channel ${channel.green}`);
 
         // Read the arbitrary data for the plugin
         const data: any = buf.Read();

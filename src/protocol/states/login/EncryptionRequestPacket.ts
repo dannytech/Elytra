@@ -33,7 +33,8 @@ export class EncryptionRequestPacket implements IClientboundPacket {
         const publicKey: Buffer = State.Keypair.PublicKey.export({ format: "der", type: "spki" });
 
         // Write the public key
-        Console.Debug(`(${this._Client.ClientId})`, "[S → C]", "[EncryptionRequestPacket]", "Requesting to enable encryption");
+        Console.Debug(`(${this._Client.ClientId})`.magenta, "[S → C]".blue, "[EncryptionRequestPacket]".green,
+            "Requesting to enable encryption");
         buf.WriteVarInt(publicKey.length);
         buf.Write(publicKey);
 

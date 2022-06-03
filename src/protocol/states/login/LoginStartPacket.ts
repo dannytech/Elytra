@@ -31,10 +31,11 @@ export class LoginStartPacket implements IServerboundPacket {
         const online: boolean = await Settings.Get(MinecraftConfigs.Online);
         if (online) {
             // Begin the encryption/authentication process
-            Console.Debug(`(${this._Client.ClientId})`, "[C → S]", "[LoginStartPacket]", "Beginning encryption/authentication process");
+            Console.Debug(`(${this._Client.ClientId})`.magenta, "[C → S]".blue, "[LoginStartPacket]".green,
+                "Beginning encryption/authentication process");
             this._Client.Queue(new EncryptionRequestPacket(this._Client));
         } else {
-            Console.Warn(`Online mode is off, allowing alleged player ${this._Client.Player.Username} to connect`);
+            Console.Warn(`Online mode is off, allowing alleged player ${this._Client.Player.Username.green} to connect`);
 
             // Prepare the player to join
             const debug: boolean = await Settings.Get(MinecraftConfigs.Debug);
@@ -44,7 +45,8 @@ export class LoginStartPacket implements IServerboundPacket {
             // Generate a random UUID to utilize for this session
             this._Client.Player.UUID = UUID.Generate();
 
-            Console.Debug(`(${this._Client.ClientId})`, "[C → S]", "[LoginStartPacket]", "Bypassing login due to online mode being off");
+            Console.Debug(`(${this._Client.ClientId})`.magenta, "[C → S]".blue, "[LoginStartPacket]".green,
+                "Bypassing login due to online mode being off");
             this._Client.Queue(new LoginSuccessPacket(this._Client));
         }
     }

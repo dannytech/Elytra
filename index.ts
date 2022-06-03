@@ -1,5 +1,7 @@
 import { Server } from "net";
 import * as crypto from "crypto";
+import "colors";
+
 import { Settings, State, MinecraftConfigs } from "./src/Configuration";
 import { Database } from "./src/Database";
 import { ClientBus } from "./src/protocol/ClientBus";
@@ -26,7 +28,7 @@ async function bootstrap() {
         .update(publicKey)
         .digest("hex")
         .replace(/(\w{2})(?!$)/g, "$1:");
-    Console.Info(`Server public key has fingerprint ${fingerprint}`);
+    Console.Info(`Server public key has fingerprint ${fingerprint.green}`);
 
     // Connect to the database
     await Database.Connect(process.env.MONGO_URI);
@@ -53,7 +55,7 @@ async function startListener() {
     const port: number = await Settings.Get(MinecraftConfigs.ServerPort);
     const ip: number = await Settings.Get(MinecraftConfigs.ServerIP);
     server.listen(port, ip, () => {
-        Console.Info(`Server listening on ${ip}:${port}`);
+        Console.Info(`Server listening on ${(ip + ":" + port).green}`);
     });
 }
 
@@ -76,5 +78,5 @@ async function startAPI() {
     if (eula)
         // Start the Minecraft server
         await startListener();
-    else Console.Error("You must accept the EULA first. Go to https://account.mojang.com/documents/minecraft_eula, then run \"elytractl set eula true\"");
+    else Console.Error("You must accept the EULA first. Go to https://account.mojang.com/documents/minecraft_eula, then run", "elytractl set eula true".green);
 })();

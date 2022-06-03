@@ -20,7 +20,8 @@ export class HeldItemChangePacket implements IClientboundPacket {
      */
     public async Write(buf: WritableBuffer): Promise<void> {
         // Set the currently held slot
-        Console.Debug(`(${this._Client.ClientId})`, "[S → C]", "[HeldItemChangePacket]", `Sending held item slot: ${this._Slot}`);
+        Console.Debug(`(${this._Client.ClientId})`.magenta, "[S → C]".blue, "[HeldItemChangePacket]".green,
+            `Sending held item slot: ${this._Slot.toString().green}`);
         buf.WriteByte(this._Slot);
     }
 }

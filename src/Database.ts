@@ -16,7 +16,7 @@ export class Database {
             useUnifiedTopology: true
         });
 
-        Console.Info(`Connected to database with URI ${uri}`);
+        Console.Info(`Connected to database with URI ${uri.green}`);
     }
 
     /**

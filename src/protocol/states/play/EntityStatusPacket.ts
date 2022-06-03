@@ -32,7 +32,8 @@ export class EntityStatusPacket implements IClientboundPacket {
      * @property {number} Status The status to update the entity with.
      */
     public async Write(buf: WritableBuffer): Promise<void> {
-        Console.Debug(`(${this._Client.ClientId})`, "[S → C]", "[EntityStatusPacket]", `Sending entity status: ${EntityStatus[this._Status]}`);
+        Console.Debug(`(${this._Client.ClientId})`.magenta, "[S → C]".blue, "[EntityStatusPacket]".green,
+            `Sending entity status: ${EntityStatus[this._Status].green}`);
         buf.WriteInt32(this._EntityId);
         buf.WriteByte(this._Status);
     }

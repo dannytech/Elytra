@@ -21,7 +21,8 @@ export class PingPacket implements IServerboundPacket {
         // Generate a packet echoing back the ping payload
         const payload: bigint = buf.ReadInt64();
 
-        Console.Debug(`(${this._Client.ClientId})`, "[C → S]", "[PingPacket]", "Ping!");
+        Console.Debug(`(${this._Client.ClientId})`.magenta, "[C → S]".blue, "[PingPacket]".green,
+            "Ping!".yellow);
         this._Client.Queue(new PongPacket(this._Client, payload));
     }
 }

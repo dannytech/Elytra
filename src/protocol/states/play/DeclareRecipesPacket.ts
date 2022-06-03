@@ -18,7 +18,8 @@ export class DeclareRecipesPacket implements IClientboundPacket {
      */
     public async Write(buf: WritableBuffer): Promise<void> {
         // TODO Add recipes
-        Console.Debug(`(${this._Client.ClientId})`, "[S → C]", "[DeclareRecipesPacket]", "Sending dummy recipes");
+        Console.Debug(`(${this._Client.ClientId})`.magenta, "[S → C]".blue, "[DeclareRecipesPacket]".green,
+            "Sending dummy recipes");
         buf.WriteVarInt(0);
     }
 }
