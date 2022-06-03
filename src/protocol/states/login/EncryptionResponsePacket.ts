@@ -60,8 +60,7 @@ export class EncryptionResponsePacket extends ServerboundPacket {
         const verifyToken: Buffer = buf.Read(verifyTokenLength);
 
         // Verify the token can be decrypted successfully
-        Console.Debug(`(${this._Client.ClientId})`.magenta, "[C → S]".blue, "[EncryptionResponsePacket]".green,
-            "Verifying nonce");
+        Console.DebugPacket(this, "Verifying nonce");
         const decryptedToken: Buffer = State.Keypair.Decrypt(verifyToken);
         if (decryptedToken.equals(this._Client.Encryption.VerificationToken)) {
             // Tell the socket to use encryption
@@ -87,8 +86,7 @@ export class EncryptionResponsePacket extends ServerboundPacket {
             if (preventProxy && !debug) params["ip"] = this._Client.IP;
 
             // Authenticate the client
-            Console.Debug(`(${this._Client.ClientId})`.magenta, "[C → S]".blue, "[EncryptionResponsePacket]".green,
-                "Authenticating client against Mojang servers");
+            Console.DebugPacket(this, "Authenticating client against Mojang servers");
             let res: AxiosResponse<SessionResponse> = await axios.get("https://sessionserver.mojang.com/session/minecraft/hasJoined", {
                 params
             });
@@ -106,8 +104,7 @@ export class EncryptionResponsePacket extends ServerboundPacket {
                 if (!debug)
                     this._Client.Queue(new SetCompressionPacket(this._Client));
 
-                Console.Debug(`(${this._Client.ClientId})`.magenta, "[C → S]".blue, "[EncryptionResponsePacket]".green,
-                    "Switching to encrypted channel");
+                Console.DebugPacket(this, "Switching to encrypted channel");
                 this._Client.Queue(new LoginSuccessPacket(this._Client));
             } else {
                 this._Client.Queue(new LoginDisconnectPacket(this._Client, ChatComponentFactory.FromString("Invalid session")), true);
@@ -125,8 +122,7 @@ export class EncryptionResponsePacket extends ServerboundPacket {
         const inFilter: boolean = filter?.players?.some(uuid => uuid == this._Client.Player.UUID.Format());
 
         // Determine whether the player is allowed to join
-        Console.Debug(`(${this._Client.ClientId})`.magenta, "[C → S]".blue, "[EncryptionResponsePacket]".green,
-            "Checking player against filter");
+        Console.DebugPacket(this, "Checking player against filter");
         if (filter?.mode == "deny" && inFilter) {
             this._Client.Queue(new PlayDisconnectPacket(this._Client, ChatComponentFactory.FromString("You have been disallowed from this server")));
 

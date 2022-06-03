@@ -47,8 +47,7 @@ export class PlayerPositionAndLookPacket extends ClientboundPacket {
         buf.WriteByte(this._Flags);
 
         // Teleport ID (dummy value)
-        Console.Debug(`(${this._Client.ClientId})`.magenta, "[S → C]".blue, "[PlayerPositionAndLookPacket]".green,
-            "Sending position/look and teleport request");
+        Console.DebugPacket(this, "Sending position/look and teleport ID");
         buf.WriteVarInt(0);
     }
 }

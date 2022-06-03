@@ -16,8 +16,7 @@ export class HandshakePacket extends ServerboundPacket {
     public async Parse(buf: ReadableBuffer) {
         // First, read the protocol version
         this._Client.ProtocolVersion = buf.ReadVarInt();
-        Console.Debug(`(${this._Client.ClientId})`.magenta, "[C → S]".blue, "[HandshakePacket]".green,
-            `Protocol version: ${this._Client.ProtocolVersion.toString().green}`);
+        Console.DebugPacket(this, "Protocol version", this._Client.ProtocolVersion.toString().green);
 
         // Then, the hostname
         buf.ReadVarChar();
@@ -35,7 +34,6 @@ export class HandshakePacket extends ServerboundPacket {
                 this._Client.State = ClientState.Login;
                 break;
         }
-        Console.Debug(`(${this._Client.ClientId})`.magenta, "[C → S]".blue, "[HandshakePacket]".green,
-            `Switching to state ${this._Client.State.green}`);
+        Console.DebugPacket(this, "Switching to state", this._Client.State.green);
     }
 }

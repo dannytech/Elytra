@@ -13,8 +13,7 @@ export class SetCompressionPacket extends ClientboundPacket {
      */
     public async Write(buf: WritableBuffer) {
         // Tell the socket to enable compression after this packet is sent
-        Console.Debug(`(${this._Client.ClientId})`.magenta, "[S → C]".blue, "[SetCompressionPacket]".green,
-            "Enabling compression");
+        Console.DebugPacket(this, "Enabling compression");
         this._Client.Compression = CompressionState.Enabling;
 
         // Threshold to compress packets

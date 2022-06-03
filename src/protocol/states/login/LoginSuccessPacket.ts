@@ -23,9 +23,9 @@ export class LoginSuccessPacket extends ClientboundPacket {
      */
     public async Write(buf: WritableBuffer) {
         // Write the player UUID
-        Console.Debug(`(${this._Client.ClientId})`.magenta, "[S → C]".blue, "[LoginSuccessPacket]".green,
-            "Sending logged-in UUID");
-        buf.WriteVarChar(this._Client.Player.UUID.Format(true));
+        const uuid: string = this._Client.Player.UUID.Format(true);
+        Console.DebugPacket(this, "Sending player UUID", uuid.green);
+        buf.WriteVarChar(uuid);
 
         // Write the username
         buf.WriteVarChar(this._Client.Player.Username);
@@ -37,13 +37,11 @@ export class LoginSuccessPacket extends ClientboundPacket {
      */
     public async AfterSend() {
         // Update the client's state
-        Console.Debug(`(${this._Client.ClientId})`.magenta, "[S → C]".blue, "[LoginSuccessPacket]".green,
-            "Switching to state", "play".green);
+        Console.DebugPacket(this, "Switching to state", "play".green);
         this._Client.State = ClientState.Play;
 
         // Queue some more joining packets
-        Console.Debug(`(${this._Client.ClientId})`.magenta, "[S → C]".blue, "[LoginSuccessPacket]".green,
-            "Queueing initial play state packets");
+        Console.DebugPacket(this, "Queueing initial play state packets");
         this._Client.Queue(new JoinGamePacket(this._Client));
 
         // Send the server brand

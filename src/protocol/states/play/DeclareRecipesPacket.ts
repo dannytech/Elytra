@@ -12,8 +12,7 @@ export class DeclareRecipesPacket extends ClientboundPacket {
      */
     public async Write(buf: WritableBuffer): Promise<void> {
         // TODO Add recipes
-        Console.Debug(`(${this._Client.ClientId})`.magenta, "[S → C]".blue, "[DeclareRecipesPacket]".green,
-            "Sending dummy recipes");
+        Console.DebugPacket(this, "Sending dummy recipes");
         buf.WriteVarInt(0);
     }
 }

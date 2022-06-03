@@ -118,8 +118,7 @@ export class Client extends EventEmitter {
             // Resolve the packet ID
             const packetId: number = State.PacketFactory.Lookup(this, packet.constructor.name);
             if (packetId == null) {
-                Console.Debug(`(${this.ClientId})`.magenta, "[S → C]".blue, `[${packet.constructor.name}]`.green,
-                    "Not sending due to missing packet ID");
+                Console.DebugPacket(packet, "Not sending due to missing packet ID");
                 continue;
             }
 

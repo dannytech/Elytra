@@ -34,8 +34,7 @@ export class DeclareCommandsPacket extends ClientboundPacket {
      */
     public async Write(buf: WritableBuffer): Promise<void> {
         // TODO Add commands
-        Console.Debug(`(${this._Client.ClientId})`.magenta, "[S → C]".blue, "[DeclareCommandsPacket]".green,
-            "Sending dummy commands");
+        Console.DebugPacket(this, "Sending dummy commands");
 
         // Command graph
         const nodes: CommandNode[] = [];

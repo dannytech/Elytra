@@ -45,8 +45,7 @@ export class UnlockRecipesPacket extends ClientboundPacket {
         buf.WriteBool(true);
 
         // Write the recipes to display/remove
-        Console.Debug(`(${this._Client.ClientId})`.magenta, "[S → C]".blue, "[UnlockRecipesPacket]".green,
-            `Sending ${this._Displayed.length.toString().green} recipes to display`);
+        Console.DebugPacket(this, "Sending", this._Displayed.length.toString().green, "recipes to display");
         buf.WriteVarInt(this._Displayed.length);
         this._Displayed.forEach((recipe: string) => {
             buf.WriteVarChar(recipe);

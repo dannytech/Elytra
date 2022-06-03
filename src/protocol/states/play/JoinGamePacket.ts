@@ -21,8 +21,7 @@ export class JoinGamePacket extends ClientboundPacket {
      */
     public async Write(buf: WritableBuffer) {
         // Player entity ID
-        Console.Debug(`(${this._Client.ClientId})`.magenta, "[S → C]".blue, "[JoinGamePacket]".green,
-            "Requesting player entity to join");
+        Console.DebugPacket(this, "Requesting player entity", this._Client.Player.EntityID.toString().green, "to join");
         buf.WriteInt32(this._Client.Player.EntityID);
 
         // Gamemode

@@ -10,8 +10,7 @@ export class RequestPacket extends ServerboundPacket {
      */
     public async Parse() {
         // Generate a response containing server information
-        Console.Debug(`(${this._Client.ClientId})`.magenta, "[C → S]".blue, "[RequestPacket]".green,
-            "Requesting server information");
+        Console.DebugPacket(this, "Requesting server information");
         this._Client.Queue(new ResponsePacket(this._Client));
     }
 }
