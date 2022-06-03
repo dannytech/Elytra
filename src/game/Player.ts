@@ -19,6 +19,12 @@ export enum PermissionLevel {
     Admin = 4
 }
 
+export interface PlayerProperty {
+    name: string;
+    value: string;
+    signature: string;
+}
+
 export interface PlayerPosition {
     x: number;
     y: number;
@@ -39,6 +45,8 @@ export class Player extends Entity {
     public Op: PermissionLevel;
     public Position: PlayerPositionAndLook;
 
+    public Properties: PlayerProperty[];
+
     constructor(username: string, uuid?: UUID) {
         super();
 
@@ -55,6 +63,7 @@ export class Player extends Entity {
             yaw: 0,
             pitch: 0
         };
+        this.Properties = [];
     }
 
     /**

@@ -13,8 +13,6 @@ import { Player } from "../../../game/Player";
 import { UUID } from "../../../game/UUID";
 import { ChatComponentFactory } from "../../../game/chat/ChatComponentFactory";
 import { Console } from "../../../game/Console";
-import { ServerPluginMessagePacket } from "../play/PluginMessagePacket";
-import { WritableBuffer } from "../../WritableBuffer";
 
 interface AuthenticationRequestParams {
     username: string,
@@ -102,6 +100,7 @@ export class EncryptionResponsePacket implements IServerboundPacket {
             // Confirm client authentication succeeded
             if (res.status == 200) {
                 this._Client.Player = new Player(this._Client.Player.Username, new UUID(res.data.id));
+                this._Client.Player.Properties = res.data.properties;
                 await this._Client.Player.Load();
 
                 Console.Info(`${this._Client.Player.Username} authenticated successfully with UUID ${this._Client.Player.UUID.Format(true)}`);
