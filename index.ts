@@ -8,7 +8,7 @@ import { ClientBus } from "./src/protocol/ClientBus";
 import { Keypair } from "./src/protocol/Encryption";
 import { World } from "./src/game/World";
 import { Console } from "./src/game/Console";
-import { PacketFactory } from "./src/protocol/Packet";
+import { PacketFactory } from "./src/protocol/PacketFactory";
 
 /**
  * Prepare the server to accept players.

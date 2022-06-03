@@ -3,7 +3,7 @@ import { ConfigModel, IConfigDocument } from "./database/ConfigModel";
 import { Keypair } from "./protocol/Encryption";
 import { ClientBus } from "./protocol/ClientBus";
 import { World } from "./game/World";
-import { PacketFactory } from "./protocol/Packet";
+import { PacketFactory } from "./protocol/PacketFactory";
 
 export enum MinecraftConfigs {
     ServerIP = "serverIP",
