@@ -1,3 +1,4 @@
+import { UUID } from "../game/UUID";
 import { WritableBuffer } from "./WritableBuffer";
 
 export class ReadableBuffer {
@@ -164,5 +165,18 @@ export class ReadableBuffer {
      */
     public ReadDouble() : number {
         return this.Read(8).readDoubleBE();
+    }
+
+    /**
+     * Reads a Minecraft UUID from the buffer.
+     * @returns {UUID} The UUID.
+     */
+    public ReadUUID() : UUID {
+        // Read the UUID in two parts
+        const msb: bigint = this.ReadUint64();
+        const lsb: bigint = this.ReadUint64();
+
+        // Convert and concatenate the parts to create a UUID
+        return new UUID(msb.toString(16) + lsb.toString(16));
     }
 }

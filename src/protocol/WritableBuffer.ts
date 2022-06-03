@@ -1,3 +1,4 @@
+import { UUID } from "../game/UUID";
 import { ReadableBuffer } from "./ReadableBuffer";
 
 export class WritableBuffer {
@@ -200,5 +201,20 @@ export class WritableBuffer {
         buf.writeDoubleBE(value);
 
         this.Write(buf);
+    }
+
+    /**
+     * Writes a Minecraft UUID to the buffer.
+     * @param {UUID} value The UUID to write.
+     */
+    public WriteUUID(value: UUID) {
+        // Split the UUID into two bigints
+        const uuid: string = value.Format();
+        const msb: bigint = BigInt("0x" + uuid.substring(0, uuid.length / 2));
+        const lsb: bigint = BigInt("0x" + uuid.substring(uuid.length / 2));
+
+        // Write the 128-bit UUID
+        this.WriteUint64(msb);
+        this.WriteUint64(lsb);
     }
 }
