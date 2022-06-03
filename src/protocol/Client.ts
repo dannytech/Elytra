@@ -186,7 +186,7 @@ export class Client extends EventEmitter {
 
     /**
      * Appends a clientbound packet to the client queue.
-     * @param {IClientboundPacket} packet The packet to queue.
+     * @param {ClientboundPacket} packet The packet to queue.
      */
     public Queue(packet: ClientboundPacket, priority: boolean = false) {
         if (priority) this._ClientboundQueue.unshift(packet);

@@ -32,13 +32,7 @@ export class ServerPluginMessagePacket extends ClientboundPacket {
     }
 }
 
-export class ClientPluginMessagePacket implements IServerboundPacket {
-    private _Client: Client;
-
-    constructor(client: Client) {
-        this._Client = client;
-    }
-
+export class ClientPluginMessagePacket extends ServerboundPacket {
     /**
      * Parse a plugin message from the client.
      * @param {ReadableBuffer} buf The incoming packet buffer.
