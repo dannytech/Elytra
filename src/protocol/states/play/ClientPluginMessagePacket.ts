@@ -15,7 +15,6 @@ export class ClientPluginMessagePacket extends ServerboundPacket {
         const channel: string = buf.ReadVarChar();
         Console.DebugPacket(this, "Received plugin message on channel", channel.green);
 
-        // Read the arbitrary data for the plugin
-        const data: any = buf.Read();
+        // TODO Do something with the rest of the buffer
     }
 }

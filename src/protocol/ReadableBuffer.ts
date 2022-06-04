@@ -19,6 +19,14 @@ export class ReadableBuffer {
     }
 
     /**
+     * Skips the specified amount of bytes in the buffer.
+     * @param {number} [bytes] The amount of bytes to skip.
+     */
+    public Skip(bytes: number) {
+        this.Cursor += bytes;
+    }
+
+    /**
      * Reads a single byte from the buffer.
      * @returns {number} The byte, represented as a number in the range 0-255.
      */
