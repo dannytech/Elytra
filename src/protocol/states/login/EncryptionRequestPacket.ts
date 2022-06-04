@@ -2,7 +2,6 @@ import { promisify } from "util";
 import * as crypto from "crypto";
 import { ClientboundPacket } from "../../Packet";
 import { WritableBuffer } from "../../WritableBuffer";
-import { Client } from "../../Client";
 import { State, Constants } from "../../../Configuration";
 import { Console } from "../../../game/Console";
 
@@ -39,6 +38,6 @@ export class EncryptionRequestPacket extends ClientboundPacket {
         buf.Write(verificationToken);
 
         // Store the token in the client state
-        this._Client.Encryption.VerificationToken = verificationToken;
+        this._Client.Encryption.verificationToken = verificationToken;
     }
 }
