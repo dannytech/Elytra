@@ -4,16 +4,7 @@ import { readFile } from "fs/promises";
 import { Client, ClientState } from "./Client";
 import { Console } from "../game/Console";
 import { ReadableBuffer } from "./ReadableBuffer";
-import { ServerboundPacket } from "./Packet";
-import { HandshakePacket } from "./states/handshaking/HandshakePacket";
-import { PingPacket } from "./states/status/PingPacket";
-import { RequestPacket } from "./states/status/RequestPacket";
-import { LoginStartPacket } from "./states/login/LoginStartPacket";
-import { EncryptionResponsePacket } from "./states/login/EncryptionResponsePacket";
-import { ClientPluginMessagePacket } from "./states/play/PluginMessagePacket";
-import { TeleportConfirmPacket } from "./states/play/TeleportConfirmPacket";
-import { ClientSettingsPacket } from "./states/play/ClientSettingsPacket";
-import { ClientKeepAlivePacket } from "./states/play/ClientKeepAlivePacket";
+import { ServerboundPacket, IServerboundConstructor } from "./Packet";
 import { checkVersion, VersionSpec } from "../Masking";
 
 export enum PacketDirection {
@@ -182,54 +173,15 @@ export class PacketFactory {
 
         // Determine the incoming packet identity based on current state and the packet ID
         const packetName: string = this.Lookup(PacketDirection.Serverbound, client, packetId) as string;
-        let packet: ServerboundPacket;
-        switch (client.State) {
-            case ClientState.Handshaking:
-                switch (packetName) {
-                    case HandshakePacket.name:
-                        packet = new HandshakePacket(client);
-                        break;
-                }
-                break;
-            case ClientState.Status:
-                switch (packetName) {
-                    case RequestPacket.name:
-                        packet = new RequestPacket(client);
-                        break;
-                    case PingPacket.name:
-                        packet = new PingPacket(client);
-                        break;
-                }
-                break;
-            case ClientState.Login:
-                switch (packetName) {
-                    case LoginStartPacket.name:
-                        packet = new LoginStartPacket(client);
-                        break;
-                    case EncryptionResponsePacket.name:
-                        packet = new EncryptionResponsePacket(client);
-                        break;
-                }
-                break;
-            case ClientState.Play:
-                switch (packetName) {
-                    case ClientSettingsPacket.name:
-                        packet = new ClientSettingsPacket(client);
-                        break;
-                    case TeleportConfirmPacket.name:
-                        packet = new TeleportConfirmPacket(client);
-                        break;
-                    case ClientPluginMessagePacket.name:
-                        packet = new ClientPluginMessagePacket(client);
-                        break;
-                    case ClientKeepAlivePacket.name:
-                        packet = new ClientKeepAlivePacket(client);
-                        break;
-                }
-        }
 
-        // Process the packet and allow it to generate a response
-        if (packet) {
+        if (packetName) {
+            // Dynamically load the packet class
+            const packetClass: IServerboundConstructor = require(`./states/${client.State}/${packetName}`)[packetName];
+
+            // Assemble a new object reflectively
+            const packet: ServerboundPacket = Object.create(packetClass.prototype);
+            packet.constructor.apply(packet, [client]);
+
             await packet.Parse(buf);
 
             // Activate post-receive hooks
