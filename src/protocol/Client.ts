@@ -11,6 +11,8 @@ import { Player } from "../game/Player";
 import { Console } from "../game/Console";
 import { PlayerInfoActions, PlayerInfoPacket } from "./states/play/PlayerInfoPacket";
 import { PacketDirection } from "./PacketFactory";
+import { LegacyKickPacket } from "./states/handshaking/LegacyKickPacket";
+import { LegacyHandshakePacket } from "./states/handshaking/LegacyHandshakePacket";
 
 export enum ClientState {
     Handshaking = "handshaking",
@@ -73,6 +75,21 @@ export class Client extends EventEmitter {
      * @async
      */
     public async Receive(packetStream: ReadableBuffer) {
+        // Support legacy handshaking (does not require encryption, compression, etc.)
+        const legacyHandshakeId = Buffer.from([0xFE, 0x01, 0xFA]);
+        if (packetStream.Buffer.slice(0, 3).equals(legacyHandshakeId)) {
+            const legacyHandshake: LegacyHandshakePacket = new LegacyHandshakePacket(this);
+
+            // Consume the packet ID
+            packetStream.Skip(1);
+
+            // Generate a handshake response
+            await legacyHandshake.Parse(packetStream);
+
+            // Send the response
+            return await this.Send();
+        }
+
         // Decrypt the packet (since the cipher is never finalized, this decryption can safely process appended packets)
         if (this.Encryption.enabled) {
             if (this._Decipher == null)
@@ -112,6 +129,22 @@ export class Client extends EventEmitter {
     }
 
     /**
+     * Wrapper for the socket's write method.
+     * @param {WritableBuffer} payload The payload to send.
+     * @async
+     */
+    private async _Write(payload: WritableBuffer) {
+        // Send the packet to the client
+        await new Promise<void>((resolve, reject) => {
+            this._Socket.write(payload.Buffer, (err) => {
+                if (err) reject(err);
+
+                return resolve();
+            });
+        });
+    }
+
+    /**
      * Dispatches queued clientbound packets to the client.
      * @async
      */
@@ -125,6 +158,14 @@ export class Client extends EventEmitter {
             // Export the fields to the completed packet
             let payload: WritableBuffer = new WritableBuffer();
             await packet.Write(payload);
+
+            if (packet instanceof LegacyKickPacket) {
+                // Prevent the client from sending any more packets
+                payload.Prepend().WriteByte(0xFF);
+
+                // Send the packet
+                return await this._Write(payload);
+            }
 
             // Resolve the packet ID
             const packetId: number = State.PacketFactory.Lookup(PacketDirection.Clientbound, this, packet.constructor.name) as number;
@@ -163,14 +204,7 @@ export class Client extends EventEmitter {
                 payload = new WritableBuffer(encrypted);
             }
 
-            // Send the packet to the client
-            await new Promise<void>((resolve, reject) => {
-                this._Socket.write(payload.Buffer, (err) => {
-                    if (err) reject(err);
-
-                    return resolve();
-                });
-            });
+            this._Write(payload);
 
             // Trigger after-send actions like enabling compression
             if (packet.AfterSend)
