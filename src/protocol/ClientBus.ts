@@ -8,15 +8,14 @@ import { PlayerInfoActions, PlayerInfoPacket } from "./states/play/PlayerInfoPac
 
 export class ClientBus {
     private _Server: Server;
+    private _Clients: Array<Client>;
     private _ClientCounter: number;
-
-    public Clients: Array<Client>;
 
     constructor(server: Server) {
         this._Server = server;
         this._ClientCounter = 0;
 
-        this.Clients = new Array<Client>();
+        this._Clients = new Array<Client>();
 
         // Attach a connection listener
         this._Server.on("connection", this._HandleConnection.bind(this));
@@ -51,11 +50,11 @@ export class ClientBus {
      */
     private async _HandleConnection(socket: Socket) {
         const client: Client = new Client(socket, this._ClientCounter++);
-        this.Clients.push(client);
+        this._Clients.push(client);
 
         // On a disconnection, purge the client object from the bus
         client.once("disconnected", () => {
-            this.Clients.splice(this.Clients.indexOf(client), 1);
+            this._Clients.splice(this._Clients.indexOf(client), 1);
         });
 
         // Process incoming packets
@@ -76,7 +75,7 @@ export class ClientBus {
      */
     public async Broadcast(callback: (client: Client) => void) {
         return new Promise<void>((resolve) => {
-            this.Clients.forEach(async (client: Client) => {
+            this._Clients.forEach(async (client: Client) => {
                 callback(client);
 
                 // Send any queued packets
@@ -92,7 +91,7 @@ export class ClientBus {
      * @returns {Player[]} A list of all players currently online.
      */
     public OnlinePlayers() : Player[] {
-        return this.Clients.reduce((players: Player[], client: Client) => {
+        return this._Clients.reduce((players: Player[], client: Client) => {
             if (client.Player && client.State == ClientState.Play)
                 players.push(client.Player);
             return players;
@@ -107,8 +106,8 @@ export class ClientBus {
         this._Server.close();
 
         // Loop in reverse, telling each client to disconnect and detach
-        for (let i: number; i = this.Clients.length - 1; i--) {
-            this.Clients[i].Disconnect();
+        for (let i: number; i = this._Clients.length - 1; i--) {
+            this._Clients[i].Disconnect();
         }
     }
 }
