@@ -110,7 +110,7 @@ export class ChatComponentFactory {
 
                     formatting = false;
                     skip = true;
-                } else if (char == "&") {
+                } else if (char == "§" || char == "&") {
                     if (component.text.length > 0) {
                         // Continue processing as a subcomponent, which will inherit all existing styles
                         const subcomponent = this._ParseFormattedString(parsable);
