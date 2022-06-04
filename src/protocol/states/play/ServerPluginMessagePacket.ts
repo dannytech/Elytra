@@ -1,7 +1,6 @@
 import { Console } from "../../../game/Console";
 import { Client } from "../../Client";
-import { ClientboundPacket, ServerboundPacket } from "../../Packet";
-import { ReadableBuffer } from "../../ReadableBuffer";
+import { ClientboundPacket } from "../../Packet";
 import { WritableBuffer } from "../../WritableBuffer";
 
 export class ServerPluginMessagePacket extends ClientboundPacket {
@@ -29,23 +28,5 @@ export class ServerPluginMessagePacket extends ClientboundPacket {
 
         // Write the arbitrary data for the plugin
         buf.Write(this._Message);
-    }
-}
-
-export class ClientPluginMessagePacket extends ServerboundPacket {
-    /**
-     * Parse a plugin message from the client.
-     * @param {ReadableBuffer} buf The incoming packet buffer.
-     * @property {string} Channel The channel the message is sent on.
-     * @property {Buffer} Data The message data.
-     * @async
-     */
-    public async Parse(buf: ReadableBuffer) {
-        // Read the plugin channel
-        const channel: string = buf.ReadVarChar();
-        Console.DebugPacket(this, "Received plugin message on channel", channel.green);
-
-        // Read the arbitrary data for the plugin
-        const data: any = buf.Read();
     }
 }
