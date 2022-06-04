@@ -12,7 +12,7 @@ export class StandardConsole extends EventEmitter {
         this.emit("message", ...message);
 
         // Writes messages to the console if it is currently unblocked
-        console.log(message.join(" "));
+        console.log(...message);
     }
 
     public Info(...message: any[]) {
