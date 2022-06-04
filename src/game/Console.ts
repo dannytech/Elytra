@@ -44,7 +44,7 @@ export class StandardConsole extends EventEmitter {
      */
     public async DebugPacket(packet: ClientboundPacket | ServerboundPacket, ...message: any[]) {
         // Determine the packet direction
-        const direction: string[] = ["S", "C"]
+        const direction: string[] = ["S", "C"];
         if ("Parse" in packet) direction.reverse();
 
         // Print details about the client and packet, in addition to the message

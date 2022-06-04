@@ -204,7 +204,7 @@ export class PacketFactory {
                 await packet.AfterReceive();
 
             // Dispatch packets if a send is needed
-            client.Send();
+            await client.Send();
         } else
             Console.Debug(`(${client.ClientId})`.magenta, "Unrecognized", client.State.green, "packet",
                 `0x${packetId.toString(16).padStart(2, "0")}`.blue, buf.Read().toString("hex").yellow);

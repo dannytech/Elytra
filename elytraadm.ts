@@ -97,7 +97,7 @@ function cast(value: any) : any {
                     case "add":
                     case "remove":
                         // Convert action to database operation
-                        const actions: any = {
+                        const actions = {
                             "add": "$addToSet",
                             "remove": "$pull"
                         }
@@ -147,9 +147,9 @@ function cast(value: any) : any {
             if (args.length == 3) {
                 await connectToDatabase();
 
-                let username: string = args.shift();
-                let attribute: string = args.shift();
-                let value: any = cast(args.shift());
+                const username: string = args.shift();
+                const attribute: string = args.shift();
+                const value = cast(args.shift());
 
                 switch (attribute) {
                     case "gamemode":
