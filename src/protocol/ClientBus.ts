@@ -24,7 +24,7 @@ export class ClientBus {
         // Send and check for keepalives
         setInterval(() => {
             this.Broadcast((client: Client) => {
-                if (client.State = ClientState.Play) {
+                if (client.State == ClientState.Play) {
                     // If the client keepalive has expired, disconnect it uncleanly
                     if (client.KeepAlive?.last && Date.now() - client.KeepAlive.last > 20000)
                         client.Disconnect();
@@ -37,7 +37,7 @@ export class ClientBus {
         // Send regular client latency updates
         setInterval(() => {
             this.Broadcast((client: Client) => {
-                if (client.State = ClientState.Play) {
+                if (client.State == ClientState.Play) {
                     client.Queue(new PlayerInfoPacket(client, PlayerInfoActions.UpdateLatency, this.OnlinePlayers()));
                 }
             });
