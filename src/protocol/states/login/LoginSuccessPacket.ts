@@ -1,6 +1,6 @@
 import { ClientboundPacket } from "../../Packet";
 import { WritableBuffer } from "../../WritableBuffer";
-import { Client, ClientState } from "../../Client";
+import { ClientState } from "../../Client";
 import { Console } from "../../../game/Console";
 import { JoinGamePacket } from "../play/JoinGamePacket";
 import { Constants } from "../../../Configuration";

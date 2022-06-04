@@ -1,7 +1,7 @@
 import { Constants } from "../../../Configuration";
 import { ClientboundPacket } from "../../Packet";
 import { WritableBuffer } from "../../WritableBuffer";
-import { Client, CompressionState } from "../../Client";
+import { CompressionState } from "../../Client";
 import { Console } from "../../../game/Console";
 
 export class SetCompressionPacket extends ClientboundPacket {

@@ -16,7 +16,7 @@ export class UUID {
      * @param {boolean} hyphenate Whether to hyphenate the UUID
      * @returns {string} The formatted UUID
      */
-    public Format(hyphenate: boolean = false) : string {
+    public Format(hyphenate = false) : string {
         if (hyphenate) return this._UUID.replace(/^(.{8})(.{4})(.{4})(.{4})(.{12})$/, "$1-$2-$3-$4-$5");
         else return this._UUID;
     }

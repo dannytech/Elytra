@@ -1,6 +1,5 @@
 import { ClientboundPacket } from "../../Packet";
 import { WritableBuffer } from "../../WritableBuffer";
-import { Client } from "../../Client";
 import { State, Settings, MinecraftConfigs } from "../../../Configuration";
 import { Console } from "../../../game/Console";
 
@@ -31,7 +30,7 @@ export class JoinGamePacket extends ClientboundPacket {
         buf.WriteInt32(0); // TODO Determine the actual dimension ID and send it back
 
         // Send a fake seed hash to prevent any possibility of reversing
-        const seedHash: bigint = BigInt(0);
+        const seedHash = BigInt(0);
         buf.WriteInt64(seedHash);
 
         // Write the maximum number of players (this is ignored)

@@ -51,13 +51,13 @@ export class ReadableBuffer {
      * @throws If the VarInt is over 5 bytes long, an error will be thrown.
      */
     public ReadVarInt() : number {
-        let numRead: number = 0;
-        let result: number = 0;
+        let numRead = 0;
+        let result = 0;
         let read: number;
 
         do {
             read = this.ReadByte();
-            let value: number = (read & 0b01111111);
+            const value: number = (read & 0b01111111);
             result |= (value << (7 * numRead));
 
             numRead++;
@@ -82,7 +82,7 @@ export class ReadableBuffer {
      * @returns {string} The string.
      */
     public ReadVarChar() : string {
-        let bytes: number = this.ReadVarInt();
+        const bytes: number = this.ReadVarInt();
 
         return this.Read(bytes).toString();
     }

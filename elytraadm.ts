@@ -60,7 +60,7 @@ function cast(value: any) : any {
                 } else namespace = "minecraft";
 
                 // Convert the value to the correct type
-                const value: any = cast(args.shift());
+                const value = cast(args.shift());
 
                 // Set the value
                 await Settings.Set(namespace, name, value);
@@ -95,12 +95,12 @@ function cast(value: any) : any {
 
                 switch (action) {
                     case "add":
-                    case "remove":
+                    case "remove": {
                         // Convert action to database operation
                         const actions = {
                             "add": "$addToSet",
                             "remove": "$pull"
-                        }
+                        };
 
                         // Resolve the username to a UUID
                         const res = await axios.get(`https://api.mojang.com/users/profiles/minecraft/${usernameOrMode}`);
@@ -122,6 +122,7 @@ function cast(value: any) : any {
                             Console.Info("Added/removed", usernameOrMode.green, "→", uuid.blue, "to/from filter");
                         } else Console.Error("Failed to get UUID for", usernameOrMode.green);
                         break;
+                    }
                     case "mode":
                         if (["allow", "deny"].includes(usernameOrMode)) {
                             await ConfigModel.findOneAndUpdate({
@@ -160,7 +161,7 @@ function cast(value: any) : any {
                                 gamemode: value
                             }
                         });
-                        Console.Info("Set gamemode for", username.green, "to", value.blue);
+                        Console.Info("Set gamemode for", username.green, "to", value.toString().blue);
 
                         break;
                     case "op":

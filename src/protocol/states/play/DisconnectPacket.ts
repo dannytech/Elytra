@@ -32,7 +32,7 @@ export class DisconnectPacket extends ClientboundPacket {
      * Disconnect the client after sending the packet.
      * @async
      */
-     public async AfterSend() {
+    public async AfterSend() {
         this._Client.Disconnect();
     }
 }

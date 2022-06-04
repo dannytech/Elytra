@@ -1,4 +1,3 @@
-import { Client } from "../../Client";
 import { ServerboundPacket } from "../../Packet";
 import { PongPacket } from "./PongPacket";
 import { ReadableBuffer } from "../../ReadableBuffer";

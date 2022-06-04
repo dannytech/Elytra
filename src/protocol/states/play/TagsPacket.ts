@@ -1,5 +1,4 @@
 import { Console } from "../../../game/Console";
-import { Client } from "../../Client";
 import { ClientboundPacket } from "../../Packet";
 import { WritableBuffer } from "../../WritableBuffer";
 

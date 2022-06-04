@@ -120,7 +120,7 @@ export class WritableBuffer {
      * @param {number} value The integer to write.
      */
     public WriteUint16(value: number) {
-        let buf: Buffer = Buffer.alloc(2);
+        const buf: Buffer = Buffer.alloc(2);
         buf.writeUInt16BE(value);
 
         this.Write(buf);
@@ -131,7 +131,7 @@ export class WritableBuffer {
      * @param {number} value The integer to write.
      */
     public WriteUint32(value: number) {
-        let buf: Buffer = Buffer.alloc(4);
+        const buf: Buffer = Buffer.alloc(4);
         buf.writeUInt32BE(value);
 
         this.Write(buf);
@@ -142,7 +142,7 @@ export class WritableBuffer {
      * @param {number} value The long integer to write.
      */
     public WriteUint64(value: bigint) {
-        let buf: Buffer = Buffer.alloc(8);
+        const buf: Buffer = Buffer.alloc(8);
         buf.writeBigUInt64BE(value);
 
         this.Write(buf);
@@ -153,7 +153,7 @@ export class WritableBuffer {
      * @param {number} value The integer to write.
      */
     public WriteInt16(value: number) {
-        let buf: Buffer = Buffer.alloc(2);
+        const buf: Buffer = Buffer.alloc(2);
         buf.writeInt16BE(value);
 
         this.Write(buf);
@@ -164,7 +164,7 @@ export class WritableBuffer {
      * @param {number} value The integer to write.
      */
     public WriteInt32(value: number) {
-        let buf: Buffer = Buffer.alloc(4);
+        const buf: Buffer = Buffer.alloc(4);
         buf.writeInt32BE(value);
 
         this.Write(buf);
@@ -175,7 +175,7 @@ export class WritableBuffer {
      * @param {number} value The long integer to write.
      */
     public WriteInt64(value: bigint) {
-        let buf: Buffer = Buffer.alloc(8);
+        const buf: Buffer = Buffer.alloc(8);
         buf.writeBigInt64BE(value);
 
         this.Write(buf);
@@ -186,7 +186,7 @@ export class WritableBuffer {
      * @param {number} value The float to write.
      */
     public WriteSingle(value: number) {
-        let buf: Buffer = Buffer.alloc(4);
+        const buf: Buffer = Buffer.alloc(4);
         buf.writeFloatBE(value);
 
         this.Write(buf);
@@ -197,7 +197,7 @@ export class WritableBuffer {
      * @param {number} value The double to write.
      */
     public WriteDouble(value: number) {
-        let buf: Buffer = Buffer.alloc(8);
+        const buf: Buffer = Buffer.alloc(8);
         buf.writeDoubleBE(value);
 
         this.Write(buf);
@@ -210,8 +210,8 @@ export class WritableBuffer {
     public WriteUUID(value: UUID) {
         // Split the UUID into two bigints
         const uuid: string = value.Format();
-        const msb: bigint = BigInt("0x" + uuid.substring(0, uuid.length / 2));
-        const lsb: bigint = BigInt("0x" + uuid.substring(uuid.length / 2));
+        const msb = BigInt("0x" + uuid.substring(0, uuid.length / 2));
+        const lsb = BigInt("0x" + uuid.substring(uuid.length / 2));
 
         // Write the 128-bit UUID
         this.WriteUint64(msb);

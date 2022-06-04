@@ -59,7 +59,7 @@ export function digest(buf: Buffer) : string {
         const inverted: Buffer = Buffer.alloc(digest.length);
 
         // Loop through the bits backwards
-        let carry: number = 0;
+        let carry = 0;
         for (let i: number = digest.length - 1; i >= 0; i--) {
             let flipped: number = digest.readUInt8(i) ^ 0b11111111; // Flip all the bits
 
