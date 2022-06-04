@@ -25,9 +25,10 @@ export function checkVersion(version: number, ranges: VersionSpec[]) : boolean {
  * NOTE: This handles most cases (including swapping start and end if the order is wrong).
  * The only edge case is if the range is n-0, in which case the start rather than the end will be n.
  * @param {string} spec The version string to convert.
+ * @param {number} [ceiling] Used as a ceiling if no end is specified.
  * @returns {VersionSpec} The version specification.
  */
-export function versionSpec(spec: string) : VersionSpec {
+export function versionSpec(spec: string, ceiling?: number) : VersionSpec {
     const parts: number[] = spec.split("-").map(Number);
 
     // Allows 0-n ranges, n-infinity ranges, and specific n
@@ -38,7 +39,7 @@ export function versionSpec(spec: string) : VersionSpec {
         };
     else {
         let start: number = parts[0] || 0;
-        let end: number = parts[1] || undefined;
+        let end: number = parts[1] || ceiling || undefined;
 
         // Do not allow end to be lower than start
         if (end && start > end)

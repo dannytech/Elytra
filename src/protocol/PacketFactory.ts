@@ -5,7 +5,7 @@ import { Client, ClientState } from "./Client";
 import { Console } from "../game/Console";
 import { ReadableBuffer } from "./ReadableBuffer";
 import { ServerboundPacket, IServerboundConstructor } from "./Packet";
-import { checkVersion, VersionSpec } from "../Masking";
+import { checkVersion, versionSpec, VersionSpec } from "../Masking";
 
 export enum PacketDirection {
     Serverbound = "serverbound",
@@ -28,7 +28,7 @@ type PacketMappings = {
 
 type SourceMap = {
     [key: string]: number | {
-        [key: number]: number
+        [key: string]: number
     }
 };
 
@@ -89,11 +89,18 @@ export class PacketFactory {
                 spec.mappings[query] = [{ version: { start: 0 }, id: result }];
             } else {
                 // Find all the packet ID versions (list them in reverse so that range can be set from the upper end)
-                const versions: number[] = Object.keys(packetId).map(Number);
-                versions.sort().reverse();
+                const versions: string[] = Object.keys(packetId);
+                versions.sort((a: string, b: string) => {
+                    // Sort only by the start of the range for simplicity
+                    const aStart = Number(a.split("-")[0]);
+                    const bStart = Number(b.split("-")[0]);
+
+                    // Reverse sort (high to low)
+                    return bStart - aStart;
+                });
 
                 // Iterate through all the versions and add a mapping for each
-                versions.reduce((previousVersion, currentVersion) => {
+                versions.reduce((previousVersion: number, currentVersion: string) => {
                     const currentId: number = packetId[currentVersion];
 
                     // Allow for packets to be removed in later versions (set an upper limit on the previous version)
@@ -101,9 +108,10 @@ export class PacketFactory {
                         return currentVersion;
 
                     // Generate the version specification matching the given range (either open-ended or at the end of the previous range)
-                    const currentSpec: VersionSpec = { start: currentVersion };
+                    let currentSpec: VersionSpec;
                     if (previousVersion)
-                        currentSpec.end = previousVersion - 1;
+                        currentSpec = versionSpec(currentVersion, previousVersion - 1);
+                    else currentSpec = versionSpec(currentVersion);
 
                     // If serverbound, the search is done by packet ID, otherwise the packet ID is the result
                     if (direction == PacketDirection.Serverbound)
@@ -124,7 +132,7 @@ export class PacketFactory {
                         spec.mappings[query].push(mapping);
                     }
 
-                    return currentVersion;
+                    return currentSpec.start;
                 }, null);
             }
         });

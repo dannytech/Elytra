@@ -14,8 +14,8 @@ serverbound:
     ClientSettingsPacket: 0x05
     ClientKeepAlivePacket: 0x0F
     ClientPluginMessagePacket:
-      464: 0x0B
-      755: 0x0A
+      464-: 0x0B
+      755-: 0x0A
 clientbound:
   status:
     ResponsePacket: 0x00
@@ -27,8 +27,8 @@ clientbound:
     SetCompressionPacket: 0x03
   play:
     ServerPluginMessagePacket:
-      464: 0x19
-      755: 0x18
+      464-: 0x19
+      755-: 0x18
     DeclareCommandsPacket: 0x12
     DisconnectPacket: 0x1B
     EntityStatusPacket: 0x1C
