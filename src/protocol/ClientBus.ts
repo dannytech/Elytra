@@ -1,9 +1,7 @@
 import { Socket, Server } from "net";
 import { Constants } from "../Configuration";
-import { Console } from "../game/Console";
 import { Player } from "../game/Player";
 import { Client, ClientState } from "./Client";
-import { ClientboundPacket } from "./Packet";
 import { ReadableBuffer } from "./ReadableBuffer";
 import { ServerKeepAlivePacket } from "./states/play/KeepAlivePacket";
 import { PlayerInfoActions, PlayerInfoPacket } from "./states/play/PlayerInfoPacket";
