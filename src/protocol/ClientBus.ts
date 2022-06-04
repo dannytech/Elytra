@@ -3,7 +3,7 @@ import { Constants } from "../Configuration";
 import { Player } from "../game/Player";
 import { Client, ClientState } from "./Client";
 import { ReadableBuffer } from "./ReadableBuffer";
-import { ServerKeepAlivePacket } from "./states/play/KeepAlivePacket";
+import { ServerKeepAlivePacket } from "./states/play/ServerKeepAlivePacket";
 import { PlayerInfoActions, PlayerInfoPacket } from "./states/play/PlayerInfoPacket";
 
 export class ClientBus {
@@ -20,6 +20,28 @@ export class ClientBus {
 
         // Attach a connection listener
         this._Server.on("connection", this._HandleConnection.bind(this));
+
+        // Send and check for keepalives
+        setInterval(() => {
+            this.Broadcast((client: Client) => {
+                if (client.State == ClientState.Play) {
+                    // If the client keepalive has expired, disconnect it uncleanly
+                    if (client.KeepAlive?.last && Date.now() - client.KeepAlive.last > 20000)
+                        client.Disconnect();
+                    else
+                        client.Queue(new ServerKeepAlivePacket(client));
+                }
+            });
+        }, Constants.KeepAliveInterval);
+
+        // Send regular client latency updates
+        setInterval(() => {
+            this.Broadcast((client: Client) => {
+                if (client.State == ClientState.Play) {
+                    client.Queue(new PlayerInfoPacket(client, PlayerInfoActions.UpdateLatency, this.OnlinePlayers()));
+                }
+            });
+        }, Constants.KeepAliveInterval * 2);
     }
 
     /**
@@ -46,28 +68,6 @@ export class ClientBus {
         // Handle errors and disconnects
         socket.once("end", client.Disconnect.bind(client));
         socket.once("error", client.Disconnect.bind(client));
-
-        // Send and check for keepalives
-        setInterval(() => {
-            this.Broadcast((client: Client) => {
-                if (client.State = ClientState.Play) {
-                    // If the client keepalive has expired, disconnect it uncleanly
-                    if (client.KeepAlive?.last && Date.now() - client.KeepAlive.last > 20000)
-                        client.Disconnect();
-                    else
-                        client.Queue(new ServerKeepAlivePacket(client));
-                }
-            });
-        }, Constants.KeepAliveInterval);
-
-        // Send regular client latency updates
-        setInterval(() => {
-            this.Broadcast((client: Client) => {
-                if (client.State = ClientState.Play) {
-                    client.Queue(new PlayerInfoPacket(client, PlayerInfoActions.UpdateLatency, this.OnlinePlayers()));
-                }
-            });
-        }, Constants.KeepAliveInterval * 2);
     }
 
     /**

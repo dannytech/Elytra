@@ -4,62 +4,161 @@ import { readFile } from "fs/promises";
 import { Client, ClientState } from "./Client";
 import { Console } from "../game/Console";
 import { ReadableBuffer } from "./ReadableBuffer";
-import { ServerboundPacket } from "./Packet";
-import { HandshakePacket } from "./states/handshaking/HandshakePacket";
-import { PingPacket } from "./states/status/PingPacket";
-import { RequestPacket } from "./states/status/RequestPacket";
-import { LoginStartPacket } from "./states/login/LoginStartPacket";
-import { EncryptionResponsePacket } from "./states/login/EncryptionResponsePacket";
-import { ClientPluginMessagePacket } from "./states/play/PluginMessagePacket";
-import { TeleportConfirmPacket } from "./states/play/TeleportConfirmPacket";
-import { ClientSettingsPacket } from "./states/play/ClientSettingsPacket";
-import { ClientKeepAlivePacket } from "./states/play/KeepAlivePacket";
+import { ServerboundPacket, IServerboundConstructor } from "./Packet";
+import { checkVersion, VersionSpec } from "../Masking";
+
+export enum PacketDirection {
+    Serverbound = "serverbound",
+    Clientbound = "clientbound"
+}
+
+interface VersionedMapping {
+    [id: number]: [{
+        version: VersionSpec,
+        id: number
+    }];
+}
+
+interface PacketSpec {
+    direction: PacketDirection;
+    state: ClientState;
+    names: string[];
+    mappings: VersionedMapping;
+}
 
 export class PacketFactory {
-    private _PacketSpec: {
-        [key: string]: {
-            [key: string]: number | {
-                [key: number]: number;
-            }
-        }
-    };
+    private _PacketSpec: PacketSpec[] = [];
 
     /**
      * Loads the packet specification from a YAML file.
      * @async
      */
     public async Load() {
-        const spec: string = await readFile("./src/protocol/packets.yml", "utf8");
-        this._PacketSpec = parse(spec);
+        // Load the packet mappingss
+        const packets: string = await readFile("./src/protocol/packets.yml", "utf8");
+        const def: any = parse(packets);
+
+        // Parse the packet names/IDs into a versioned lookup table
+        for (const direction of Object.values(PacketDirection))
+            for (const state in def[direction])
+                this._LoadPacketSpec(direction as PacketDirection, state as ClientState, def[direction][state]);
+    }
+
+    private _LoadPacketSpec(direction: PacketDirection, state: ClientState, def: any) {
+        const spec: PacketSpec = {
+            direction: direction,
+            state: state,
+            names: [],
+            mappings: {}
+        };
+
+        Object.entries(def).forEach(([packetName, packetId]) => {
+            const index: number = spec.names.push(packetName) - 1;
+
+            // Dynamically set the direction of the search
+            let query: number;
+            let result: number;
+            if (direction == PacketDirection.Serverbound)
+                result = index;
+            else
+                query = index;
+
+            if (typeof packetId == "number") {
+                // If serverbound, the search is done by packet ID, otherwise the packet ID is the result
+                if (direction == PacketDirection.Serverbound) {
+                    query = packetId as number;
+                } else
+                    result = packetId as number;
+
+                // Add a mapping from the packet ID to the packet name (by index)
+                spec.mappings[query] = [{ version: { start: 0 }, id: result }];
+            } else {
+                // Find all the packet ID versions (list them in reverse so that range can be set from the upper end)
+                const versions: number[] = Object.keys(packetId).map(Number);
+                versions.sort().reverse();
+
+                // Iterate through all the versions and add a mapping for each
+                versions.reduce((previousVersion, currentVersion) => {
+                    const currentId: number = (packetId as any)[currentVersion];
+
+                    // Allow for packets to be removed in later versions (set an upper limit on the previous version)
+                    if (currentId == null)
+                        return currentVersion;
+
+                    // Generate the version specification matching the given range (either open-ended or at the end of the previous range)
+                    const currentSpec: VersionSpec = { start: currentVersion };
+                    if (previousVersion)
+                        currentSpec.end = previousVersion - 1;
+
+                    // If serverbound, the search is done by packet ID, otherwise the packet ID is the result
+                    if (direction == PacketDirection.Serverbound)
+                        query = currentId;
+                    else
+                        result = currentId;
+
+                    // Create a mapping for the current version
+                    const mapping: { version: VersionSpec, id: number } = {
+                        version: currentSpec,
+                        id: result
+                    };
+
+                    // Set or add the mapping to the packet ID
+                    if (!(query in spec.mappings))
+                        spec.mappings[query] = [mapping];
+                    else {
+                        spec.mappings[query].push(mapping);
+                    }
+
+                    return currentVersion;
+                }, null);
+            }
+        });
+
+        // Add the compiled specification
+        this._PacketSpec.push(spec);
     }
 
     /**
      * Convert from a packet name to the corresponding version-specific packet ID
      * @param {ClientState} state The client state to use for the lookup.
-     * @param {string} packetName The name of the packet to convert.
-     * @returns {number} The packet ID.
+     * @param {string|number} packetNameOrId The name of the packet to convert.
+     * @returns {string|number} The packet ID.
      */
-    public Lookup(client: Client, packetName: string) : number {
-        const statePackets = this._PacketSpec[client.State];
+    public Lookup(direction: PacketDirection, client: Client, packetNameOrId: string | number) : string | number {
+        // Load the mappings for the current state
+        const statePackets = this._PacketSpec.find(spec => spec.direction == direction && spec.state == client.State);
 
-        if (statePackets.hasOwnProperty(packetName)) {
-            const packetId = statePackets[packetName];
+        if (statePackets) {
+            // Get the packet ID or index to search for
+            let search: number;
+            if (direction == PacketDirection.Serverbound)
+                search = packetNameOrId as number;
+            else
+                search = statePackets.names.indexOf(packetNameOrId as string);
 
-            if (typeof packetId === "number")
-                return packetId;
-            else {
-                // Get a reverse-ordered (latest first) list of the changes to the packet ID
-                const versions: number[] = Object.keys(packetId).map(Number);
-                versions.sort().reverse();
+            // Get the result of the search
+            const result: any[] = statePackets.mappings[search];
 
-                // Find the latest version change the client is compatible with
-                for (const version of versions) {
-                    if (client.ProtocolVersion >= version)
-                        return packetId[version];
+            // Find a matching version specification
+            if (result) {
+                for (const mapping of result) {
+                    if (checkVersion(client.ProtocolVersion || 0, [mapping.version])) {
+                        if (direction == PacketDirection.Serverbound)
+                            return statePackets.names[mapping.id];
+                        else
+                            return mapping.id;
+                    }
                 }
             }
         }
-        Console.Error("Unable to resolve packet ID for", packetName.green, "(please report this to the developer)");
+
+        let diagnosticName: string;
+        if (direction == PacketDirection.Serverbound) {
+            const packetId = packetNameOrId as number;
+            diagnosticName = `0x${packetId.toString(16).padStart(2, "0")}`;
+        } else
+            diagnosticName = packetNameOrId as string;
+        Console.Error("Unable to resolve", direction.green, client.State.green, "packet", diagnosticName.blue, "(please report this to the developer)");
     }
 
     /**
@@ -73,54 +172,16 @@ export class PacketFactory {
         const packetId: number = buf.ReadVarInt();
 
         // Determine the incoming packet identity based on current state and the packet ID
-        let packet: ServerboundPacket;
-        switch (client.State) {
-            case ClientState.Handshaking:
-                switch (packetId) {
-                    case this.Lookup(client, HandshakePacket.name):
-                        packet = new HandshakePacket(client);
-                        break;
-                }
-                break;
-            case ClientState.Status:
-                switch (packetId) {
-                    case this.Lookup(client, RequestPacket.name):
-                        packet = new RequestPacket(client);
-                        break;
-                    case this.Lookup(client, PingPacket.name):
-                        packet = new PingPacket(client);
-                        break;
-                }
-                break;
-            case ClientState.Login:
-                switch (packetId) {
-                    case this.Lookup(client, LoginStartPacket.name):
-                        packet = new LoginStartPacket(client);
-                        break;
-                    case this.Lookup(client, EncryptionResponsePacket.name):
-                        packet = new EncryptionResponsePacket(client);
-                        break;
-                }
-                break;
-            case ClientState.Play:
-                switch (packetId) {
-                    case this.Lookup(client, ClientSettingsPacket.name):
-                        packet = new ClientSettingsPacket(client);
-                        break;
-                    case this.Lookup(client, TeleportConfirmPacket.name):
-                        packet = new TeleportConfirmPacket(client);
-                        break;
-                    case this.Lookup(client, ClientPluginMessagePacket.name):
-                        packet = new ClientPluginMessagePacket(client);
-                        break;
-                    case this.Lookup(client, ClientKeepAlivePacket.name):
-                        packet = new ClientKeepAlivePacket(client);
-                        break;
-                }
-        }
+        const packetName: string = this.Lookup(PacketDirection.Serverbound, client, packetId) as string;
 
-        // Process the packet and allow it to generate a response
-        if (packet) {
+        if (packetName) {
+            // Dynamically load the packet class
+            const packetClass: IServerboundConstructor = require(`./states/${client.State}/${packetName}`)[packetName];
+
+            // Assemble a new object reflectively
+            const packet: ServerboundPacket = Object.create(packetClass.prototype);
+            packet.constructor.apply(packet, [client]);
+
             await packet.Parse(buf);
 
             // Activate post-receive hooks

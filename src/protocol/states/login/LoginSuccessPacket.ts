@@ -4,7 +4,7 @@ import { Client, ClientState } from "../../Client";
 import { Console } from "../../../game/Console";
 import { JoinGamePacket } from "../play/JoinGamePacket";
 import { Constants } from "../../../Configuration";
-import { ServerPluginMessagePacket } from "../play/PluginMessagePacket";
+import { ServerPluginMessagePacket } from "../play/ServerPluginMessagePacket";
 import { HeldItemChangePacket } from "../play/HeldItemChangePacket";
 import { DeclareRecipesPacket } from "../play/DeclareRecipesPacket";
 import { TagsPacket } from "../play/TagsPacket";

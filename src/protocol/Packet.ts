@@ -2,6 +2,10 @@ import { ReadableBuffer } from "./ReadableBuffer";
 import { WritableBuffer } from "./WritableBuffer";
 import { Client } from "./Client";
 
+export interface IServerboundConstructor {
+    new(client: Client): ServerboundPacket;
+};
+
 export abstract class ServerboundPacket {
     protected _Client: Client;
 
