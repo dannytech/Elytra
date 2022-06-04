@@ -4,7 +4,7 @@ import { Client } from "./Client";
 
 export interface IServerboundConstructor {
     new(client: Client): ServerboundPacket;
-};
+}
 
 export abstract class ServerboundPacket {
     protected _Client: Client;
@@ -53,7 +53,7 @@ export abstract class ClientboundPacket {
      * Return the embedded client (mainly for logging purposes).
      * @returns {Client} The client.
      */
-     public GetClient() : Client {
+    public GetClient() : Client {
         return this._Client;
     }
 

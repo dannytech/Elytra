@@ -1,6 +1,5 @@
 import axios, { AxiosResponse } from "axios";
-import { State, Settings, MinecraftConfigs, Constants } from "../../../Configuration";
-import { Client } from "../../Client";
+import { State, Settings, MinecraftConfigs } from "../../../Configuration";
 import { ServerboundPacket } from "../../Packet";
 import { ReadableBuffer } from "../../ReadableBuffer";
 import { SetCompressionPacket } from "./SetCompressionPacket";
@@ -8,19 +7,18 @@ import { LoginSuccessPacket } from "./LoginSuccessPacket";
 import { DisconnectPacket as LoginDisconnectPacket } from "./DisconnectPacket";
 import { DisconnectPacket as PlayDisconnectPacket } from "../play/DisconnectPacket";
 import { digest } from "../../Encryption";
-import { JoinGamePacket } from "../play/JoinGamePacket";
 import { Player } from "../../../game/Player";
 import { UUID } from "../../../game/UUID";
 import { ChatComponentFactory } from "../../../game/chat/ChatComponentFactory";
 import { Console } from "../../../game/Console";
 
-interface AuthenticationRequestParams {
+type AuthenticationRequestParams = {
     username: string,
     serverId: string,
     ip?: string
-}
+};
 
-interface SessionResponse {
+type SessionResponse = {
     id: string,
     name: string,
     properties: [
@@ -30,12 +28,12 @@ interface SessionResponse {
             signature: string
         }
     ]
-}
+};
 
-interface FilterList {
+type FilterList = {
     mode: string,
-    players: [string]
-}
+    players: string[]
+};
 
 export class EncryptionResponsePacket extends ServerboundPacket {
     /**
@@ -62,11 +60,11 @@ export class EncryptionResponsePacket extends ServerboundPacket {
         // Verify the token can be decrypted successfully
         Console.DebugPacket(this, "Verifying nonce");
         const decryptedToken: Buffer = State.Keypair.Decrypt(verifyToken);
-        if (decryptedToken.equals(this._Client.Encryption.VerificationToken)) {
+        if (decryptedToken.equals(this._Client.Encryption.verificationToken)) {
             // Tell the socket to use encryption
-            this._Client.Encryption.SharedSecret = decryptedSecret;
-            this._Client.Encryption.Enabled = true;
-            delete this._Client.Encryption.VerificationToken;
+            this._Client.Encryption.sharedSecret = decryptedSecret;
+            this._Client.Encryption.enabled = true;
+            delete this._Client.Encryption.verificationToken;
 
             // Generate the server hash for authentication
             const serverHash: string = digest(Buffer.concat([
@@ -75,7 +73,7 @@ export class EncryptionResponsePacket extends ServerboundPacket {
             ]));
 
             // Prepare to authenticate the client
-            let params: AuthenticationRequestParams = {
+            const params: AuthenticationRequestParams = {
                 username: this._Client.Player.Username,
                 serverId: serverHash
             };
@@ -87,7 +85,7 @@ export class EncryptionResponsePacket extends ServerboundPacket {
 
             // Authenticate the client
             Console.DebugPacket(this, "Authenticating client against Mojang servers");
-            let res: AxiosResponse<SessionResponse> = await axios.get("https://sessionserver.mojang.com/session/minecraft/hasJoined", {
+            const res: AxiosResponse<SessionResponse> = await axios.get("https://sessionserver.mojang.com/session/minecraft/hasJoined", {
                 params
             });
 

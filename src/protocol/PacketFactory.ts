@@ -12,22 +12,34 @@ export enum PacketDirection {
     Clientbound = "clientbound"
 }
 
-interface VersionedMapping {
+type PacketMapping = {
     [id: number]: [{
         version: VersionSpec,
         id: number
     }];
-}
+};
 
-interface PacketSpec {
+type PacketMappings = {
     direction: PacketDirection;
     state: ClientState;
     names: string[];
-    mappings: VersionedMapping;
-}
+    mappings: PacketMapping;
+};
+
+type SourceMap = {
+    [key: string]: number | {
+        [key: number]: number
+    }
+};
+
+type SourceMappings = {
+    [key in PacketDirection]: {
+        [key in ClientState]:  SourceMap
+    }
+};
 
 export class PacketFactory {
-    private _PacketSpec: PacketSpec[] = [];
+    private _PacketSpec: PacketMappings[] = [];
 
     /**
      * Loads the packet specification from a YAML file.
@@ -36,16 +48,19 @@ export class PacketFactory {
     public async Load() {
         // Load the packet mappingss
         const packets: string = await readFile("./src/protocol/packets.yml", "utf8");
-        const def: any = parse(packets);
+        const mappings: SourceMappings = parse(packets);
 
         // Parse the packet names/IDs into a versioned lookup table
         for (const direction of Object.values(PacketDirection))
-            for (const state in def[direction])
-                this._LoadPacketSpec(direction as PacketDirection, state as ClientState, def[direction][state]);
+            for (const state in mappings[direction]) {
+                const def: SourceMap = mappings[direction][state as ClientState];
+
+                this._LoadPacketSpec(direction as PacketDirection, state as ClientState, def);
+            }
     }
 
-    private _LoadPacketSpec(direction: PacketDirection, state: ClientState, def: any) {
-        const spec: PacketSpec = {
+    private _LoadPacketSpec(direction: PacketDirection, state: ClientState, def: SourceMap) {
+        const spec: PacketMappings = {
             direction: direction,
             state: state,
             names: [],
@@ -79,7 +94,7 @@ export class PacketFactory {
 
                 // Iterate through all the versions and add a mapping for each
                 versions.reduce((previousVersion, currentVersion) => {
-                    const currentId: number = (packetId as any)[currentVersion];
+                    const currentId: number = packetId[currentVersion];
 
                     // Allow for packets to be removed in later versions (set an upper limit on the previous version)
                     if (currentId == null)
@@ -137,7 +152,7 @@ export class PacketFactory {
                 search = statePackets.names.indexOf(packetNameOrId as string);
 
             // Get the result of the search
-            const result: any[] = statePackets.mappings[search];
+            const result = statePackets.mappings[search];
 
             // Find a matching version specification
             if (result) {

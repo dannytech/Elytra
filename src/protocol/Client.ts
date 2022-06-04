@@ -25,10 +25,10 @@ export enum CompressionState {
     Enabled
 }
 
-export interface IEncryptionState {
-    Enabled: boolean;
-    VerificationToken?: Buffer;
-    SharedSecret?: Buffer;
+export type EncryptionState = {
+    enabled: boolean;
+    verificationToken?: Buffer;
+    sharedSecret?: Buffer;
 }
 
 export class Client extends EventEmitter {
@@ -41,7 +41,7 @@ export class Client extends EventEmitter {
     public ProtocolVersion: number;
     public State: ClientState;
     public Compression: CompressionState;
-    public Encryption: IEncryptionState;
+    public Encryption: EncryptionState;
     public KeepAlive: {
         id?: bigint;
         sent?: number;
@@ -61,7 +61,7 @@ export class Client extends EventEmitter {
         this.State = ClientState.Handshaking;
         this.Compression = CompressionState.Disabled;
         this.Encryption = {
-            Enabled: false
+            enabled: false
         };
         this.KeepAlive = {};
         this.IP = this._Socket.remoteAddress;
@@ -74,12 +74,12 @@ export class Client extends EventEmitter {
      */
     public async Receive(packetStream: ReadableBuffer) {
         // Decrypt the packet (since the cipher is never finalized, this decryption can safely process appended packets)
-        if (this.Encryption.Enabled) {
+        if (this.Encryption.enabled) {
             if (this._Decipher == null)
-                this._Decipher = crypto.createDecipheriv("aes-128-cfb8", this.Encryption.SharedSecret, this.Encryption.SharedSecret);
+                this._Decipher = crypto.createDecipheriv("aes-128-cfb8", this.Encryption.sharedSecret, this.Encryption.sharedSecret);
 
             // Decrypt the entire packet (no headers need to be stripped)
-            let decrypted: Buffer = this._Decipher.update(packetStream.Buffer);
+            const decrypted: Buffer = this._Decipher.update(packetStream.Buffer);
             packetStream = new ReadableBuffer(decrypted);
         }
 
@@ -120,7 +120,7 @@ export class Client extends EventEmitter {
             // Prevent writing to a closed socket in most cases
             if (!this._Socket.writable) return;
 
-            let packet: ClientboundPacket = this._ClientboundQueue.shift();
+            const packet: ClientboundPacket = this._ClientboundQueue.shift();
 
             // Export the fields to the completed packet
             let payload: WritableBuffer = new WritableBuffer();
@@ -154,12 +154,12 @@ export class Client extends EventEmitter {
             payload.Prepend().WriteVarInt(payload.Buffer.length);
 
             // Encrypt the packet
-            if (this.Encryption.Enabled) {
+            if (this.Encryption.enabled) {
                 if (this._Cipher == null)
-                    this._Cipher = crypto.createCipheriv("aes-128-cfb8", this.Encryption.SharedSecret, this.Encryption.SharedSecret);
+                    this._Cipher = crypto.createCipheriv("aes-128-cfb8", this.Encryption.sharedSecret, this.Encryption.sharedSecret);
 
                 // Encrypt the entire packet, including headers
-                let encrypted: Buffer = this._Cipher.update(payload.Buffer);
+                const encrypted: Buffer = this._Cipher.update(payload.Buffer);
                 payload = new WritableBuffer(encrypted);
             }
 
@@ -195,7 +195,7 @@ export class Client extends EventEmitter {
                 // Remove the player from the list of online players
                 if (client.State == ClientState.Play)
                     client.Queue(new PlayerInfoPacket(client, PlayerInfoActions.RemovePlayer, [this.Player]));
-            })
+            });
             this.Player.Save();
         }
 
@@ -205,8 +205,9 @@ export class Client extends EventEmitter {
     /**
      * Appends a clientbound packet to the client queue.
      * @param {ClientboundPacket} packet The packet to queue.
+     * @param {boolean} [force=false] Whether to put the packet at the beginning of the queue.
      */
-    public Queue(packet: ClientboundPacket, priority: boolean = false) {
+    public Queue(packet: ClientboundPacket, priority = false) {
         if (priority) this._ClientboundQueue.unshift(packet);
         else this._ClientboundQueue.push(packet);
     }

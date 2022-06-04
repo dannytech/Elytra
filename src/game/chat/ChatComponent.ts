@@ -10,7 +10,7 @@
  * @property {boolean} [obfuscated] Whether to obfuscate the text.
  * @property {object[]} [extra] Child text components to inherit from this.
  */
-export interface ChatTextComponent {
+export type ChatTextComponent = {
     text: string;
     color?: string;
     font?: string;
@@ -27,7 +27,7 @@ export interface ChatTextComponent {
  * @property {string} translate A translation identifier for the client to parse.
  * @property {object[]} [with] An array of text components to be inserted into translation slots.
  */
-export interface ChatTranslationComponent {
+export type ChatTranslationComponent = {
     translate: string;
     with?: object[];
 }
@@ -39,7 +39,7 @@ export interface ChatTranslationComponent {
  * @property {string} score.objective The scoreboard objective identifier.
  * @property {string} [score.value] A scoreboard value, used to override the actual value, bypassing resolution.
  */
-export interface ChatScoreComponent {
+export type ChatScoreComponent = {
     score: {
         name: string;
         objective: string;
@@ -51,7 +51,7 @@ export interface ChatScoreComponent {
  * A player selector component.
  * @property {string} selector A selector for a collection of player(s).
  */
-export interface ChatSelectorComponent {
+export type ChatSelectorComponent = {
     selector: string;
 }
 
@@ -59,7 +59,7 @@ export interface ChatSelectorComponent {
  * A client keybind component
  * @property {string} keybind A client keybind identifier.
  */
-export interface ChatKeybindComponent {
+export type ChatKeybindComponent = {
     keybind: string;
 }
 
@@ -71,7 +71,7 @@ export interface ChatKeybindComponent {
  * @property {string} [entity] A string containing the target selector for the entity(s) for which to retrieve NBT value(s).
  * @property {string} [storage] A string containing the storage identifier for which to retrieve NBT value(s).
  */
-export interface ChatNBTComponent {
+export type ChatNBTComponent = {
     nbt: string;
     interpret?: boolean;
     block?: string;

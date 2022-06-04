@@ -1,4 +1,4 @@
-export interface VersionSpec {
+export type VersionSpec = {
     start: number;
     end?: number;
 }
@@ -13,7 +13,7 @@ export function checkVersion(version: number, ranges: VersionSpec[]) : boolean {
     for (const range of ranges)
         if (version >= range.start) {
             if (range.end) return version <= range.end;
-            else return true
+            else return true;
         }
 
     return false;

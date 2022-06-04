@@ -1,6 +1,6 @@
 import { ChatComponent, ChatTextComponent } from "./ChatComponent";
 
-interface ParsableString {
+type StringCursor = {
     string: string,
     reset: boolean,
     cursor: number
@@ -9,21 +9,21 @@ interface ParsableString {
 export class ChatComponentFactory {
     /**
      * Parse a text component from the given string containing formatting codes.
-     * @param {ParsableString} parsable The string to parse, wrapped with a cursor.
+     * @param {StringCursor} parsable The string to parse, wrapped with a cursor.
      * @returns {ChatTextComponent} A parsed JSON object containing text and formatting.
      * @static
      */
-    private static ParseFormattedString(parsable: ParsableString) : ChatTextComponent {
+    private static _ParseFormattedString(parsable: StringCursor) : ChatTextComponent {
         const component: ChatTextComponent = {
             text: "",
             extra: new Array<ChatTextComponent>()
         };
-        let escaped: boolean = false;
-        let formatting: boolean = false;
+        let escaped = false;
+        let formatting = false;
 
         while (parsable.cursor < parsable.string.length) {
-            let char: string = parsable.string[parsable.cursor];
-            let skip: boolean = false; // Whether to skip adding the current character, if it has already been processed
+            const char: string = parsable.string[parsable.cursor];
+            let skip = false; // Whether to skip adding the current character, if it has already been processed
 
             if (!escaped) {
                 if (char == "\\") {
@@ -42,7 +42,7 @@ export class ChatComponentFactory {
                             break;
                         case "3":
                             component.color = "dark_aqua";
-                            break;;
+                            break;
                         case "4":
                             component.color = "dark_red";
                             break;
@@ -113,7 +113,7 @@ export class ChatComponentFactory {
                 } else if (char == "&") {
                     if (component.text.length > 0) {
                         // Continue processing as a subcomponent, which will inherit all existing styles
-                        const subcomponent = this.ParseFormattedString(parsable);
+                        const subcomponent = this._ParseFormattedString(parsable);
 
                         // Only append if there's actual text left
                         if (subcomponent.text.length > 0)
@@ -149,7 +149,7 @@ export class ChatComponentFactory {
      * @static
      *
      */
-     public static FromString(str: string) : ChatTextComponent {
+    public static FromString(str: string) : ChatTextComponent {
         return {
             text: str
         };
@@ -162,7 +162,7 @@ export class ChatComponentFactory {
      * @static
      */
     public static FromFormattedString(str: string) : ChatTextComponent {
-        const parsable: ParsableString = {
+        const parsable: StringCursor = {
             string: str,
             reset: false,
             cursor: 0
@@ -180,7 +180,7 @@ export class ChatComponentFactory {
             // Clear the reset flag to continue processing
             parsable.reset = false;
 
-            const subcomponent = this.ParseFormattedString(parsable);
+            const subcomponent = this._ParseFormattedString(parsable);
 
             root.extra.push(subcomponent);
         }
@@ -195,7 +195,7 @@ export class ChatComponentFactory {
      * @static
      */
     public static GetRaw(component: ChatComponent) : string {
-        let raw: string = "";
+        let raw = "";
 
         // Append the element text
         if ("text" in component) raw += component.text;

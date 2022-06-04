@@ -1,5 +1,4 @@
 import { Console } from "../../../game/Console";
-import { Client } from "../../Client";
 import { ClientboundPacket } from "../../Packet";
 import { WritableBuffer } from "../../WritableBuffer";
 
@@ -13,15 +12,45 @@ enum CommandFlags {
     Suggestions = 0x10
 }
 
-interface CommandNode {
+type BrigadierNumber = {
+    flags: number,
+    min?: number,
+    max?: number
+};
+
+type BrigadierBigint = {
+    flags: number,
+    min?: bigint,
+    max?: bigint
+};
+
+enum BrigadierString {
+    SINGLE_WORD = 0,
+    QUOTABLE_PHRASE = 1,
+    GREEDABLE_PHRASE = 2
+}
+
+type MinecraftEntity = number;
+
+type MinecraftScoreHolder = number;
+
+type MinecraftRange = boolean;
+
+type MinecraftResourceOrTag = string;
+
+type MinecraftResource = string;
+
+type CommandNode = {
     flags: number; // byte flags
     children: number[]; // indices of the children
     redirect?: number; // index of the redirect (optional)
     name?: string; // the name of the command (optional except for literal and argument nodes)
     parser?: string; // identifier for argument parsers (optional)
-    properties?: any; // properties for the argument parser (optional)
+    properties?: BrigadierNumber | BrigadierBigint | BrigadierString |
+        MinecraftEntity | MinecraftScoreHolder | MinecraftRange |
+        MinecraftResourceOrTag | MinecraftResource; // properties for the argument parser (optional)
     suggestions?: string; // identifier for suggestions type (optional)
-}
+};
 
 export class DeclareCommandsPacket extends ClientboundPacket {
     /**

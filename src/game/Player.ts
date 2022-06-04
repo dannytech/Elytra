@@ -19,19 +19,19 @@ export enum PermissionLevel {
     Admin = 4
 }
 
-export interface PlayerProperty {
+export type PlayerProperty = {
     name: string;
     value: string;
     signature: string;
 }
 
-export interface PlayerPosition {
+export type PlayerPosition = {
     x: number;
     y: number;
     z: number;
 }
 
-export interface PlayerLook {
+export type PlayerLook = {
     yaw: number;
     pitch: number;
 }
