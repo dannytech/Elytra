@@ -3,6 +3,8 @@ import { Settings, MinecraftConfigs } from "../Configuration";
 import { Client } from "../protocol/Client";
 import { ClientboundPacket, ServerboundPacket } from "../protocol/Packet";
 
+/*eslint @typescript-eslint/no-explicit-any: ["error", { "ignoreRestArgs": true }]*/
+
 export class StandardConsole extends EventEmitter {
     /**
      * Log to the console.

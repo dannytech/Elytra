@@ -1,4 +1,3 @@
-import { Client } from "../../Client";
 import { ServerboundPacket } from "../../Packet";
 import { ResponsePacket } from "./ResponsePacket";
 import { Console } from "../../../game/Console";
