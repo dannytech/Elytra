@@ -39,6 +39,9 @@ jobs:
           key: *node_modules
           paths:
             - node_modules/
+      - run:
+          name: Build the server
+          command: npm run build -- --sourceMap false
       - store_artifacts:
           path: dist/
       - persist_to_workspace:
