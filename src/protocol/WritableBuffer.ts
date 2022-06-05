@@ -31,14 +31,6 @@ export class WritableBuffer {
     }
 
     /**
-     * Writes a single byte to the buffer.
-     * @param {number} value The byte to write, in numerical form.
-     */
-    public WriteByte(value: number) {
-        this.Write(Buffer.from([ value ]));
-    }
-
-    /**
      * Writes multiple bytes to the buffer.
      * @param {Buffer} value The buffer to write.
      */
@@ -56,6 +48,14 @@ export class WritableBuffer {
      */
     public WriteBool(value: boolean) {
         this.WriteByte(value ? 0x1 : 0x0);
+    }
+
+    /**
+     * Writes a single byte to the buffer.
+     * @param {number} value The byte to write, in numerical form.
+     */
+    public WriteByte(value: number) {
+        this.Write(Buffer.from([ value ]));
     }
 
     /**

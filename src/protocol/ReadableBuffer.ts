@@ -28,14 +28,6 @@ export class ReadableBuffer {
     }
 
     /**
-     * Reads a single byte from the buffer.
-     * @returns {number} The byte, represented as a number in the range 0-255.
-     */
-    public ReadByte() : number {
-        return this.Read(1)[0];
-    }
-
-    /**
      * Reads the specified amount of bytes from the buffer, or all the remaining unread bytes.
      * @param {number} [bytes] The amount of bytes to read.
      * @returns {Buffer} A new buffer containing the subset of bytes read.
@@ -48,6 +40,14 @@ export class ReadableBuffer {
             Console.Debug("ReadableBuffer attempted to read past the end of the buffer. This could cause issues parsing packets correctly.".red.bold);
 
         return this.Buffer.slice(this.Cursor, this.Cursor += bytes);
+    }
+
+    /**
+     * Reads a single byte from the buffer.
+     * @returns {number} The byte, represented as a number in the range 0-255.
+     */
+    public ReadByte() : number {
+        return this.Read(1)[0];
     }
 
     /**
