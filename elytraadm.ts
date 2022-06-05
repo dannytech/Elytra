@@ -24,10 +24,10 @@ async function connectToDatabase() {
 
 /**
  * Convert values from the command line arguments to the correct type
- * @param {any} value The value to convert
+ * @param {string} value The value to convert
  * @returns {any} The converted value
  */
-function cast(value: any) : any {
+function cast(value: string) : any {
     switch(value) {
         case "true":
             return true;
