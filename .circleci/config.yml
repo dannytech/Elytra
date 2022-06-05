@@ -93,7 +93,7 @@ workflows:
       - build:
           filters:
             branches:
-              only: master
+              only: main
       - deploy:
           requires:
             - test
@@ -102,6 +102,6 @@ workflows:
             - ghcr
           filters:
             branches:
-              only: master
+              only: main
             tags:
               only: /.$/
