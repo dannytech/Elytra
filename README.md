@@ -8,7 +8,7 @@ Elytra is a lightweight Minecraft server written in TypeScript. Although the pro
 
 Elytra uses a MongoDB backend to store the server configuration and state. This allows many configuration options to be changed while the server is running, in addition to making it easier to store complex data structures like chunk data. The simplest way to get started is to run the [`mongo`](https://hub.docker.com/_/mongo) Docker image and point this project to it, or to use a service like [MongoDB Cloud](https://www.mongodb.com/cloud). Setting up a MongoDB server or cluster will not be covered here. Create a new file called `.env`, then add `MONGO_URI=` and paste the cluster connection URL.
 
-From there, either run `yarn start` to build and start the server in production mode, or `yarn dev` to run a development server, which will restart on any changes. The first time the server is run, it will prompt to accept the EULA.
+Elytra targets the LTS version of NodeJS, but is likely to function normally on other versions. Once the environment is set up, either run `yarn start` to build and start the server in production mode, or `yarn dev` to run a development server, which will restart on any changes. The first time the server is run, it will prompt to accept the EULA.
 
 ## Contributing
 
