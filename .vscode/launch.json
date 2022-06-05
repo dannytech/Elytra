@@ -1,0 +1,21 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "pwa-node",
+            "request": "launch",
+            "name": "Start Server (nodemon)",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "runtimeExecutable": "${workspaceFolder}/node_modules/nodemon/bin/nodemon.js",
+            "program": "${workspaceFolder}/index.ts",
+            "console": "integratedTerminal",
+            "internalConsoleOptions": "neverOpen",
+            "restart": true,
+            "outFiles": [
+                "${workspaceFolder}/dist/**/*.js"
+            ]
+        }
+    ]
+}
