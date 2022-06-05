@@ -100,6 +100,8 @@ workflows:
           filters:
             branches:
               only: main
+            tags:
+              only: /.$/
       - deploy:
           requires:
             - test
@@ -107,7 +109,5 @@ workflows:
           context:
             - ghcr
           filters:
-            branches:
-              only: main
             tags:
               only: /.$/
