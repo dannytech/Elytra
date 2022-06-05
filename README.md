@@ -33,6 +33,7 @@ There are many features still to implement, not the less something more than jus
     - [] Versioned packet ID mappings (either requires manual data entry or a scraping script)
     - [] Block and item masking (if a block or item is not supported in a particular version, telling those clients it's a similar block or item)
     - [] Pre- and post-1.9 combat
+- [] Automated testing
 - [] World generation and loading
 - [] Entities
 - [] Tile entities
