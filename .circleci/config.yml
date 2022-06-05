@@ -18,9 +18,9 @@ jobs:
           key: *node_modules
           paths:
             - node_modules/
-      # - run:
-      #     name: Check code style
-      #     command: npm run lint
+      - run:
+          name: Check code style
+          command: npm run lint
 
   # build a production bundle for deployment
   build:
@@ -101,7 +101,7 @@ workflows:
             branches:
               only: main
             tags:
-              only: /.$/
+              only: /.*/
       - deploy:
           requires:
             - test
@@ -109,5 +109,7 @@ workflows:
           context:
             - ghcr
           filters:
+            branches:
+              ignore: /.*/
             tags:
-              only: /.$/
+              only: /.*/
