@@ -2,6 +2,8 @@ import * as mongoose from "mongoose";
 import { Console } from "./game/Console";
 
 export class Database {
+    public static Connected = false;
+
     /**
      * Connect Mongoose to the database backend
      * @param {string} uri A MongoDB connection URI
@@ -15,6 +17,7 @@ export class Database {
             useCreateIndex: true,
             useUnifiedTopology: true
         });
+        Database.Connected = true;
 
         Console.Info("Connected to database with URI", uri.green);
     }
@@ -26,6 +29,8 @@ export class Database {
      */
     public static async Disconnect() {
         await mongoose.disconnect();
+        Database.Connected = false;
+
         Console.Info("Disconnected from database");
     }
 }
