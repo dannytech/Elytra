@@ -1,4 +1,4 @@
-#!/usr/bin/env -S yarn run ts-node
+#!/usr/bin/env -S npx ts-node
 
 import axios from "axios";
 import "colors";

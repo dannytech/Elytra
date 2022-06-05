@@ -1,6 +1,5 @@
 # module files
 node_modules/
-yarn-error.log
 
 # output files
 dist/
