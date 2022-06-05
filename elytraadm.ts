@@ -64,7 +64,7 @@ function cast(value: string) : any {
 
                 // Set the value
                 await Settings.Set(namespace, name, value);
-                Console.Info("Set", `${namespace}:${name}`.green = value.toString().blue);
+                Console.Info("Set", `${namespace}:${name}`.green, "=", value.toString().blue);
             }
             break;
         case "get":
