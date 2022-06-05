@@ -4,12 +4,12 @@
         {
             "type": "pwa-node",
             "request": "launch",
-            "name": "Start Server (nodemon)",
+            "name": "Start Server (watch)",
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "runtimeExecutable": "${workspaceFolder}/node_modules/nodemon/bin/nodemon.js",
-            "program": "${workspaceFolder}/index.ts",
+            "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/tsc-watch",
+            "runtimeArgs": ["--incremental", "--noClear", "--onSuccess", "/usr/local/bin/node ./dist/index.js"],
             "console": "integratedTerminal",
             "internalConsoleOptions": "neverOpen",
             "restart": true,
