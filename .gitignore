@@ -1,7 +1,9 @@
-dist/
+# module files
 node_modules/
 yarn-error.log
 
-.env
+# output files
+dist/
 
-.devcontainer/
+# server settings
+.env
