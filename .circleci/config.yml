@@ -42,8 +42,11 @@ jobs:
       - run:
           name: Build the server
           command: npm run build -- --sourceMap false
+      - run:
+          name: Bundle the server
+          command: tar czf dist.tar.gz dist/
       - store_artifacts:
-          path: dist/
+          path: dist.tar.gz
       - persist_to_workspace:
           root: .
           paths:
