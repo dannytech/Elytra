@@ -7,6 +7,7 @@ export class ServerPluginMessagePacket extends ClientboundPacket {
     private _Channel: string;
     private _Message: Buffer;
 
+    /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
     constructor(client: Client, channel: string, message: any) {
         super(client);
 

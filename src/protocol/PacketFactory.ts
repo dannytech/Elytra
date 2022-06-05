@@ -199,6 +199,7 @@ export class PacketFactory {
 
         if (packetName) {
             // Dynamically load the packet class
+            /* eslint-disable-next-line @typescript-eslint/no-var-requires */
             const packetClass: IServerboundConstructor = require(`./states/${client.State}/${packetName}`)[packetName];
 
             // Assemble a new object reflectively
