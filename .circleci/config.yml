@@ -1,0 +1,107 @@
+version: 2.1
+
+jobs:
+  # run automated tests (just linting for now)
+  test:
+    docker:
+      - image: cimg/node:lts
+
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - &node_modules node_modules-{{ .Branch }}-{{checksum "package-lock.json"}}
+      - run:
+          name: Install packages
+          command: npm install
+      - save_cache:
+          key: *node_modules
+          paths:
+            - node_modules/
+      - run:
+          name: Check code style
+          command: npm run lint
+
+  # build a production bundle for deployment
+  build:
+    docker:
+      - image: cimg/node:lts
+
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - *node_modules
+      - run:
+          name: Install packages
+          command: npm install
+      - save_cache:
+          key: *node_modules
+          paths:
+            - node_modules/
+      - store_artifacts:
+          path: dist/
+      - persist_to_workspace:
+          root: .
+          paths:
+            - dist/
+
+  # create a Docker image for Elytra
+  deploy:
+    docker:
+      - image: docker:git
+
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - restore_cache:
+          keys:
+            - &docker_layers docker-{{ .Branch }}-{{checksum "Dockerfile"}}
+      - setup_remote_docker
+      - run:
+          name: Load Docker image layer cache
+          command: |
+            set +o pipefail
+            docker load -i /caches/elytra.tar | true
+      - run:
+        name: Build Docker image
+        command: |
+          docker build --cache-from=elytra -t elytra .
+      - run:
+        name: Save Docker image layer cache
+        command: |
+          mkdir -p /caches
+          docker save -o /caches/elytra.tar elytra
+      - save_cache:
+          key: *docker_layers
+          paths:
+            - /cache/elytra.tar
+      - run:
+          name: Push Docker image
+          environment:
+            GITHUB_USERNAME: dannytech
+          command: |
+            docker login ghcr.io --username ${GITHUB_USERNAME} --password ${GITHUB_TOKEN}
+            docker tag elytra "ghcr.io/${GITHUB_USERNAME}/elytra:${CIRCLE_TAG}"
+            docker push "ghcr.io/${GITHUB_USERNAME}/elytra:${CIRCLE_TAG}"
+
+workflows:
+  main:
+    jobs:
+      - test
+      - build:
+          filters:
+            branches:
+              only: master
+      - deploy:
+          requires:
+            - test
+            - build
+          context:
+            - ghcr
+          filters:
+            branches:
+              only: master
+            tags:
+              only: /.$/
