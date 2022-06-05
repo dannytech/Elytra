@@ -101,7 +101,7 @@ workflows:
             branches:
               only: main
             tags:
-              only: /.$/
+              only: /.*/
       - deploy:
           requires:
             - test
@@ -109,5 +109,7 @@ workflows:
           context:
             - ghcr
           filters:
+            branches:
+              ignore: /.*/
             tags:
-              only: /.$/
+              only: /.*/
