@@ -13,7 +13,7 @@ FROM node:lts
 WORKDIR /app
 
 # copy files
-COPY --from=0 node_modules/ ./
+COPY --from=0 node_modules/ ./node_modules/
 COPY dist/* ./
 
 # standard server port for documentation purposes
