@@ -9,6 +9,7 @@
   "scripts": {
     "build": "tsc",
     "dev": "tsc-watch --incremental --noClear --onSuccess 'node dist/index.js'",
+    "lint": "eslint .",
     "start": "npm run build && node dist/index.js"
   },
   "engines": {
