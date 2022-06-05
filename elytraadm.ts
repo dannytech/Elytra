@@ -27,6 +27,7 @@ async function connectToDatabase() {
  * @param {string} value The value to convert
  * @returns {any} The converted value
  */
+/* eslint-disable-next-line @typescript-eslint/no-explicit-any */
 function cast(value: string) : any {
     switch(value) {
         case "true":

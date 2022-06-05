@@ -5,6 +5,7 @@ import { Schema, Model, Document } from "mongoose";
 export interface IConfigSchema {
     namespace: string
     name: string
+    /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
     value: any
 }
 export interface IConfigDocument extends IConfigSchema, Document {}

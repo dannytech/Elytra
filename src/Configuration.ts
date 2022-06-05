@@ -6,6 +6,13 @@ import { World } from "./game/World";
 import { PacketFactory } from "./protocol/PacketFactory";
 import { versionSpec } from "./Masking";
 
+type SettingsDefault = {
+    [namespace: string]: {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        [name: string]: any
+    }
+};
+
 export enum MinecraftConfigs {
     ServerIP = "serverIP",
     ServerPort = "serverPort",
@@ -28,11 +35,7 @@ export enum ElytraConfigs {
 }
 
 export class Settings {
-    private static _Defaults: {
-        [namespace: string]: {
-            [name: string]: any
-        }
-    } = {
+    private static _Defaults: SettingsDefault = {
         minecraft: {
             [MinecraftConfigs.ServerIP]: "0.0.0.0",
             [MinecraftConfigs.ServerPort]: 25565,
@@ -76,8 +79,11 @@ export class Settings {
      * @static
      * @async
      */
+    /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
     public static async Get(name: string) : Promise<any>;
+    /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
     public static async Get(namespace: string, name: string) : Promise<any>;
+    /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
     public static async Get(namespaceOrName: string, name?: string) : Promise<any> {
         // support an overload which assumes the namespace as the first parameter is not necessary
         if (name === undefined) {
@@ -102,8 +108,11 @@ export class Settings {
      * @static
      * @async
      */
+    /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
     public static async Set(name: string, value: any) : Promise<void>;
+    /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
     public static async Set(namespace: string, name: string, value: any) : Promise<void>;
+    /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
     public static async Set(namespaceOrName: string, nameOrValue: any, value?: any) {
         // support an overload which assumes the namespace as the first parameter is not necessary
         if (value === undefined) {
@@ -138,12 +147,12 @@ export class State {
 }
 
 export class Constants {
-    public static ServerName: string = "Elytra";
-    public static ConfigNamespace: string = "minecraft";
-    public static ProtocolVersion: number = 578;
-    public static CompressionThreshold: number = 64;
-    public static KeyLength: number = 1024;
-    public static VerificationTokenLength: number = 8;
-    public static MessageBufferSize: number = 1000000;
-    public static KeepAliveInterval: number = 5000;
+    public static ServerName = "Elytra";
+    public static ConfigNamespace = "minecraft";
+    public static ProtocolVersion = 578;
+    public static CompressionThreshold = 64;
+    public static KeyLength = 1024;
+    public static VerificationTokenLength = 8;
+    public static MessageBufferSize = 1000000;
+    public static KeepAliveInterval = 5000;
 }

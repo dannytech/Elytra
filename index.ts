@@ -63,9 +63,8 @@ async function startListener() {
  * Start the REST and Websocket APIs to allow for remote management and synchronization.
  * @async
  */
-async function startAPI() {
-
-}
+/* eslint-disable-next-line @typescript-eslint/no-empty-function */
+async function startAPI() {}
 
 (async () => {
     // Prepare the server to start
