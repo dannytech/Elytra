@@ -18,9 +18,9 @@ jobs:
           key: *node_modules
           paths:
             - node_modules/
-      # - run:
-      #     name: Check code style
-      #     command: npm run lint
+      - run:
+          name: Check code style
+          command: npm run lint
 
   # build a production bundle for deployment
   build:
