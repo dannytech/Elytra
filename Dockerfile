@@ -14,7 +14,7 @@ WORKDIR /app
 
 # copy files
 COPY --from=0 node_modules/ ./node_modules/
-COPY dist/* ./
+COPY dist/ ./
 
 # standard server port for documentation purposes
 EXPOSE 25565/tcp
