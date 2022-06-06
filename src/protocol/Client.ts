@@ -30,7 +30,22 @@ export type EncryptionState = {
     enabled: boolean;
     verificationToken?: Buffer;
     sharedSecret?: Buffer;
-}
+};
+
+export type ProtocolState = {
+    clientId: number;
+    ip: string;
+    state: ClientState;
+    compression: CompressionState;
+    encryption: EncryptionState;
+    version?: number;
+};
+
+export type KeepAliveState = {
+    id?: bigint;
+    sent?: number;
+    last?: number;
+};
 
 export class Client extends EventEmitter {
     private _Socket: Socket;
@@ -38,17 +53,8 @@ export class Client extends EventEmitter {
     private _Decipher: Decipher;
     private _Cipher: Cipher;
 
-    public ClientId: number;
-    public ProtocolVersion: number;
-    public State: ClientState;
-    public Compression: CompressionState;
-    public Encryption: EncryptionState;
-    public KeepAlive: {
-        id?: bigint;
-        sent?: number;
-        last?: number;
-    };
-    public IP: string;
+    public Protocol: ProtocolState;
+    public KeepAlive: KeepAliveState;
     public Player: Player;
 
     constructor(socket: Socket, id: number) {
@@ -58,14 +64,16 @@ export class Client extends EventEmitter {
         this._Socket = socket;
         this._ClientboundQueue = Array<ClientboundPacket>();
 
-        this.ClientId = id;
-        this.State = ClientState.Handshaking;
-        this.Compression = CompressionState.Disabled;
-        this.Encryption = {
-            enabled: false
+        this.Protocol = {
+            clientId: id,
+            ip: socket.remoteAddress,
+            state: ClientState.Handshaking,
+            compression: CompressionState.Disabled,
+            encryption: {
+                enabled: false
+            }
         };
         this.KeepAlive = {};
-        this.IP = this._Socket.remoteAddress;
     }
 
     /**
@@ -76,8 +84,8 @@ export class Client extends EventEmitter {
     public async Receive(packetStream: ProtocolStub) {
         while (packetStream.Stream.readable) {
             // Decrypt the packet (since the cipher is never finalized, this decryption can safely process appended packets)
-            if (this.Encryption.enabled && this._Decipher == null) {
-                this._Decipher = crypto.createDecipheriv("aes-128-cfb8", this.Encryption.sharedSecret, this.Encryption.sharedSecret);
+            if (this.Protocol.encryption.enabled && this._Decipher == null) {
+                this._Decipher = crypto.createDecipheriv("aes-128-cfb8", this.Protocol.encryption.sharedSecret, this.Protocol.encryption.sharedSecret);
 
                 // Decrypt from the incoming stream through the decryption stream
                 packetStream.Stream.pipe(this._Decipher);
@@ -99,7 +107,7 @@ export class Client extends EventEmitter {
             let packet: ReadableBuffer = new ReadableBuffer(packetBuf);
 
             // Decompress the packet
-            if (this.Compression === CompressionState.Enabled) {
+            if (this.Protocol.compression === CompressionState.Enabled) {
                 // Check that the packet met the compression threshold
                 const compressedLength: number = packet.ReadVarInt();
 
@@ -158,7 +166,7 @@ export class Client extends EventEmitter {
             payload.Prepend().WriteVarInt(packetId);
 
             // Compress the packet
-            if (this.Compression === CompressionState.Enabled) {
+            if (this.Protocol.compression === CompressionState.Enabled) {
                 let uncompressedLength: number = payload.Buffer.length;
 
                 // Only compress over the threshold
@@ -175,9 +183,9 @@ export class Client extends EventEmitter {
             payload.Prepend().WriteVarInt(payload.Buffer.length);
 
             // Encrypt the packet
-            if (this.Encryption.enabled) {
+            if (this.Protocol.encryption.enabled) {
                 if (this._Cipher == null)
-                    this._Cipher = crypto.createCipheriv("aes-128-cfb8", this.Encryption.sharedSecret, this.Encryption.sharedSecret);
+                    this._Cipher = crypto.createCipheriv("aes-128-cfb8", this.Protocol.encryption.sharedSecret, this.Protocol.encryption.sharedSecret);
 
                 // Encrypt the entire packet, including headers
                 const encrypted: Buffer = this._Cipher.update(payload.Buffer);
@@ -200,14 +208,14 @@ export class Client extends EventEmitter {
         // Flush the clientbound queue
         this._ClientboundQueue.splice(0, this._ClientboundQueue.length);
 
-        Console.Debug(`(${this.ClientId})`.magenta, "Disconnecting");
+        Console.Debug(`(${this.Protocol.clientId})`.magenta, "Disconnecting");
         this._Socket.destroy();
 
         // Save the player state before destroying the client
         if (this.Player) {
             State.ClientBus.Broadcast((client: Client ) => {
                 // Remove the player from the list of online players
-                if (client.State == ClientState.Play)
+                if (client.Protocol.state == ClientState.Play)
                     client.Queue(new PlayerInfoPacket(client, PlayerInfoActions.RemovePlayer, [this.Player]));
             });
             this.Player.Save();

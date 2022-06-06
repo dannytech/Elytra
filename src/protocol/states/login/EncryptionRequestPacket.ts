@@ -38,6 +38,6 @@ export class EncryptionRequestPacket extends ClientboundPacket {
         buf.Write(verificationToken);
 
         // Store the token in the client state
-        this._Client.Encryption.verificationToken = verificationToken;
+        this._Client.Protocol.encryption.verificationToken = verificationToken;
     }
 }

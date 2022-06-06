@@ -51,7 +51,7 @@ export class StandardConsole extends EventEmitter {
 
         // Print details about the client and packet, in addition to the message
         const client: Client = packet.GetClient();
-        this.Debug(`(${client.ClientId})`.magenta, `[${direction[0]} → ${direction[1]}]`.blue, `[${packet.constructor.name}]`.cyan, ...message);
+        this.Debug(`(${client.Protocol.clientId})`.magenta, `[${direction[0]} → ${direction[1]}]`.blue, `[${packet.constructor.name}]`.cyan, ...message);
     }
 }
 

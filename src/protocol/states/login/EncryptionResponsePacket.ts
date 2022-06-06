@@ -60,11 +60,11 @@ export class EncryptionResponsePacket extends ServerboundPacket {
         // Verify the token can be decrypted successfully
         Console.DebugPacket(this, "Verifying nonce");
         const decryptedToken: Buffer = State.Keypair.Decrypt(verifyToken);
-        if (decryptedToken.equals(this._Client.Encryption.verificationToken)) {
+        if (decryptedToken.equals(this._Client.Protocol.encryption.verificationToken)) {
             // Tell the socket to use encryption
-            this._Client.Encryption.sharedSecret = decryptedSecret;
-            this._Client.Encryption.enabled = true;
-            delete this._Client.Encryption.verificationToken;
+            this._Client.Protocol.encryption.sharedSecret = decryptedSecret;
+            this._Client.Protocol.encryption.enabled = true;
+            delete this._Client.Protocol.encryption.verificationToken;
 
             // Generate the server hash for authentication
             const serverHash: string = digest(Buffer.concat([
@@ -81,7 +81,7 @@ export class EncryptionResponsePacket extends ServerboundPacket {
             // Ensures the client authentication and joining client originate from the same source
             const preventProxy: boolean = await Settings.Get(MinecraftConfigs.PreventProxy);
             const debug: boolean = await Settings.Get(MinecraftConfigs.Debug);
-            if (preventProxy && !debug) params["ip"] = this._Client.IP;
+            if (preventProxy && !debug) params["ip"] = this._Client.Protocol.ip;
 
             // Authenticate the client
             Console.DebugPacket(this, "Authenticating client against Mojang servers");

@@ -38,7 +38,7 @@ export class LoginSuccessPacket extends ClientboundPacket {
     public async AfterSend() {
         // Update the client's state
         Console.DebugPacket(this, "Switching to state", "play".green);
-        this._Client.State = ClientState.Play;
+        this._Client.Protocol.state = ClientState.Play;
 
         // Queue some more joining packets
         Console.DebugPacket(this, "Queueing initial play state packets");

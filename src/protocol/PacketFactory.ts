@@ -150,7 +150,7 @@ export class PacketFactory {
      */
     public Lookup(direction: PacketDirection, client: Client, packetNameOrId: string | number) : string | number {
         // Load the mappings for the current state
-        const statePackets = this._PacketSpec.find(spec => spec.direction == direction && spec.state == client.State);
+        const statePackets = this._PacketSpec.find(spec => spec.direction == direction && spec.state == client.Protocol.state);
 
         if (statePackets) {
             // Get the packet ID or index to search for
@@ -166,7 +166,7 @@ export class PacketFactory {
             // Find a matching version specification
             if (result) {
                 for (const mapping of result) {
-                    if (checkVersion(client.ProtocolVersion || 0, [mapping.version])) {
+                    if (checkVersion(client.Protocol.version || 0, [mapping.version])) {
                         if (direction == PacketDirection.Serverbound)
                             return statePackets.names[mapping.id];
                         else
@@ -182,7 +182,7 @@ export class PacketFactory {
             diagnosticName = `0x${packetId.toString(16).padStart(2, "0")}`;
         } else
             diagnosticName = packetNameOrId as string;
-        Console.Error("Unable to resolve", direction.green, client.State.green, "packet", diagnosticName.blue, "(please report this to the developer)");
+        Console.Error("Unable to resolve", direction.green, client.Protocol.state.green, "packet", diagnosticName.blue, "(please report this to the developer)");
     }
 
     /**
@@ -201,7 +201,7 @@ export class PacketFactory {
         if (packetName) {
             // Dynamically load the packet class
             /* eslint-disable-next-line @typescript-eslint/no-var-requires */
-            const packetClass: IServerboundConstructor = require(`./states/${client.State}/${packetName}`)[packetName];
+            const packetClass: IServerboundConstructor = require(`./states/${client.Protocol.state}/${packetName}`)[packetName];
 
             // Assemble a new object reflectively
             const packet: ServerboundPacket = Reflect.construct(packetClass, [client]);
@@ -215,7 +215,7 @@ export class PacketFactory {
             // Dispatch packets if a send is needed
             await client.Send();
         } else
-            Console.Debug(`(${client.ClientId})`.magenta, "Unrecognized", client.State.green, "packet",
+            Console.Debug(`(${client.Protocol.clientId})`.magenta, "Unrecognized", client.Protocol.state.green, "packet",
                 `0x${packetId.toString(16).padStart(2, "0")}`.blue, buf.Buffer.toString("hex").yellow);
     }
 }

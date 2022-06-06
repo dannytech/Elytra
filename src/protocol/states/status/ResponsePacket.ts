@@ -20,8 +20,8 @@ export class ResponsePacket extends ClientboundPacket {
 
         // Either echo the protocol version if supported or tell the client to update to a newer version
         const serverVersionSpec: VersionSpec[] = await Settings.Get(MinecraftConfigs.ServerVersion);
-        let protocolVersion: number = this._Client.ProtocolVersion;
-        if (!checkVersion(this._Client.ProtocolVersion, serverVersionSpec)) {
+        let protocolVersion: number = this._Client.Protocol.version;
+        if (!checkVersion(this._Client.Protocol.version, serverVersionSpec)) {
             const lastVersionSpec = serverVersionSpec[serverVersionSpec.length - 1];
 
             // Set protocol to the latest supported version
