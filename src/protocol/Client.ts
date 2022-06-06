@@ -6,13 +6,12 @@ import { Constants, State } from "../Configuration";
 import { ClientboundPacket } from "./Packet";
 import { ReadableBuffer } from "./ReadableBuffer";
 import { WritableBuffer } from "./WritableBuffer";
+import { ProtocolStub } from "./ProtocolStub";
 import { Zlib } from "./Zlib";
 import { Player } from "../game/Player";
 import { Console } from "../game/Console";
 import { PlayerInfoActions, PlayerInfoPacket } from "./states/play/PlayerInfoPacket";
 import { PacketDirection } from "./PacketFactory";
-import { LegacyKickPacket } from "./states/handshaking/LegacyKickPacket";
-import { LegacyHandshakePacket } from "./states/handshaking/LegacyHandshakePacket";
 
 export enum ClientState {
     Handshaking = "handshaking",
@@ -71,44 +70,33 @@ export class Client extends EventEmitter {
 
     /**
      * Parses and processes an incoming packet(s) from the given buffer.
-     * @param {ReadableBuffer} packetStream The incoming buffer of packet(s).
+     * @param {ProtocolStub} packetStream The incoming buffer of packet(s).
      * @async
      */
-    public async Receive(packetStream: ReadableBuffer) {
-        // Support legacy handshaking (does not require encryption, compression, etc.)
-        const legacyHandshakeId = Buffer.from([0xFE, 0x01, 0xFA]);
-        if (packetStream.Buffer.slice(0, 3).equals(legacyHandshakeId)) {
-            const legacyHandshake: LegacyHandshakePacket = new LegacyHandshakePacket(this);
-
-            // Consume the packet ID
-            packetStream.Skip(1);
-
-            // Generate a handshake response
-            await legacyHandshake.Parse(packetStream);
-
-            // Send the response
-            return await this.Send();
-        }
-
-        // Decrypt the packet (since the cipher is never finalized, this decryption can safely process appended packets)
-        if (this.Encryption.enabled) {
-            if (this._Decipher == null)
+    public async Receive(packetStream: ProtocolStub) {
+        while (packetStream.GetStream().readable) {
+            // Decrypt the packet (since the cipher is never finalized, this decryption can safely process appended packets)
+            if (this.Encryption.enabled && this._Decipher == null) {
                 this._Decipher = crypto.createDecipheriv("aes-128-cfb8", this.Encryption.sharedSecret, this.Encryption.sharedSecret);
 
-            // Decrypt the entire packet (no headers need to be stripped)
-            const decrypted: Buffer = this._Decipher.update(packetStream.Buffer);
-            packetStream = new ReadableBuffer(decrypted);
-        }
+                // Decrypt from the incoming stream through the decryption stream
+                packetStream.GetStream().pipe(this._Decipher);
 
-        // Loop until no more packets exist
-        while (packetStream.Cursor < packetStream.Buffer.length - 1) {
-            const packetLength: number = packetStream.ReadVarInt();
+                // Replace the existing stream (note that underlying stream references are preserved)
+                packetStream = new ProtocolStub(this._Decipher);
+            }
+
+            // Get the length of the next packet
+            const packetLength: number = await packetStream.ReadVarInt();
 
             // A zero-length packet indicates the end of a connection (a FIN)
-            if (packetLength === 0)
+            // Legacy server list ping uses the packet ID 0xFE, which is not supported by Elytra
+            if (packetLength == 0x00 || packetLength == 0xFE)
                 return this.Disconnect();
 
-            let packet: ReadableBuffer = new ReadableBuffer(packetStream.Read(packetLength));
+            // Read the entire contents of the packet
+            const packetBuf: Buffer = await packetStream.Read(packetLength);
+            let packet: ReadableBuffer = new ReadableBuffer(packetBuf);
 
             // Decompress the packet
             if (this.Compression === CompressionState.Enabled) {
@@ -158,14 +146,6 @@ export class Client extends EventEmitter {
             // Export the fields to the completed packet
             let payload: WritableBuffer = new WritableBuffer();
             await packet.Write(payload);
-
-            if (packet instanceof LegacyKickPacket) {
-                // Prevent the client from sending any more packets
-                payload.Prepend().WriteByte(0xFF);
-
-                // Send the packet
-                return await this._Write(payload);
-            }
 
             // Resolve the packet ID
             const packetId: number = State.PacketFactory.Lookup(PacketDirection.Clientbound, this, packet.constructor.name) as number;
@@ -239,7 +219,7 @@ export class Client extends EventEmitter {
     /**
      * Appends a clientbound packet to the client queue.
      * @param {ClientboundPacket} packet The packet to queue.
-     * @param {boolean} [force=false] Whether to put the packet at the beginning of the queue.
+     * @param {boolean} [priority=false] Whether to put the packet at the beginning of the queue.
      */
     public Queue(packet: ClientboundPacket, priority = false) {
         if (priority) this._ClientboundQueue.unshift(packet);
