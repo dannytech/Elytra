@@ -74,13 +74,13 @@ export class Client extends EventEmitter {
      * @async
      */
     public async Receive(packetStream: ProtocolStub) {
-        while (packetStream.GetStream().readable) {
+        while (packetStream.Stream.readable) {
             // Decrypt the packet (since the cipher is never finalized, this decryption can safely process appended packets)
             if (this.Encryption.enabled && this._Decipher == null) {
                 this._Decipher = crypto.createDecipheriv("aes-128-cfb8", this.Encryption.sharedSecret, this.Encryption.sharedSecret);
 
                 // Decrypt from the incoming stream through the decryption stream
-                packetStream.GetStream().pipe(this._Decipher);
+                packetStream.Stream.pipe(this._Decipher);
 
                 // Replace the existing stream (note that underlying stream references are preserved)
                 packetStream = new ProtocolStub(this._Decipher);
@@ -163,8 +163,8 @@ export class Client extends EventEmitter {
 
                 // Only compress over the threshold
                 if (uncompressedLength > Constants.CompressionThreshold) {
-                    const compressed: ReadableBuffer = await Zlib.Deflate(payload.GetReadable());
-                    payload = compressed.GetWritable();
+                    const compressed: ReadableBuffer = await Zlib.Deflate(payload.ReadableBuffer);
+                    payload = compressed.WritableBuffer;
                 } else uncompressedLength = 0;
 
                 // Prepend the uncompressed length

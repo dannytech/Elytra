@@ -5,7 +5,8 @@
         "removeComments": true,
         "preserveConstEnums": true,
         "sourceMap": true,
-        "outDir": "dist/"
+        "outDir": "dist/",
+        "target": "ES5" // ES6 causes issues with reflective loading
     },
     "files": [
         "index.ts",

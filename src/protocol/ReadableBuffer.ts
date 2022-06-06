@@ -3,28 +3,20 @@ import { UUID } from "../game/UUID";
 import { WritableBuffer } from "./WritableBuffer";
 
 export class ReadableBuffer {
+    private _Buffer: Buffer;
+
+    public get Buffer() : Buffer {
+        return this._Buffer;
+    }
+    public get WritableBuffer() : WritableBuffer {
+        return new WritableBuffer(this._Buffer);
+    }
+
     public Cursor: number;
-    public Buffer: Buffer;
 
     constructor(buf: Buffer) {
-        this.Buffer = buf;
+        this._Buffer = buf;
         this.Cursor = 0;
-    }
-
-    /**
-     * Exports a WriteableBuffer of the buffer's contents.
-     * @returns {WritableBuffer} A writable representation of the buffer.
-     */
-    public GetWritable() : WritableBuffer {
-        return new WritableBuffer(this.Buffer);
-    }
-
-    /**
-     * Skips the specified amount of bytes in the buffer.
-     * @param {number} [bytes] The amount of bytes to skip.
-     */
-    public Skip(bytes: number) {
-        this.Cursor += bytes;
     }
 
     /**
@@ -33,13 +25,13 @@ export class ReadableBuffer {
      * @returns {Buffer} A new buffer containing the subset of bytes read.
      */
     public Read(bytes?: number) : Buffer {
-        bytes = bytes || this.Buffer.length - this.Cursor;
+        bytes = bytes || this._Buffer.length - this.Cursor;
 
         // Alert if there was a buffer overrun, this really shouldn't happen
-        if (bytes + this.Cursor > this.Buffer.length)
+        if (bytes + this.Cursor > this._Buffer.length)
             Console.Debug("ReadableBuffer attempted to read past the end of the buffer. This could cause issues parsing packets correctly.".red.bold);
 
-        return this.Buffer.slice(this.Cursor, this.Cursor += bytes);
+        return this._Buffer.slice(this.Cursor, this.Cursor += bytes);
     }
 
     /**

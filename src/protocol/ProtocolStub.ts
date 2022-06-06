@@ -11,7 +11,7 @@ export class ProtocolStub {
      * Returns the full-duplex stream being read from.
      * @returns {Duplex} The underlying stream.
      */
-    public GetStream() : Duplex {
+    public get Stream() : Duplex {
         return this._Stream;
     }
 

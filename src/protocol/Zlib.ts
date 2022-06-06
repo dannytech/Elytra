@@ -14,10 +14,9 @@ export class Zlib {
      */
     public static async Deflate(uncompressed: ReadableBuffer) : Promise<ReadableBuffer> {
         const output: WritableBuffer = new WritableBuffer();
-        const buf: Buffer = uncompressed.Read();
 
         const compressed: Buffer = await new Promise((resolve, reject) => {
-            deflate(buf, (err, buf: Buffer) => {
+            deflate(uncompressed.Buffer, (err, buf: Buffer) => {
                 if (err) return reject(err);
 
                 return resolve(buf);
@@ -28,12 +27,12 @@ export class Zlib {
         output.Write(this._Zlib);
 
         // Write the Adler32 checksum
-        output.WriteUint32(this.Adler32(buf));
+        output.WriteUint32(this.Adler32(uncompressed.Buffer));
 
         // Write the compressed data
         output.Write(compressed);
 
-        return output.GetReadable();
+        return output.ReadableBuffer;
     }
 
     /**
@@ -52,7 +51,7 @@ export class Zlib {
             const checksum = compressed.ReadUint32();
 
             const decompressed: Buffer = await new Promise((resolve, reject) => {
-                inflate(compressed.Read(), (err, buf: Buffer) => {
+                inflate(compressed.Buffer, (err, buf: Buffer) => {
                     if (err) return reject(err);
 
                     return resolve(buf);
