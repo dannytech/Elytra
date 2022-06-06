@@ -6,7 +6,7 @@
         "preserveConstEnums": true,
         "sourceMap": true,
         "outDir": "dist/",
-        "target": "ES5" // ES6 causes issues with reflective loading
+        "target": "ES6"
     },
     "files": [
         "index.ts",

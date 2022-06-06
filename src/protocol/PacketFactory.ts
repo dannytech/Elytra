@@ -204,8 +204,7 @@ export class PacketFactory {
             const packetClass: IServerboundConstructor = require(`./states/${client.State}/${packetName}`)[packetName];
 
             // Assemble a new object reflectively
-            const packet: ServerboundPacket = Object.create(packetClass.prototype);
-            packet.constructor.apply(packet, [client]);
+            const packet: ServerboundPacket = Reflect.construct(packetClass, [client]);
 
             await packet.Parse(buf);
 
