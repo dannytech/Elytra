@@ -32,7 +32,7 @@ export class Zlib {
         // Write the compressed data
         output.Write(compressed);
 
-        return output.GetReadable();
+        return output.ReadableBuffer;
     }
 
     /**
@@ -51,7 +51,7 @@ export class Zlib {
             const checksum = compressed.ReadUint32();
 
             const decompressed: Buffer = await new Promise((resolve, reject) => {
-                inflate(compressed.Read(), (err, buf: Buffer) => {
+                inflate(compressed.Buffer, (err, buf: Buffer) => {
                     if (err) return reject(err);
 
                     return resolve(buf);

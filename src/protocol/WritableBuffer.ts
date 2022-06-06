@@ -3,21 +3,18 @@ import { ReadableBuffer } from "./ReadableBuffer";
 
 export class WritableBuffer {
     private _Prepend: boolean;
+    private _Buffer: Buffer;
 
-    public Buffer: Buffer;
+    public get Buffer() : Buffer {
+        return this._Buffer;
+    }
+    public get ReadableBuffer() : ReadableBuffer {
+        return new ReadableBuffer(this._Buffer);
+    }
 
     constructor(buf?: Buffer) {
         this._Prepend = false;
-
-        this.Buffer = buf || Buffer.alloc(0);
-    }
-
-    /**
-     * Exports a ReadableBuffer from the written data.
-     * @returns {ReadableBuffer} A readable representation of the written data.
-     */
-    public GetReadable() : ReadableBuffer {
-        return new ReadableBuffer(this.Buffer);
+        this._Buffer = buf || Buffer.alloc(0);
     }
 
     /**
@@ -31,23 +28,15 @@ export class WritableBuffer {
     }
 
     /**
-     * Writes a single byte to the buffer.
-     * @param {number} value The byte to write, in numerical form.
-     */
-    public WriteByte(value: number) {
-        this.Write(Buffer.from([ value ]));
-    }
-
-    /**
      * Writes multiple bytes to the buffer.
      * @param {Buffer} value The buffer to write.
      */
     public Write(value: Buffer) {
         if (this._Prepend) {
-            this.Buffer = Buffer.concat([ value, this.Buffer ]);
+            this._Buffer = Buffer.concat([ value, this._Buffer ]);
             this._Prepend = false;
         } else
-            this.Buffer = Buffer.concat([ this.Buffer, value ]);
+            this._Buffer = Buffer.concat([ this._Buffer, value ]);
     }
 
     /**
@@ -56,6 +45,14 @@ export class WritableBuffer {
      */
     public WriteBool(value: boolean) {
         this.WriteByte(value ? 0x1 : 0x0);
+    }
+
+    /**
+     * Writes a single byte to the buffer.
+     * @param {number} value The byte to write, in numerical form.
+     */
+    public WriteByte(value: number) {
+        this.Write(Buffer.from([ value ]));
     }
 
     /**
@@ -75,7 +72,7 @@ export class WritableBuffer {
             temp.WriteByte(digit);
         } while (value != 0);
 
-        this.Write(temp.Buffer);
+        this.Write(temp._Buffer);
     }
 
     /**
@@ -96,7 +93,7 @@ export class WritableBuffer {
         temp.WriteVarInt(value.length);
         temp.Write(Buffer.from(value));
 
-        this.Write(temp.Buffer);
+        this.Write(temp._Buffer);
     }
 
     /**

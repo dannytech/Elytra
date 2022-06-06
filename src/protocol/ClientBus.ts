@@ -2,9 +2,9 @@ import { Socket, Server } from "net";
 import { Constants } from "../Configuration";
 import { Player } from "../game/Player";
 import { Client, ClientState } from "./Client";
-import { ReadableBuffer } from "./ReadableBuffer";
 import { ServerKeepAlivePacket } from "./states/play/ServerKeepAlivePacket";
 import { PlayerInfoActions, PlayerInfoPacket } from "./states/play/PlayerInfoPacket";
+import { ProtocolStub } from "./ProtocolStub";
 
 export class ClientBus {
     private _Server: Server;
@@ -52,16 +52,12 @@ export class ClientBus {
         const client: Client = new Client(socket, this._ClientCounter++);
         this._Clients.push(client);
 
+        // Client receive loop
+        client.Receive(new ProtocolStub(socket));
+
         // On a disconnection, purge the client object from the bus
         client.once("disconnected", () => {
             this._Clients.splice(this._Clients.indexOf(client), 1);
-        });
-
-        // Process incoming packets
-        socket.on("data", (chunk: Buffer) => {
-            const buf: ReadableBuffer = new ReadableBuffer(chunk);
-
-            client.Receive(buf);
         });
 
         // Handle errors and disconnects

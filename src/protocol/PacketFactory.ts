@@ -143,7 +143,8 @@ export class PacketFactory {
 
     /**
      * Convert from a packet name to the corresponding version-specific packet ID
-     * @param {ClientState} state The client state to use for the lookup.
+     * @param {PacketDirection} direction The direction of the packet
+     * @param {Client} client The client connecting, used to determine state and protocol version.
      * @param {string|number} packetNameOrId The name of the packet to convert.
      * @returns {string|number} The packet ID.
      */
@@ -216,6 +217,6 @@ export class PacketFactory {
             await client.Send();
         } else
             Console.Debug(`(${client.ClientId})`.magenta, "Unrecognized", client.State.green, "packet",
-                `0x${packetId.toString(16).padStart(2, "0")}`.blue, buf.Read().toString("hex").yellow);
+                `0x${packetId.toString(16).padStart(2, "0")}`.blue, buf.Buffer.toString("hex").yellow);
     }
 }
