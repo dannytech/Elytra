@@ -18,7 +18,6 @@ export class ProtocolStub {
     /**
      * Reads the specified amount of bytes from the buffer, blocking until fulfilled.
      * @param {number} bytes The amount of bytes to read.
-     * @param {number} [timeout] The amount of time to wait for the read to complete.
      * @returns {ReadableBuffer} A ReadableBuffer containing the bytes read.
      * @throws 
      * @async

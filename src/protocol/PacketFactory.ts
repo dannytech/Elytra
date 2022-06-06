@@ -143,7 +143,8 @@ export class PacketFactory {
 
     /**
      * Convert from a packet name to the corresponding version-specific packet ID
-     * @param {ClientState} state The client state to use for the lookup.
+     * @param {PacketDirection} direction The direction of the packet
+     * @param {Client} client The client connecting, used to determine state and protocol version.
      * @param {string|number} packetNameOrId The name of the packet to convert.
      * @returns {string|number} The packet ID.
      */
