@@ -1,6 +1,5 @@
 import { Socket, Server } from "net";
 import { Constants } from "../Configuration";
-import { Player } from "../game/Player";
 import { Client, ClientState } from "./Client";
 import { ServerKeepAlivePacket } from "./states/play/ServerKeepAlivePacket";
 import { PlayerInfoActions, PlayerInfoPacket } from "./states/play/PlayerInfoPacket";
@@ -8,8 +7,12 @@ import { ProtocolStub } from "./ProtocolStub";
 
 export class ClientBus {
     private _Server: Server;
-    private _Clients: Array<Client>;
+    private _Clients: Client[];
     private _ClientCounter: number;
+
+    public get Clients(): Client[] {
+        return this._Clients;
+    }
 
     constructor(server: Server) {
         this._Server = server;
@@ -37,7 +40,9 @@ export class ClientBus {
         setInterval(() => {
             this.Broadcast((client: Client) => {
                 if (client.Protocol.state == ClientState.Play) {
-                    client.Queue(new PlayerInfoPacket(client, PlayerInfoActions.UpdateLatency, this.OnlinePlayers()));
+                    const onlinePlayers: Client[] = this.Clients.filter((client: Client) => client.Protocol.state == ClientState.Play && client.Player.Metadata.uuid);
+
+                    client.Queue(new PlayerInfoPacket(client, PlayerInfoActions.UpdateLatency, onlinePlayers));
                 }
             });
         }, Constants.KeepAliveInterval * 2);
@@ -80,18 +85,6 @@ export class ClientBus {
                 resolve();
             });
         });
-    }
-
-    /**
-     * Get a list of all players currently online.
-     * @returns {Player[]} A list of all players currently online.
-     */
-    public OnlinePlayers() : Player[] {
-        return this._Clients.reduce((players: Player[], client: Client) => {
-            if (client.Player && client.Protocol.state == ClientState.Play)
-                players.push(client.Player);
-            return players;
-        }, []);
     }
 
     /**

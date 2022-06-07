@@ -1,5 +1,5 @@
 import { Console } from "../../../game/Console";
-import { Player, PlayerProperty } from "../../../game/Player";
+import { PlayerProperty } from "../../../game/Player";
 import { Client } from "../../Client";
 import { ClientboundPacket } from "../../Packet";
 import { WritableBuffer } from "../../WritableBuffer";
@@ -14,13 +14,13 @@ export enum PlayerInfoActions {
 
 export class PlayerInfoPacket extends ClientboundPacket {
     private _Action: PlayerInfoActions;
-    private _Players: Player[];
+    private _Clients: Client[];
 
-    constructor(client: Client, action: PlayerInfoActions, players: Player[]) {
+    constructor(client: Client, action: PlayerInfoActions, clients: Client[]) {
         super(client);
 
         this._Action = action;
-        this._Players = players;
+        this._Clients = clients;
     }
 
     /**
@@ -35,19 +35,19 @@ export class PlayerInfoPacket extends ClientboundPacket {
         buf.WriteVarInt(this._Action);
 
         // List of players
-        Console.DebugPacket(this, "Sending", PlayerInfoActions[this._Action].green, "player information for", this._Players.length.toString().blue, "player(s)");
-        buf.WriteVarInt(this._Players.length);
-        this._Players.forEach((player: Player) => {
+        Console.DebugPacket(this, "Sending", PlayerInfoActions[this._Action].green, "player information for", this._Clients.length.toString().blue, "player(s)");
+        buf.WriteVarInt(this._Clients.length);
+        this._Clients.forEach((client: Client) => {
             // Write each player UUID
-            buf.WriteUUID(player.UUID);
+            buf.WriteUUID(client.Player.Metadata.uuid);
 
             switch(this._Action) {
                 case PlayerInfoActions.AddPlayer:
-                    buf.WriteVarChar(player.Username);
+                    buf.WriteVarChar(client.Player.Metadata.username);
 
                     // Write player properties such as skin and cape
-                    buf.WriteVarInt(player.Properties.length);
-                    player.Properties.forEach((property: PlayerProperty) => {
+                    buf.WriteVarInt(client.Player.Metadata.properties.length);
+                    client.Player.Metadata.properties.forEach((property: PlayerProperty) => {
                         buf.WriteVarChar(property.name);
                         buf.WriteVarChar(property.value);
 
@@ -59,10 +59,10 @@ export class PlayerInfoPacket extends ClientboundPacket {
                     });
 
                     // Write the gamemode
-                    buf.WriteVarInt(player.Gamemode);
+                    buf.WriteVarInt(client.Player.State.gamemode);
 
                     // Write the current player latency
-                    buf.WriteVarInt(player.Latency || -1);
+                    buf.WriteVarInt(client.Protocol.latency);
 
                     // Indicates whether the player has a custom nickname
                     buf.WriteBool(false);
@@ -71,11 +71,11 @@ export class PlayerInfoPacket extends ClientboundPacket {
                     break;
                 case PlayerInfoActions.UpdateGamemode:
                     // Send a gamemode update for a player
-                    buf.WriteVarInt(player.Gamemode);
+                    buf.WriteVarInt(client.Player.State.gamemode);
                     break;
                 case PlayerInfoActions.UpdateLatency:
                     // Send a latency update for a player
-                    buf.WriteVarInt(player.Latency || -1);
+                    buf.WriteVarInt(client.Protocol.latency);
                     break;
                 case PlayerInfoActions.UpdateDisplayName:
                     buf.WriteBool(false);

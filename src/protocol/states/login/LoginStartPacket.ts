@@ -27,7 +27,7 @@ export class LoginStartPacket extends ServerboundPacket {
             Console.DebugPacket(this, "Beginning encryption/authentication process");
             this._Client.Queue(new EncryptionRequestPacket(this._Client));
         } else {
-            Console.Warn("Online mode is off, allowing alleged player", this._Client.Player.Username.green, "to connect");
+            Console.Warn("Online mode is off, allowing alleged player", this._Client.Player.Metadata.username.green, "to connect");
 
             // Prepare the player to join
             const debug: boolean = await Settings.Get(MinecraftConfigs.Debug);
@@ -35,7 +35,7 @@ export class LoginStartPacket extends ServerboundPacket {
                 this._Client.Queue(new SetCompressionPacket(this._Client));
 
             // Generate a random UUID to utilize for this session
-            this._Client.Player.UUID = UUID.Generate();
+            this._Client.Player.Metadata.uuid = UUID.Generate();
 
             Console.DebugPacket(this, "Bypassing login due to offline mode");
             this._Client.Queue(new LoginSuccessPacket(this._Client));

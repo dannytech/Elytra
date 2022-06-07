@@ -24,7 +24,7 @@ export class ClientKeepAlivePacket extends ServerboundPacket {
             this._Client.KeepAlive.last = now;
 
             // Calculate the client latency
-            this._Client.Player.Latency = now - this._Client.KeepAlive.sent;
+            this._Client.Protocol.latency = now - this._Client.KeepAlive.sent;
         }
     }
 }

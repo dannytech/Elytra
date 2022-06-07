@@ -38,34 +38,43 @@ export type PlayerLook = {
 
 export type PlayerPositionAndLook = PlayerPosition & PlayerLook;
 
+export type PlayerState = {
+    gamemode: Gamemode;
+    op: PermissionLevel;
+    position: PlayerPositionAndLook;
+    activeChunks: number;
+};
+
+export type PlayerMetadata = {
+    username: string;
+    uuid?: UUID;
+    properties: PlayerProperty[];
+};
+
 export class Player extends Entity {
-    public Username: string;
-    public UUID: UUID;
-    public Gamemode: number;
-    public Op: PermissionLevel;
-    public Position: PlayerPositionAndLook;
-
-    public Latency: number;
-
-    public Properties: PlayerProperty[];
+    public State: PlayerState;
+    public Metadata: PlayerMetadata;
 
     constructor(username: string, uuid?: UUID) {
         super();
 
-        this.Username = username;
-        if (uuid) this.UUID = uuid;
-
-        // Defaults
-        this.Gamemode = Gamemode.Survival;
-        this.Op = PermissionLevel.None;
-        this.Position = {
-            x: 0,
-            y: 0,
-            z: 0,
-            yaw: 0,
-            pitch: 0
+        this.State = {
+            gamemode: Gamemode.Survival,
+            op: PermissionLevel.None,
+            position: {
+                x: 0,
+                y: 0,
+                z: 0,
+                yaw: 0,
+                pitch: 0
+            },
+            activeChunks: 0
         };
-        this.Properties = [];
+        this.Metadata = {
+            username: username,
+            uuid: uuid,
+            properties: []
+        };
     }
 
     /**
@@ -74,18 +83,18 @@ export class Player extends Entity {
      */
     public async Save() {
         // The Player object is used a placeholder during the encryption process, in which case we shouldn't save it
-        if (this.UUID) {
+        if (this.Metadata.uuid) {
             // Update or insert the player data
             await PlayerModel.findOneAndUpdate({
-                uuid: this.UUID.Format()
+                uuid: this.Metadata.uuid.Format()
             }, {
                 $setOnInsert: {
-                    uuid: this.UUID.Format()
+                    uuid: this.Metadata.uuid.Format()
                 },
                 $set: {
-                    gamemode: this.Gamemode,
-                    op: this.Op,
-                    positionAndLook: this.Position
+                    gamemode: this.State.gamemode,
+                    op: this.State.op,
+                    positionAndLook: this.State.position
                 }
             }, {
                 upsert: true
@@ -100,18 +109,18 @@ export class Player extends Entity {
     public async Load() {
         // Retrieve state and update the username history
         const playerDocument: IPlayerDocument = await PlayerModel.findOneAndUpdate({
-            uuid: this.UUID.Format()
+            uuid: this.Metadata.uuid.Format()
         }, {
             $addToSet: {
-                username: this.Username
+                username: this.Metadata.username
             }
         }, { new: true });
 
         if (playerDocument) {
             // Load the player state
-            this.Gamemode = playerDocument.gamemode;
-            this.Op = playerDocument.op;
-            this.Position = playerDocument.positionAndLook;
+            this.State.gamemode = playerDocument.gamemode;
+            this.State.op = playerDocument.op;
+            this.State.position = playerDocument.positionAndLook;
         }
     }
 }

@@ -74,7 +74,7 @@ export class EncryptionResponsePacket extends ServerboundPacket {
 
             // Prepare to authenticate the client
             const params: AuthenticationRequestParams = {
-                username: this._Client.Player.Username,
+                username: this._Client.Player.Metadata.username,
                 serverId: serverHash
             };
 
@@ -91,11 +91,11 @@ export class EncryptionResponsePacket extends ServerboundPacket {
 
             // Confirm client authentication succeeded
             if (res.status == 200) {
-                this._Client.Player = new Player(this._Client.Player.Username, new UUID(res.data.id));
-                this._Client.Player.Properties = res.data.properties;
+                this._Client.Player = new Player(this._Client.Player.Metadata.username, new UUID(res.data.id));
+                this._Client.Player.Metadata.properties = res.data.properties;
                 await this._Client.Player.Load();
 
-                Console.Info(this._Client.Player.Username.green, "authenticated successfully with UUID", this._Client.Player.UUID.Format(true).blue);
+                Console.Info(this._Client.Player.Metadata.username.green, "authenticated successfully with UUID", this._Client.Player.Metadata.uuid.Format(true).blue);
 
                 // Finish the handshake and proceed to the play state
                 const debug: boolean = await Settings.Get(MinecraftConfigs.Debug);
@@ -107,28 +107,28 @@ export class EncryptionResponsePacket extends ServerboundPacket {
             } else {
                 this._Client.Queue(new LoginDisconnectPacket(this._Client, ChatComponentFactory.FromString("Invalid session")), true);
 
-                Console.Error("Player", this._Client.Player.Username.green, "has invalid session (might be using a proxy)");
+                Console.Error("Player", this._Client.Player.Metadata.username.green, "has invalid session (might be using a proxy)");
             }
         } else {
             this._Client.Queue(new LoginDisconnectPacket(this._Client, ChatComponentFactory.FromString("Failed to negotiate encrypted channel")), true);
 
-            Console.Error("Player", this._Client.Player.Username.green, "failed to negotiate encrypted channel");
+            Console.Error("Player", this._Client.Player.Metadata.username.green, "failed to negotiate encrypted channel");
         }
 
         // Load the player filter
         const filter: FilterList = await Settings.Get(MinecraftConfigs.Filter);
-        const inFilter: boolean = filter?.players?.some(uuid => uuid == this._Client.Player.UUID.Format());
+        const inFilter: boolean = filter?.players?.some(uuid => uuid == this._Client.Player.Metadata.uuid.Format());
 
         // Determine whether the player is allowed to join
         Console.DebugPacket(this, "Checking player against filter");
         if (filter?.mode == "deny" && inFilter) {
             this._Client.Queue(new PlayDisconnectPacket(this._Client, ChatComponentFactory.FromString("You have been disallowed from this server")));
 
-            Console.Error("Player", this._Client.Player.Username.green, "is disallowed by filter");
+            Console.Error("Player", this._Client.Player.Metadata.username.green, "is disallowed by filter");
         } else if (filter?.mode == "allow" && !inFilter) {
             this._Client.Queue(new PlayDisconnectPacket(this._Client, ChatComponentFactory.FromString("You have not been allowed on this server")));
 
-            Console.Warn("Player", this._Client.Player.Username.green, "is not allowed by filter");
+            Console.Warn("Player", this._Client.Player.Metadata.username.green, "is not allowed by filter");
         }
     }
 }

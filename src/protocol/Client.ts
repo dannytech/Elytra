@@ -35,6 +35,7 @@ export type EncryptionState = {
 export type ProtocolState = {
     clientId: number;
     ip: string;
+    latency: number;
     state: ClientState;
     compression: CompressionState;
     encryption: EncryptionState;
@@ -67,6 +68,7 @@ export class Client extends EventEmitter {
         this.Protocol = {
             clientId: id,
             ip: socket.remoteAddress,
+            latency: -1,
             state: ClientState.Handshaking,
             compression: CompressionState.Disabled,
             encryption: {
@@ -216,7 +218,7 @@ export class Client extends EventEmitter {
             State.ClientBus.Broadcast((client: Client ) => {
                 // Remove the player from the list of online players
                 if (client.Protocol.state == ClientState.Play)
-                    client.Queue(new PlayerInfoPacket(client, PlayerInfoActions.RemovePlayer, [this.Player]));
+                    client.Queue(new PlayerInfoPacket(client, PlayerInfoActions.RemovePlayer, [this]));
             });
             this.Player.Save();
         }

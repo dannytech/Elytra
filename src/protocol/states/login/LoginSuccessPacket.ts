@@ -23,12 +23,12 @@ export class LoginSuccessPacket extends ClientboundPacket {
      */
     public async Write(buf: WritableBuffer) {
         // Write the player UUID
-        const uuid: string = this._Client.Player.UUID.Format(true);
+        const uuid: string = this._Client.Player.Metadata.uuid.Format(true);
         Console.DebugPacket(this, "Sending player UUID", uuid.green);
         buf.WriteVarChar(uuid);
 
         // Write the username
-        buf.WriteVarChar(this._Client.Player.Username);
+        buf.WriteVarChar(this._Client.Player.Metadata.username);
     }
 
     /**
@@ -53,9 +53,9 @@ export class LoginSuccessPacket extends ClientboundPacket {
         this._Client.Queue(new HeldItemChangePacket(this._Client, 0));
         this._Client.Queue(new DeclareRecipesPacket(this._Client));
         this._Client.Queue(new TagsPacket(this._Client));
-        this._Client.Queue(new EntityStatusPacket(this._Client, this._Client.Player.EntityID, EntityStatus.PlayerPermissionsLevel0 + this._Client.Player.Op));
+        this._Client.Queue(new EntityStatusPacket(this._Client, this._Client.Player.EntityID, EntityStatus.PlayerPermissionsLevel0 + this._Client.Player.State.op));
         this._Client.Queue(new DeclareCommandsPacket(this._Client));
         this._Client.Queue(new UnlockRecipesPacket(this._Client, UnlockRecipesAction.Init));
-        this._Client.Queue(new PlayerPositionAndLookPacket(this._Client, this._Client.Player.Position));
+        this._Client.Queue(new PlayerPositionAndLookPacket(this._Client, this._Client.Player.State.position));
     }
 }

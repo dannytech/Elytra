@@ -24,7 +24,7 @@ export class JoinGamePacket extends ClientboundPacket {
         buf.WriteInt32(this._Client.Player.EntityID);
 
         // Gamemode
-        buf.WriteByte(this._Client.Player.Gamemode);
+        buf.WriteByte(this._Client.Player.State.gamemode);
 
         // Dimension
         buf.WriteInt32(0); // TODO Determine the actual dimension ID and send it back

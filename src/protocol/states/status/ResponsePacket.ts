@@ -4,7 +4,7 @@ import { WritableBuffer } from "../../WritableBuffer";
 import { ChatComponentFactory } from "../../../game/chat/ChatComponentFactory";
 import { Console } from "../../../game/Console";
 import { checkVersion, VersionSpec } from "../../../Masking";
-import { Player } from "../../../game/Player";
+import { Client, ClientState } from "../../Client";
 
 export class ResponsePacket extends ClientboundPacket {
     /**
@@ -14,7 +14,7 @@ export class ResponsePacket extends ClientboundPacket {
      * @async
      */
     public async Write(buf: WritableBuffer) {
-        const onlinePlayers: Player[] = State.ClientBus.OnlinePlayers();
+        const onlinePlayers: Client[] = State.ClientBus.Clients.filter((client: Client) => client.Protocol.state === ClientState.Play && client.Player.Metadata.uuid);
         const maximumPlayers: number = await Settings.Get(MinecraftConfigs.MaximumPlayers);
         const motd: string = await Settings.Get(MinecraftConfigs.MOTD);
 
@@ -39,10 +39,10 @@ export class ResponsePacket extends ClientboundPacket {
             players: {
                 max: maximumPlayers,
                 online: onlinePlayers.length,
-                sample: onlinePlayers.slice(0, 5).map((player: Player) => {
+                sample: onlinePlayers.slice(0, 5).map((client: Client) => {
                     return {
-                        name: player.Username,
-                        id: player.UUID
+                        name: client.Player.Metadata.username,
+                        id: client.Player.Metadata.uuid
                     };
                 })
             },
