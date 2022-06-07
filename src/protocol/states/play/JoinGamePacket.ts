@@ -37,7 +37,7 @@ export class JoinGamePacket extends ClientboundPacket {
         buf.WriteByte(0);
 
         // Level type
-        buf.WriteVarChar(State.World.Generator);
+        buf.WriteVarChar(State.World.Metadata.generator);
 
         // View distance
         const renderDistance: number = await Settings.Get(MinecraftConfigs.RenderDistance);

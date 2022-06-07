@@ -2,19 +2,31 @@ import * as crypto from "crypto";
 import { WorldModel, IWorldDocument } from "../database/WorldModel";
 import { Entity } from "./Entity";
 
-export class World {
-    private _EntityCounter: number;
+type EntityArray = {
+    entities: Entity[];
+    counter: number;
+};
 
-    public Seed: bigint;
-    public Generator: string;
-    public Entities: Entity[];
+type WorldMetadata = {
+    seed: bigint;
+    generator: string;
+};
+
+export class World {
+    private _Entities: EntityArray;
+
+    public Metadata: WorldMetadata;
 
     constructor(seed: bigint) {
-        this._EntityCounter = 0;
+        this._Entities = {
+            entities: [],
+            counter: 0
+        };
 
-        this.Seed = seed;
-        this.Generator = "default";
-        this.Entities = [];
+        this.Metadata = {
+            seed,
+            generator: "default"
+        };
     }
 
     /**
@@ -23,9 +35,9 @@ export class World {
      * @returns {number} The unique entity ID within the world.
      */
     public RegisterEntity(entity: Entity) : number {
-        this.Entities.push(entity);
+        this._Entities.entities.push(entity);
 
-        return this._EntityCounter++;
+        return this._Entities.counter++;
     }
 
     /**
@@ -36,8 +48,8 @@ export class World {
         // Update or insert the player data
         await WorldModel.findOneAndUpdate({}, {
             $setOnInsert: {
-                seed: this.Seed,
-                generator: this.Generator
+                seed: this.Metadata.seed,
+                generator: this.Metadata.generator
             }
         }, {
             upsert: true
@@ -56,7 +68,7 @@ export class World {
         if (worldDocument) {
             // Import the player data into a new Player object
             const world: World = new World(worldDocument.seed);
-            world.Generator = worldDocument.generator;
+            world.Metadata.generator = worldDocument.generator;
 
             return world;
         } else {
