@@ -9,7 +9,7 @@ export type VersionSpec = {
  * @param {VersionSpec[]} ranges The version specification to check against.
  * @returns {boolean} Whether the version is compatible with the specification.
  */
-export function checkVersion(version: number, ranges: VersionSpec[]) : boolean {
+export function checkVersion(version: number, ranges: VersionSpec[]): boolean {
     for (const range of ranges)
         if (version >= range.start) {
             if (range.end) return version <= range.end;
@@ -28,7 +28,7 @@ export function checkVersion(version: number, ranges: VersionSpec[]) : boolean {
  * @param {number} [ceiling] Used as a ceiling if no end is specified.
  * @returns {VersionSpec} The version specification.
  */
-export function versionSpec(spec: string, ceiling?: number) : VersionSpec {
+export function versionSpec(spec: string, ceiling?: number): VersionSpec {
     const parts: number[] = spec.split("-").map(Number);
 
     // Allows 0-n ranges, n-infinity ranges, and specific n

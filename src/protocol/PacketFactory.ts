@@ -148,7 +148,7 @@ export class PacketFactory {
      * @param {string|number} packetNameOrId The name of the packet to convert.
      * @returns {string|number} The packet ID.
      */
-    public Lookup(direction: PacketDirection, client: Client, packetNameOrId: string | number) : string | number {
+    public Lookup(direction: PacketDirection, client: Client, packetNameOrId: string | number): string | number {
         // Load the mappings for the current state
         const statePackets = this._PacketSpec.find(spec => spec.direction == direction && spec.state == client.Protocol.state);
 

@@ -13,7 +13,7 @@ export class ChatComponentFactory {
      * @returns {ChatTextComponent} A parsed JSON object containing text and formatting.
      * @static
      */
-    private static _ParseFormattedString(parsable: StringCursor) : ChatTextComponent {
+    private static _ParseFormattedString(parsable: StringCursor): ChatTextComponent {
         const component: ChatTextComponent = {
             text: "",
             extra: []
@@ -149,7 +149,7 @@ export class ChatComponentFactory {
      * @static
      *
      */
-    public static FromString(str: string) : ChatTextComponent {
+    public static FromString(str: string): ChatTextComponent {
         return {
             text: str
         };
@@ -161,7 +161,7 @@ export class ChatComponentFactory {
      * @returns {ChatTextComponent} The parsed component.
      * @static
      */
-    public static FromFormattedString(str: string) : ChatTextComponent {
+    public static FromFormattedString(str: string): ChatTextComponent {
         const parsable: StringCursor = {
             string: str,
             reset: false,
@@ -194,7 +194,7 @@ export class ChatComponentFactory {
      * @returns {string} The converted string.
      * @static
      */
-    public static GetRaw(component: ChatComponent) : string {
+    public static GetRaw(component: ChatComponent): string {
         let raw = "";
 
         // Append the element text

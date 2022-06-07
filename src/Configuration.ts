@@ -80,11 +80,11 @@ export class Settings {
      * @async
      */
     /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
-    public static async Get(name: string) : Promise<any>;
+    public static async Get(name: string): Promise<any>;
     /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
-    public static async Get(namespace: string, name: string) : Promise<any>;
+    public static async Get(namespace: string, name: string): Promise<any>;
     /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
-    public static async Get(namespaceOrName: string, name?: string) : Promise<any> {
+    public static async Get(namespaceOrName: string, name?: string): Promise<any> {
         // support an overload which assumes the namespace as the first parameter is not necessary
         if (name === undefined) {
             name = namespaceOrName;
@@ -109,9 +109,9 @@ export class Settings {
      * @async
      */
     /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
-    public static async Set(name: string, value: any) : Promise<void>;
+    public static async Set(name: string, value: any): Promise<void>;
     /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
-    public static async Set(namespace: string, name: string, value: any) : Promise<void>;
+    public static async Set(namespace: string, name: string, value: any): Promise<void>;
     /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
     public static async Set(namespaceOrName: string, nameOrValue: any, value?: any) {
         // support an overload which assumes the namespace as the first parameter is not necessary

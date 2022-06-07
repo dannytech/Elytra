@@ -34,7 +34,7 @@ export class World {
      * @param {Entity} entity The entity to register.
      * @returns {number} The unique entity ID within the world.
      */
-    public RegisterEntity(entity: Entity) : number {
+    public RegisterEntity(entity: Entity): number {
         this._Entities.entities.push(entity);
 
         return this._Entities.counter++;
@@ -61,7 +61,7 @@ export class World {
      * @static
      * @async
      */
-    public static async Load() : Promise<World> {
+    public static async Load(): Promise<World> {
         // Retrieve all existing player data
         const worldDocument: IWorldDocument = await WorldModel.findOne({}, [ "seed", "generator" ]);
 

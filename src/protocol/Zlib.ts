@@ -12,7 +12,7 @@ export class Zlib {
      * @static
      * @async
      */
-    public static async Deflate(uncompressed: ReadableBuffer) : Promise<ReadableBuffer> {
+    public static async Deflate(uncompressed: ReadableBuffer): Promise<ReadableBuffer> {
         const output: WritableBuffer = new WritableBuffer();
 
         const compressed: Buffer = await new Promise((resolve, reject) => {
@@ -44,7 +44,7 @@ export class Zlib {
      * @static
      * @async
      */
-    public static async Inflate(compressed: ReadableBuffer) : Promise<ReadableBuffer> {
+    public static async Inflate(compressed: ReadableBuffer): Promise<ReadableBuffer> {
         // Verify the header is valid
         if (compressed.Read(this._Zlib.length).equals(this._Zlib)) {
             // Extract the checksum
@@ -72,7 +72,7 @@ export class Zlib {
      * @param {Buffer} buf The uncompressed buffer to checksum.
      * @returns {number} A 4-byte Adler32 checksum in numerical form.
      */
-    public static Adler32(buf: Buffer) : number {
+    public static Adler32(buf: Buffer): number {
         const mod = 65521;
         let a = 1, b = 0;
 

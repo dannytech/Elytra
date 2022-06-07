@@ -11,7 +11,7 @@ export class ProtocolStub {
      * Returns the full-duplex stream being read from.
      * @returns {Duplex} The underlying stream.
      */
-    public get Stream() : Duplex {
+    public get Stream(): Duplex {
         return this._Stream;
     }
 
@@ -22,7 +22,7 @@ export class ProtocolStub {
      * @throws 
      * @async
      */
-    public async Read(bytes: number) : Promise<Buffer> {
+    public async Read(bytes: number): Promise<Buffer> {
         const buf: Buffer = this._Stream.read(bytes);
 
         // If the buffer is empty (null), wait for more data
@@ -40,7 +40,7 @@ export class ProtocolStub {
      * @throws If the VarInt is over 5 bytes long, an error will be thrown.
      * @async
      */
-    public async ReadVarInt() : Promise<number> {
+    public async ReadVarInt(): Promise<number> {
         let numRead = 0;
         let result = 0;
         let read: number;

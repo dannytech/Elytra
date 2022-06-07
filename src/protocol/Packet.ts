@@ -32,7 +32,7 @@ export abstract class ServerboundPacket {
      * Post-receive hook.
      * @async
      */
-    public AfterReceive?() : Promise<void>;
+    public AfterReceive?(): Promise<void>;
 }
 
 export abstract class ClientboundPacket {
@@ -61,5 +61,5 @@ export abstract class ClientboundPacket {
      * Post-send hook.
      * @async
      */
-    public AfterSend?() : Promise<void>;
+    public AfterSend?(): Promise<void>;
 }

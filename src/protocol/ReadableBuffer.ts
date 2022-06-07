@@ -5,10 +5,10 @@ import { WritableBuffer } from "./WritableBuffer";
 export class ReadableBuffer {
     private _Buffer: Buffer;
 
-    public get Buffer() : Buffer {
+    public get Buffer(): Buffer {
         return this._Buffer;
     }
-    public get WritableBuffer() : WritableBuffer {
+    public get WritableBuffer(): WritableBuffer {
         return new WritableBuffer(this._Buffer);
     }
 
@@ -38,7 +38,7 @@ export class ReadableBuffer {
      * Reads a single byte from the buffer.
      * @returns {number} The byte, represented as a number in the range 0-255.
      */
-    public ReadByte() : number {
+    public ReadByte(): number {
         return this.Read(1)[0];
     }
 
@@ -46,7 +46,7 @@ export class ReadableBuffer {
      * Reads a single-byte bool from the buffer.
      * @returns {boolean} The boolean.
      */
-    public ReadBool() : boolean {
+    public ReadBool(): boolean {
         return this.ReadByte() > 0;
     }
 
@@ -55,7 +55,7 @@ export class ReadableBuffer {
      * @returns {number} The converted number.
      * @throws If the VarInt is over 5 bytes long, an error will be thrown.
      */
-    public ReadVarInt() : number {
+    public ReadVarInt(): number {
         let numRead = 0;
         let result = 0;
         let read: number;
@@ -78,7 +78,7 @@ export class ReadableBuffer {
      * Note that reading bigints is currently unsupported, so normal VarInts are read.
      * @returns {bigint} The converted bigint.
      */
-    public ReadVarLong() : bigint {
+    public ReadVarLong(): bigint {
         return BigInt(this.ReadVarInt());
     }
 
@@ -86,7 +86,7 @@ export class ReadableBuffer {
      * Reads a length-prefixed string from the buffer.
      * @returns {string} The string.
      */
-    public ReadVarChar() : string {
+    public ReadVarChar(): string {
         const bytes: number = this.ReadVarInt();
 
         return this.Read(bytes).toString();
@@ -96,7 +96,7 @@ export class ReadableBuffer {
      * Reads a single-byte character from the buffer.
      * @returns {string} The single character, wrapped in a string.
      */
-    public ReadChar() : string {
+    public ReadChar(): string {
         return String.fromCharCode(this.ReadByte());
     }
 
@@ -104,7 +104,7 @@ export class ReadableBuffer {
      * Reads a stringified JSON from a VarChar from the buffer.
      * @returns {object} The parsed object.
      */
-    public ReadJSON() : object {
+    public ReadJSON(): object {
         return JSON.parse(this.ReadVarChar());
     }
 
@@ -112,7 +112,7 @@ export class ReadableBuffer {
      * Reads a two-byte positive integer from the buffer.
      * @returns {number} The integer.
      */
-    public ReadUint16() : number {
+    public ReadUint16(): number {
         return this.Read(2).readUInt16BE();
     }
 
@@ -120,7 +120,7 @@ export class ReadableBuffer {
      * Reads a four-byte positive integer from the buffer.
      * @returns {number} The integer.
      */
-    public ReadUint32() : number {
+    public ReadUint32(): number {
         return this.Read(4).readUInt32BE();
     }
 
@@ -128,7 +128,7 @@ export class ReadableBuffer {
      * Reads an eight-byte positive long integer from the buffer.
      * @returns {bigint} The long integer.
      */
-    public ReadUint64() : bigint {
+    public ReadUint64(): bigint {
         return this.Read(8).readBigUInt64BE();
     }
 
@@ -136,7 +136,7 @@ export class ReadableBuffer {
      * Reads a two-byte positive or negative integer from the buffer.
      * @returns {number} The integer.
      */
-    public ReadInt16() : number {
+    public ReadInt16(): number {
         return this.Read(2).readInt16BE();
     }
 
@@ -144,7 +144,7 @@ export class ReadableBuffer {
      * Reads a four-byte positive or negative integer from the buffer.
      * @returns {number} The integer.
      */
-    public ReadInt32() : number {
+    public ReadInt32(): number {
         return this.Read(4).readInt32BE();
     }
 
@@ -152,7 +152,7 @@ export class ReadableBuffer {
      * Reads an eight-byte positive or negative long integer from the buffer.
      * @returns {number} The long integer.
      */
-    public ReadInt64() : bigint {
+    public ReadInt64(): bigint {
         return this.Read(8).readBigInt64BE();
     }
 
@@ -160,7 +160,7 @@ export class ReadableBuffer {
      * Reads a four-byte float from the buffer.
      * @returns {number} The float.
      */
-    public ReadSingle() : number {
+    public ReadSingle(): number {
         return this.Read(4).readFloatBE();
     }
 
@@ -168,7 +168,7 @@ export class ReadableBuffer {
      * Reads an eight-byte double from the buffer.
      * @returns {number} The double.
      */
-    public ReadDouble() : number {
+    public ReadDouble(): number {
         return this.Read(8).readDoubleBE();
     }
 
@@ -176,7 +176,7 @@ export class ReadableBuffer {
      * Reads a Minecraft UUID from the buffer.
      * @returns {UUID} The UUID.
      */
-    public ReadUUID() : UUID {
+    public ReadUUID(): UUID {
         // Read the UUID in two parts
         const msb: bigint = this.ReadUint64();
         const lsb: bigint = this.ReadUint64();

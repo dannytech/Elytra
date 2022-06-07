@@ -5,10 +5,10 @@ export class WritableBuffer {
     private _Prepend: boolean;
     private _Buffer: Buffer;
 
-    public get Buffer() : Buffer {
+    public get Buffer(): Buffer {
         return this._Buffer;
     }
-    public get ReadableBuffer() : ReadableBuffer {
+    public get ReadableBuffer(): ReadableBuffer {
         return new ReadableBuffer(this._Buffer);
     }
 
@@ -21,7 +21,7 @@ export class WritableBuffer {
      * Enables prepend mode for a single write operation.
      * @returns {WritableBuffer} The current WritableBuffer with prepend mode enabled.
      */
-    public Prepend() : WritableBuffer {
+    public Prepend(): WritableBuffer {
         this._Prepend = true;
 
         return this;

@@ -18,7 +18,7 @@ export class Keypair {
      * Decrypt the given buffer using the keypair's private key.
      * @param {Buffer} buf The buffer to decrypt.
      */
-    public Decrypt(buf: Buffer) : Buffer {
+    public Decrypt(buf: Buffer): Buffer {
         return privateDecrypt({
             key: this.PrivateKey,
             padding: crypto.constants.RSA_PKCS1_PADDING
@@ -31,7 +31,7 @@ export class Keypair {
      * @static
      * @async
      */
-    public static async Generate() : Promise<Keypair> {
+    public static async Generate(): Promise<Keypair> {
         // Minecraft uses a 1024-bit RSA key by default
         const { publicKey, privateKey } = await generateKeyPairAsync("rsa", {
             modulusLength: Constants.KeyLength
@@ -45,7 +45,7 @@ export class Keypair {
  * Generates a Minecraft-style hex digest of the given buffer.
  * @param {Buffer} buf The buffer to hash.
  */
-export function digest(buf: Buffer) : string {
+export function digest(buf: Buffer): string {
     // Generate a standard SHA-1 hash
     let digest: Buffer = crypto.createHash("sha1")
         .update(buf)
