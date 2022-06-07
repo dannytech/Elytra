@@ -5,9 +5,18 @@ export class WritableBuffer {
     private _Prepend: boolean;
     private _Buffer: Buffer;
 
+    /**
+     * Returns the current buffer.
+     * @returns {Buffer} The underlying buffer.
+     */
     public get Buffer(): Buffer {
         return this._Buffer;
     }
+
+    /**
+     * Returns a readable buffer of the current buffer.
+     * @returns {ReadableBuffer} A readable version of the underlying buffer.
+     */
     public get ReadableBuffer(): ReadableBuffer {
         return new ReadableBuffer(this._Buffer);
     }

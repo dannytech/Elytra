@@ -6,9 +6,18 @@ export class ReadableBuffer {
     private _Buffer: Buffer;
     private _Cursor: number;
 
+    /**
+     * Returns the current buffer.
+     * @returns {Buffer} The underlying buffer.
+     */
     public get Buffer(): Buffer {
         return this._Buffer;
     }
+
+    /**
+     * Returns a writable buffer of the current buffer.
+     * @returns {WritableBuffer} A writable version of the underlying buffer.
+     */
     public get WritableBuffer(): WritableBuffer {
         return new WritableBuffer(this._Buffer);
     }

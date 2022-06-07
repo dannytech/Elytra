@@ -14,6 +14,10 @@ export class ClientBus {
     private _Server: Server;
     private _Clients: ClientArray;
 
+    /**
+     * Returns the list of clients currently connected to the server.
+     * @returns {Client[]} The list of clients.
+     */
     public get Clients(): Client[] {
         return this._Clients.clients;
     }
