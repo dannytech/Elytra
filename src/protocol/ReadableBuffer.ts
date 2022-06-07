@@ -4,6 +4,7 @@ import { WritableBuffer } from "./WritableBuffer";
 
 export class ReadableBuffer {
     private _Buffer: Buffer;
+    private _Cursor: number;
 
     public get Buffer(): Buffer {
         return this._Buffer;
@@ -12,11 +13,9 @@ export class ReadableBuffer {
         return new WritableBuffer(this._Buffer);
     }
 
-    public Cursor: number;
-
     constructor(buf: Buffer) {
         this._Buffer = buf;
-        this.Cursor = 0;
+        this._Cursor = 0;
     }
 
     /**
@@ -24,14 +23,14 @@ export class ReadableBuffer {
      * @param {number} [bytes] The amount of bytes to read.
      * @returns {Buffer} A new buffer containing the subset of bytes read.
      */
-    public Read(bytes?: number) : Buffer {
-        bytes = bytes || this._Buffer.length - this.Cursor;
+    public Read(bytes?: number): Buffer {
+        bytes = bytes || this._Buffer.length - this._Cursor;
 
         // Alert if there was a buffer overrun, this really shouldn't happen
-        if (bytes + this.Cursor > this._Buffer.length)
+        if (bytes + this._Cursor > this._Buffer.length)
             Console.Debug("ReadableBuffer attempted to read past the end of the buffer. This could cause issues parsing packets correctly.".red.bold);
 
-        return this._Buffer.slice(this.Cursor, this.Cursor += bytes);
+        return this._Buffer.slice(this._Cursor, this._Cursor += bytes);
     }
 
     /**
