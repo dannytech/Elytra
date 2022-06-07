@@ -5,20 +5,25 @@ import { ServerKeepAlivePacket } from "./states/play/ServerKeepAlivePacket";
 import { PlayerInfoActions, PlayerInfoPacket } from "./states/play/PlayerInfoPacket";
 import { ProtocolStub } from "./ProtocolStub";
 
+type ClientArray = {
+    clients: Client[];
+    counter: number;
+};
+
 export class ClientBus {
     private _Server: Server;
-    private _Clients: Client[];
-    private _ClientCounter: number;
+    private _Clients: ClientArray;
 
     public get Clients(): Client[] {
-        return this._Clients;
+        return this._Clients.clients;
     }
 
     constructor(server: Server) {
         this._Server = server;
-        this._ClientCounter = 0;
-
-        this._Clients = [];
+        this._Clients = {
+            clients: [],
+            counter: 0
+        };
 
         // Attach a connection listener
         this._Server.on("connection", this._HandleConnection.bind(this));
@@ -54,15 +59,15 @@ export class ClientBus {
      * @async
      */
     private async _HandleConnection(socket: Socket) {
-        const client: Client = new Client(socket, this._ClientCounter++);
-        this._Clients.push(client);
+        const client: Client = new Client(socket, this._Clients.counter++);
+        this._Clients.clients.push(client);
 
         // Client receive loop
         client.Receive(new ProtocolStub(socket));
 
         // On a disconnection, purge the client object from the bus
         client.once("disconnected", () => {
-            this._Clients.splice(this._Clients.indexOf(client), 1);
+            this._Clients.clients.splice(this._Clients.clients.indexOf(client), 1);
         });
 
         // Handle errors and disconnects
@@ -76,7 +81,7 @@ export class ClientBus {
      */
     public async Broadcast(callback: (client: Client) => void) {
         return new Promise<void>((resolve) => {
-            this._Clients.forEach(async (client: Client) => {
+            this._Clients.clients.forEach(async (client: Client) => {
                 callback(client);
 
                 // Send any queued packets
@@ -94,9 +99,11 @@ export class ClientBus {
         // Stop accepting new clients
         this._Server.close();
 
-        // Loop in reverse, telling each client to disconnect and detach
-        for (let i: number; i >= this._Clients.length - 1; i--) {
-            this._Clients[i].Disconnect();
+        // Tell each client to disconnect and detach
+        while (this._Clients.clients.length > 0) {
+            const client: Client = this._Clients.clients.pop();
+
+            client.Disconnect();
         }
     }
 }
