@@ -1,4 +1,5 @@
 import { Console } from "../../../game/Console";
+import { PlayerPosition } from "../../../game/Player";
 import { ClientboundPacket } from "../../Packet";
 import { WritableBuffer } from "../../WritableBuffer";
 
@@ -11,8 +12,12 @@ export class UpdateViewPositionPacket extends ClientboundPacket {
      * @async
      */
     public async Write(buf: WritableBuffer) {
+        const position: PlayerPosition = this._Client.Player.State.position;
+
+        // Write the chunk coordinates
+        buf.WriteVarInt(Math.floor(position.x / 16));
+        buf.WriteVarInt(Math.floor(position.y / 16));
+
         Console.DebugPacket(this, "Sending chunk view position update");
-        buf.WriteVarInt(0);
-        buf.WriteVarInt(0);
     }
 }
