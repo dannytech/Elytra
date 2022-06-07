@@ -50,7 +50,7 @@ export class StandardConsole extends EventEmitter {
         if ("Parse" in packet) direction.reverse();
 
         // Print details about the client and packet, in addition to the message
-        const client: Client = packet.GetClient();
+        const client: Client = packet.Client;
         this.Debug(`(${client.Protocol.clientId})`.magenta, `[${direction[0]} → ${direction[1]}]`.blue, `[${packet.constructor.name}]`.cyan, ...message);
     }
 }

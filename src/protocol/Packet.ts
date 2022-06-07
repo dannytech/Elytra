@@ -9,6 +9,14 @@ export interface IServerboundConstructor {
 export abstract class ServerboundPacket {
     protected _Client: Client;
 
+    /**
+     * Return the embedded client (mainly for logging purposes).
+     * @returns {Client} The client.
+     */
+    public get Client(): Client {
+        return this._Client;
+    }
+
     constructor(client: Client) {
         this._Client = client;
     }
@@ -18,15 +26,7 @@ export abstract class ServerboundPacket {
      * @param {ReadableBuffer} buf The packet contents to parse.
      * @async
      */
-    public abstract Parse(buf: ReadableBuffer) : Promise<void>;
-
-    /**
-     * Return the embedded client (mainly for logging purposes).
-     * @returns {Client} The client.
-     */
-    public GetClient() : Client {
-        return this._Client;
-    }
+    public abstract Parse(buf: ReadableBuffer): Promise<void>;
 
     /**
      * Post-receive hook.
@@ -38,6 +38,14 @@ export abstract class ServerboundPacket {
 export abstract class ClientboundPacket {
     protected _Client: Client;
 
+    /**
+     * Return the embedded client (mainly for logging purposes).
+     * @returns {Client} The client.
+     */
+    public get Client(): Client {
+        return this._Client;
+    }
+
     constructor(client: Client) {
         this._Client = client;
     }
@@ -47,15 +55,7 @@ export abstract class ClientboundPacket {
      * @param {WritableBuffer} buf The buffer to be sent to the client.
      * @async
      */
-    public abstract Write(buf: WritableBuffer) : Promise<void>;
-
-    /**
-     * Return the embedded client (mainly for logging purposes).
-     * @returns {Client} The client.
-     */
-    public GetClient() : Client {
-        return this._Client;
-    }
+    public abstract Write(buf: WritableBuffer): Promise<void>;
 
     /**
      * Post-send hook.
