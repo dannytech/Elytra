@@ -16,7 +16,7 @@ export class ChatComponentFactory {
     private static _ParseFormattedString(parsable: StringCursor) : ChatTextComponent {
         const component: ChatTextComponent = {
             text: "",
-            extra: new Array<ChatTextComponent>()
+            extra: []
         };
         let escaped = false;
         let formatting = false;
@@ -171,7 +171,7 @@ export class ChatComponentFactory {
         // Pack components into a single top-level component
         const root: ChatTextComponent = {
             text: "",
-            extra: new Array<ChatTextComponent>(),
+            extra: [],
             color: "reset"
         };
 

@@ -7,14 +7,14 @@ export class World {
 
     public Seed: bigint;
     public Generator: string;
-    public Entities: Array<Entity>;
+    public Entities: Entity[];
 
     constructor(seed: bigint) {
         this._EntityCounter = 0;
 
         this.Seed = seed;
         this.Generator = "default";
-        this.Entities = new Array<Entity>();
+        this.Entities = [];
     }
 
     /**

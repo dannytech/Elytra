@@ -18,7 +18,7 @@ export class ClientBus {
         this._Server = server;
         this._ClientCounter = 0;
 
-        this._Clients = new Array<Client>();
+        this._Clients = [];
 
         // Attach a connection listener
         this._Server.on("connection", this._HandleConnection.bind(this));

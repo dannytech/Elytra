@@ -50,7 +50,7 @@ export type KeepAliveState = {
 
 export class Client extends EventEmitter {
     private _Socket: Socket;
-    private _ClientboundQueue: Array<ClientboundPacket>;
+    private _ClientboundQueue: ClientboundPacket[];
     private _Decipher: Decipher;
     private _Cipher: Cipher;
 
@@ -63,7 +63,7 @@ export class Client extends EventEmitter {
 
         // Set initial values
         this._Socket = socket;
-        this._ClientboundQueue = Array<ClientboundPacket>();
+        this._ClientboundQueue = [];
 
         this.Protocol = {
             clientId: id,
