@@ -1,5 +1,5 @@
 import { Console } from "../../../game/Console";
-import { PlayerPositionAndLook } from "../../../game/Player";
+import { EntityPositionAndLook } from "../../../game/Entity";
 import { Client } from "../../Client";
 import { ClientboundPacket } from "../../Packet";
 import { WritableBuffer } from "../../WritableBuffer";
@@ -13,10 +13,10 @@ export enum PlayerPositionAndLookFlags {
 }
 
 export class PlayerPositionAndLookPacket extends ClientboundPacket {
-    private _PositionAndLook: PlayerPositionAndLook;
+    private _PositionAndLook: EntityPositionAndLook;
     private _Flags: PlayerPositionAndLookFlags;
 
-    constructor(client: Client, positionAndLook: PlayerPositionAndLook, flags: PlayerPositionAndLookFlags = 0x00) {
+    constructor(client: Client, positionAndLook: EntityPositionAndLook, flags: PlayerPositionAndLookFlags = 0x00) {
         super(client);
 
         this._PositionAndLook = positionAndLook;

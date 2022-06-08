@@ -143,7 +143,9 @@ export class State {
     public static Keypair: Keypair;
     public static ClientBus: ClientBus;
     public static PacketFactory: PacketFactory;
-    public static World: World;
+    public static Worlds: {
+        [id: string]: World
+    };
 }
 
 export class Constants {

@@ -1,5 +1,5 @@
 import * as mongoose from "mongoose";
-import { Schema, Model, Document } from "mongoose";
+import { Schema, SchemaTypes, Model, Document } from "mongoose";
 
 // TypeScript Interface for handling data going to and from the database
 export interface IConfigSchema {
@@ -14,7 +14,7 @@ export interface IConfigDocument extends IConfigSchema, Document {}
 const ConfigSchema: Schema = new Schema({
     namespace: { type: String, required: true },
     name: { type: String, required: true },
-    value: { type: mongoose.SchemaTypes.Mixed, required: true }
+    value: { type: SchemaTypes.Mixed, required: true }
 });
 ConfigSchema.index({ name: 1, namespace: 1}, { unique: true });
 export const ConfigModel: Model<IConfigDocument> = mongoose.model<IConfigDocument>("Config", ConfigSchema);

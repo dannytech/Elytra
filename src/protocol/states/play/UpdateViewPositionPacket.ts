@@ -1,5 +1,5 @@
 import { Console } from "../../../game/Console";
-import { PlayerPosition } from "../../../game/Player";
+import { EntityPosition } from "../../../game/Entity";
 import { ClientboundPacket } from "../../Packet";
 import { WritableBuffer } from "../../WritableBuffer";
 
@@ -12,7 +12,7 @@ export class UpdateViewPositionPacket extends ClientboundPacket {
      * @async
      */
     public async Write(buf: WritableBuffer) {
-        const position: PlayerPosition = this._Client.Player.State.position;
+        const position: EntityPosition = this._Client.Player.State.position;
 
         // Write the chunk coordinates
         buf.WriteVarInt(Math.floor(position.x / 16));

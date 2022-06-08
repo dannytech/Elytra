@@ -34,7 +34,21 @@ async function bootstrap() {
     await Database.Connect(process.env.MONGO_URI);
 
     // Load world data
-    State.World = await World.Load();
+    let worlds = await World.LoadWorlds();
+    if (worlds.length === 0) {
+        const newWorld: World = new World();
+
+        // Immediately save it
+        await newWorld.Save();
+
+        worlds = [new World()];
+    }
+
+    // Add the worlds to the global state
+    State.Worlds = {};
+    worlds.forEach((world) => {
+        State.Worlds[world.Metadata.id] = world;
+    });
 }
 
 /**

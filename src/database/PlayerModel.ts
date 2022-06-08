@@ -1,6 +1,7 @@
 import * as mongoose from "mongoose";
-import { Schema, Model, Document } from "mongoose";
-import { PermissionLevel, PlayerPositionAndLook } from "../game/Player";
+import { Schema, SchemaTypes, Model, Document } from "mongoose";
+import { EntityPositionAndLook } from "../game/Entity";
+import { PermissionLevel } from "../game/Player";
 
 // TypeScript Interface for handling data going to and from the database
 export interface IPlayerSchema {
@@ -8,8 +9,7 @@ export interface IPlayerSchema {
     username: string[],
     gamemode: number,
     op: PermissionLevel,
-    world: string,
-    positionAndLook: PlayerPositionAndLook
+    positionAndLook: EntityPositionAndLook
 }
 export interface IPlayerDocument extends IPlayerSchema, Document {}
 
@@ -18,6 +18,7 @@ const PlayerPositionAndLookSchema = new Schema({
     x: { type: Number, default: 0 },
     y: { type: Number, default: 0 },
     z: { type: Number, default: 0 },
+    world: { type: SchemaTypes.ObjectId },
     yaw: { type: Number, default: 0 },
     pitch: { type: Number, default: 0 }
 });
@@ -28,7 +29,6 @@ const PlayerSchema: Schema = new Schema({
     username: [{ type: String, required: true }],
     gamemode: { type: Number, min: 0, max: 7, required: true },
     op: { type: Number, min: 0, max: 4 },
-    world: { type: mongoose.SchemaTypes.ObjectId },
     positionAndLook: { type: PlayerPositionAndLookSchema, required: true }
 });
 PlayerSchema.index({ uuid: 1, username: 1 }, { unique: true });

@@ -1,5 +1,7 @@
 import * as crypto from "crypto";
+import { Types } from "mongoose";
 import { WorldModel, IWorldDocument } from "../database/WorldModel";
+import { Chunklet, ChunkletPosition, ChunkPosition } from "./Chunk";
 import { Entity } from "./Entity";
 
 type EntityArray = {
@@ -8,7 +10,8 @@ type EntityArray = {
 };
 
 type WorldMetadata = {
-    seed: bigint;
+    id: string,
+    seed?: string;
     generator: string;
 };
 
@@ -17,16 +20,20 @@ export class World {
 
     public Metadata: WorldMetadata;
 
-    constructor(seed: bigint) {
+    constructor(id?: string, seed?: string) {
         this._Entities = {
             entities: [],
             counter: 0
         };
 
+        id || (id = new Types.ObjectId().toHexString());
         this.Metadata = {
-            seed,
+            id,
             generator: "default"
         };
+
+        // Generate a random world seed
+        seed || (this.Metadata.seed = crypto.randomBytes(8).toString("hex"));
     }
 
     /**
@@ -46,7 +53,7 @@ export class World {
      */
     public async Save() {
         // Update or insert the player data
-        await WorldModel.findOneAndUpdate({}, {
+        await WorldModel.findByIdAndUpdate(this.Metadata.id, {
             $setOnInsert: {
                 seed: this.Metadata.seed,
                 generator: this.Metadata.generator
@@ -57,24 +64,46 @@ export class World {
     }
 
     /**
-     * Load the world from the database.
+     * Load all worlds from the database.
      * @static
      * @async
      */
-    public static async Load(): Promise<World> {
-        // Retrieve all existing player data
-        const worldDocument: IWorldDocument = await WorldModel.findOne({}, [ "seed", "generator" ]);
+    public static async LoadWorlds() : Promise<World[]> {
+        // Retrieve all existing world data
+        const worldDocument: IWorldDocument[] = await WorldModel.find({}, [ "seed", "generator" ]);
+        const worlds: World[] = [];
 
-        if (worldDocument) {
-            // Import the player data into a new Player object
-            const world: World = new World(worldDocument.seed);
-            world.Metadata.generator = worldDocument.generator;
+        for (const document of worldDocument) {
+            const world: World = new World(document._id, document.seed);
+            world.Metadata.generator = document.generator;
 
-            return world;
-        } else {
-            // Generate a random seed to use for the world generator
-            const seed: bigint = crypto.randomBytes(8).readBigInt64BE();
-            return new World(seed);
+            worlds.push(world);
         }
+        return worlds;
+    }
+
+    /**
+     * Gets the chunklets for a given chunk position.
+     * @param {ChunkPosition} coords The chunk coordinates to enumerate.
+     * @returns {Chunklet[]} The chunklets for the given chunk position.
+     * @async
+     */
+    public async GetChunklets(coords: ChunkPosition): Promise<Chunklet[]> {
+        const chunks: Chunklet[] = [];
+
+        // Loads the entire column of chunklets
+        for (let i = 0; i < 16; i++) {
+            chunks.push(new Chunklet({
+                ...coords,
+                z: i,
+                world: this.Metadata.id
+            }));
+        }
+
+        // Load all the chunklets asynchronously
+        const loaders: Promise<boolean>[] = chunks.map(async (chunk: Chunklet) => await chunk.Load());
+        await Promise.all(loaders);
+
+        return chunks;
     }
 }

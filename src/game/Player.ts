@@ -1,5 +1,7 @@
+import { State } from "../Configuration";
 import { IPlayerDocument, PlayerModel } from "../database/PlayerModel";
-import { Entity } from "./Entity";
+import { ChunkPosition } from "./Chunk";
+import { Entity, EntityPositionAndLook } from "./Entity";
 import { UUID } from "./UUID";
 
 export enum Gamemode {
@@ -25,24 +27,11 @@ export type PlayerProperty = {
     signature: string;
 }
 
-export type PlayerPosition = {
-    x: number;
-    y: number;
-    z: number;
-}
-
-export type PlayerLook = {
-    yaw: number;
-    pitch: number;
-}
-
-export type PlayerPositionAndLook = PlayerPosition & PlayerLook;
-
 export type PlayerState = {
     gamemode: Gamemode;
     op: PermissionLevel;
-    position: PlayerPositionAndLook;
-    activeChunks: number;
+    position: EntityPositionAndLook;
+    activeChunks: ChunkPosition[];
 };
 
 export type PlayerMetadata = {
@@ -56,19 +45,21 @@ export class Player extends Entity {
     public Metadata: PlayerMetadata;
 
     constructor(username: string, uuid?: UUID) {
-        super();
+        const position: EntityPositionAndLook = {
+            x: 0,
+            y: 0,
+            z: 0,
+            world: Object.values(State.Worlds)[0].Metadata.id,
+            yaw: 0,
+            pitch: 0
+        };
+        super(position);
 
         this.State = {
             gamemode: Gamemode.Survival,
             op: PermissionLevel.None,
-            position: {
-                x: 0,
-                y: 0,
-                z: 0,
-                yaw: 0,
-                pitch: 0
-            },
-            activeChunks: 0
+            position,
+            activeChunks: []
         };
         this.Metadata = {
             username: username,
