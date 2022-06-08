@@ -33,6 +33,7 @@ clientbound:
     DisconnectPacket: 0x1B
     EntityStatusPacket: 0x1C
     ServerKeepAlivePacket: 0x21
+    UpdateLightPacket: 0x25
     JoinGamePacket: 0x26
     PlayerInfoPacket: 0x34
     PlayerPositionAndLookPacket: 0x36

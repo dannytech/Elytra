@@ -4,6 +4,7 @@ import { Client, ClientState } from "../../Client";
 import { ServerboundPacket } from "../../Packet";
 import { ReadableBuffer } from "../../ReadableBuffer";
 import { PlayerInfoActions, PlayerInfoPacket } from "./PlayerInfoPacket";
+import { UpdateLightPacket } from "./UpdateLightPacket";
 import { UpdateViewPositionPacket } from "./UpdateViewPositionPacket";
 
 export class TeleportConfirmPacket extends ServerboundPacket {
@@ -33,5 +34,10 @@ export class TeleportConfirmPacket extends ServerboundPacket {
         // Send further information like chunk lighting
         this._Client.Queue(new PlayerInfoPacket(this._Client, PlayerInfoActions.AddPlayer, onlinePlayers));
         this._Client.Queue(new UpdateViewPositionPacket(this._Client));
+        this._Client.Queue(new UpdateLightPacket(this._Client, {
+            x: Math.floor(this._Client.Player.State.position.x / 16),
+            y: Math.floor(this._Client.Player.State.position.y / 16),
+            world: this._Client.Player.State.position.world
+        }));
     }
 }
