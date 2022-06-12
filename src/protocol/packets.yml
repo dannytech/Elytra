@@ -16,6 +16,7 @@ serverbound:
     ClientPluginMessagePacket:
       464-: 0x0B
       755-: 0x0A
+    PlayerPositionAndRotationPacket: 0x12
 clientbound:
   status:
     ResponsePacket: 0x00
