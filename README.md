@@ -23,20 +23,20 @@ There are many features still to implement, not the less something more than jus
 - [X] Protocol state management
 - [X] Protocol encryption, authentication, and compression
 - [X] Chat
-- [] Client states
+- [ ] Client states
     - [X] Handshaking
     - [X] Status
     - [X] Login
-    - [] Play
-- [] Support for multiple protocol and game versions
+    - [ ] Play
+- [ ] Support for multiple protocol and game versions
     - [X] Per-version packet ID mapping (accomplished via reflective packet class loading)
-    - [] Versioned packet ID mappings (either requires manual data entry or a scraping script)
-    - [] Block and item masking (if a block or item is not supported in a particular version, telling those clients it's a similar block or item)
-    - [] Pre- and post-1.9 combat
-- [] Automated testing
-- [] World generation and loading
-- [] Entities
-- [] Tile entities
-- [] NBT
-- [] Plugin API
-    - [] EventEmitters for most game components
+    - [ ] Versioned packet ID mappings (either requires manual data entry or a scraping script)
+    - [ ] Block and item masking (if a block or item is not supported in a particular version, telling those clients it's a similar block or item)
+    - [ ] Pre- and post-1.9 combat
+- [ ] Automated testing
+- [ ] World generation and loading
+- [ ] Entities
+- [ ] Tile entities
+- [ ] NBT
+- [ ] Plugin API
+    - [ ] EventEmitters for most game components
