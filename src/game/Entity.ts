@@ -22,7 +22,7 @@ export class Entity {
     public EntityID: number;
     public State: EntityState;
 
-    constructor(position: EntityPosition) {
+    constructor(position: EntityPositionAndLook) {
         // Register the entity as part of the world
         this.State = {
             position
