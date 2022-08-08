@@ -14,11 +14,20 @@ export type EntityLook = {
 
 export type EntityPositionAndLook = EntityPosition & EntityLook;
 
+export type EntityState = {
+    position: EntityPositionAndLook;
+}
+
 export class Entity {
     public EntityID: number;
+    public State: EntityState;
 
     constructor(position: EntityPosition) {
         // Register the entity as part of the world
-        this.EntityID = State.Worlds[position.world].RegisterEntity(this);
+        this.State = {
+            position
+        };
+
+        this.EntityID = State.World.RegisterEntity(this);
     }
 }
