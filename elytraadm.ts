@@ -186,7 +186,4 @@ function cast(value: string): any {
         default:
             Console.Error("Unknown command");
     }
-
-    if (Database.Connected)
-        await Database.Disconnect();
 })();

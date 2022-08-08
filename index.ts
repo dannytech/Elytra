@@ -31,7 +31,7 @@ async function bootstrap() {
     Console.Info("Server public key has fingerprint", fingerprint.green);
 
     // Connect to the database
-    await Database.Connect(process.env.MONGO_URI);
+    await Database.Connect();
 
     // Load world data
     let worlds = await World.LoadWorlds();
