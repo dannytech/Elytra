@@ -19,7 +19,7 @@
     "axios": "^0.21.1",
     "colors": "^1.4.0",
     "dotenv-extended": "^2.8.0",
-    "mongoose": "^5.9.20",
+    "mongoose": "^5.13.15",
     "uuid": "^8.1.0",
     "yaml": "^2.1.1"
   },
