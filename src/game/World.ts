@@ -58,21 +58,39 @@ export class World {
      * @async
      */
     public async GetChunklets(coords: ChunkPosition): Promise<Chunklet[]> {
-        const chunks: Chunklet[] = [];
+        // Attempt to load the chunklets
+        const chunklets = await r.table<ChunkletModel>("chunklet")
+            .getAll([
+                coords.x,
+                coords.y,
+                this.Metadata.id
+            ], { index: "chunk_position" })
+            .pluck("blocks")
+            .run();
 
-        // Loads the entire column of chunklets
+        // Identify which chunklets already exist
+        const existingChunklets = chunklets.map((chunklet: ChunkletModel) => chunklet.y);
+
+        // Load or create chunklets as needed
+        const newChunklets: Chunklet[] = [];
         for (let i = 0; i < 16; i++) {
-            chunks.push(new Chunklet({
-                ...coords,
-                z: i,
-                world: this.Metadata.id
-            }));
+            if (!existingChunklets.includes(i)) {
+                // Generate a temporary chunklet
+                const newChunklet = new Chunklet({
+                    ...coords,
+                    z: i,
+                    world: this.Metadata.id
+                });
+
+                newChunklets.push(Chunklet.Mapper.proxy(newChunklet));
+            }
         }
 
-        // Load all the chunklets asynchronously
-        const loaders: Promise<boolean>[] = chunks.map(async (chunk: Chunklet) => await chunk.Load());
-        await Promise.all(loaders);
-
-        return chunks;
+        return [
+            ...chunklets
+                .map<Chunklet>((chunklet: ChunkletModel) => Chunklet.Mapper.load(chunklet))
+                .map<Chunklet>((chunklet: Chunklet) => Chunklet.Mapper.proxy(chunklet)),
+            ...newChunklets
+        ];
     }
 }
