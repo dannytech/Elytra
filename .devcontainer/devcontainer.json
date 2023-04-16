@@ -2,19 +2,20 @@
 // https://github.com/microsoft/vscode-dev-containers/tree/v0.233.0/containers/javascript-node-mongo
 // Update the VARIANT arg in docker-compose.yml to pick a Node.js version
 {
-	"name": "Node.js & Mongo DB",
+	"name": "Node.js & RethinkDB",
 	"dockerComposeFile": "docker-compose.yml",
 	"service": "app",
 	"workspaceFolder": "/workspace",
 
-	// Set *default* container specific settings.json values on container create.
-	"settings": {},
-
 	// Add the IDs of extensions you want installed when the container is created.
-	"extensions": [
-		"dbaeumer.vscode-eslint",
-		"ms-vscode.vscode-js-profile-flame"
-	],
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"dbaeumer.vscode-eslint",
+				"ms-vscode.vscode-js-profile-flame"
+			]
+		}
+	},
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	"forwardPorts": [
