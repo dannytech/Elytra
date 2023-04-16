@@ -9,8 +9,7 @@
         "target": "ES6"
     },
     "files": [
-        "index.ts",
-        "elytraadm.ts"
+        "index.ts"
     ],
     "include": [
         "src/**/*.ts"
