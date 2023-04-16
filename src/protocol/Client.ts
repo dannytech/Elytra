@@ -12,6 +12,8 @@ import { Player } from "../game/Player";
 import { Console } from "../game/Console";
 import { PlayerInfoActions, PlayerInfoPacket } from "./states/play/PlayerInfoPacket";
 import { PacketDirection } from "./PacketFactory";
+import { r } from "rethinkdb-ts";
+import { PlayerModel } from "../database/models/PlayerModel";
 
 export enum ClientState {
     Handshaking = "handshaking",
@@ -220,7 +222,13 @@ export class Client extends EventEmitter {
                 if (client.Protocol.state == ClientState.Play)
                     client.Queue(new PlayerInfoPacket(client, PlayerInfoActions.RemovePlayer, [this]));
             });
-            this.Player.Save();
+
+            // Save the player if they fully loaded
+            if (this.Protocol.state === ClientState.Play) {
+                r.table<PlayerModel>("player")
+                    .insert(Player.Mapper.save(this.Player), { conflict: "update" })
+                    .run();
+            }
         }
 
         this.emit("disconnected");

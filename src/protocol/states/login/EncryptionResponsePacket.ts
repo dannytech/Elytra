@@ -11,6 +11,8 @@ import { Player } from "../../../game/Player";
 import { UUID } from "../../../game/UUID";
 import { ChatComponentFactory } from "../../../game/chat/ChatComponentFactory";
 import { Console } from "../../../game/Console";
+import { PlayerModel } from "../../../database/models/PlayerModel";
+import { r } from "rethinkdb-ts";
 
 type AuthenticationRequestParams = {
     username: string,
@@ -91,9 +93,18 @@ export class EncryptionResponsePacket extends ServerboundPacket {
 
             // Confirm client authentication succeeded
             if (res.status == 200) {
-                this._Client.Player = new Player(this._Client.Player.Metadata.username, new UUID(res.data.id));
+                // Attempt to load the player from the database
+                const player = await r.table<PlayerModel>("player")
+                    .get(res.data.id)
+                    .run();
+
+                // Deserialize or create the player object
+                if (player)
+                    this._Client.Player = Player.Mapper.load(player);
+                else this._Client.Player = new Player(this._Client.Player.Metadata.username, new UUID(res.data.id));
+
+                // Configure metadata received from Mojang servers
                 this._Client.Player.Metadata.properties = res.data.properties;
-                await this._Client.Player.Load();
 
                 Console.Info(this._Client.Player.Metadata.username.green, "authenticated successfully with UUID", this._Client.Player.Metadata.uuid.Format(true).blue);
 

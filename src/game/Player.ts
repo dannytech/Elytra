@@ -1,6 +1,6 @@
 import { State } from "../Configuration";
-import { IPlayerDocument, PlayerModel } from "../database/PlayerModel";
-import { ChunkPosition } from "./Chunk";
+import { PlayerModelMapper } from "../database/mappers/PlayerModelMapper";
+import { ChunkPosition } from "./Chunklet";
 import { Entity, EntityPositionAndLook } from "./Entity";
 import { UUID } from "./UUID";
 
@@ -41,6 +41,8 @@ export type PlayerMetadata = {
 };
 
 export class Player extends Entity {
+    public static Mapper: PlayerModelMapper = new PlayerModelMapper();
+
     public State: PlayerState;
     public Metadata: PlayerMetadata;
 
@@ -66,52 +68,5 @@ export class Player extends Entity {
             uuid: uuid,
             properties: []
         };
-    }
-
-    /**
-     * Save the player object to the database.
-     * @async
-     */
-    public async Save() {
-        // The Player object is used a placeholder during the encryption process, in which case we shouldn't save it
-        if (this.Metadata.uuid) {
-            // Update or insert the player data
-            await PlayerModel.findOneAndUpdate({
-                uuid: this.Metadata.uuid.Format()
-            }, {
-                $setOnInsert: {
-                    uuid: this.Metadata.uuid.Format()
-                },
-                $set: {
-                    gamemode: this.State.gamemode,
-                    op: this.State.op,
-                    positionAndLook: this.State.position
-                }
-            }, {
-                upsert: true
-            });
-        }
-    }
-
-    /**
-     * Load a player object from the database.
-     * @async
-     */
-    public async Load() {
-        // Retrieve state and update the username history
-        const playerDocument: IPlayerDocument = await PlayerModel.findOneAndUpdate({
-            uuid: this.Metadata.uuid.Format()
-        }, {
-            $addToSet: {
-                username: this.Metadata.username
-            }
-        }, { new: true });
-
-        if (playerDocument) {
-            // Load the player state
-            this.State.gamemode = playerDocument.gamemode;
-            this.State.op = playerDocument.op;
-            this.State.position = playerDocument.positionAndLook;
-        }
     }
 }

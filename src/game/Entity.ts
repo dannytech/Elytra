@@ -28,6 +28,6 @@ export class Entity {
             position
         };
 
-        this.EntityID = State.World.RegisterEntity(this);
+        this.EntityID = State.Worlds[position.world].RegisterEntity(this);
     }
 }
