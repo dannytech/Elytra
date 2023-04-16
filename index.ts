@@ -9,6 +9,8 @@ import { Keypair } from "./src/protocol/Encryption";
 import { World } from "./src/game/World";
 import { Console } from "./src/game/Console";
 import { PacketFactory } from "./src/protocol/PacketFactory";
+import { WorldModel } from "./src/database/models/WorldModel";
+import { r } from "rethinkdb-ts";
 
 /**
  * Prepare the server to accept players.
@@ -33,22 +35,25 @@ async function bootstrap() {
     // Connect to the database
     await Database.Connect();
 
-    // Load world data
-    let worlds = await World.LoadWorlds();
-    if (worlds.length === 0) {
+    // Retrieve all existing world data
+    const worlds = await r.table<WorldModel>("world")
+        .run();
+
+    State.Worlds = {};
+    if (worlds.length > 0) {
+        // Convert and proxy the world objects
+        worlds.forEach((world: WorldModel) => {
+            State.Worlds[world.id] = World.Mapper.load(world, true);
+        });
+    } else {
+        Console.Info("Creating default world");
+
+        // Create a new world
         const newWorld: World = new World();
 
-        // Immediately save it
-        await newWorld.Save();
-
-        worlds = [new World()];
+        // Proxy and map the world
+        State.Worlds[newWorld.Metadata.id] = World.Mapper.proxy(newWorld);
     }
-
-    // Add the worlds to the global state
-    State.Worlds = {};
-    worlds.forEach((world) => {
-        State.Worlds[world.Metadata.id] = world;
-    });
 }
 
 /**

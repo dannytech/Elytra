@@ -56,12 +56,12 @@ export class Settings {
                     start: joi.number().integer(),
                     end: joi.number().integer().optional()
                 }).custom((value: VersionSpec, helper) => {
-                    // attempts to identify overlapping version specs
+                    // Attempts to identify overlapping version specs
                     const overlaps = Constants.SupportedVersions.some((supported: VersionSpec) => {
                         return supported.start <= value.start && value.end <= supported.end;
                     });
 
-                    // check if there is an overlapping version
+                    // Check if there is an overlapping version
                     if (!overlaps)
                         return helper.message({ custom: "Version spec does not include a supported range" });
                     else return true;
@@ -149,19 +149,19 @@ export class Settings {
     public static async Get(namespace: string, name: string): Promise<any>;
     /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
     public static async Get(namespaceOrName: string, name?: string): Promise<any> {
-        // support an overload which assumes the namespace as the first parameter is not necessary
+        // Support an overload which assumes the namespace as the first parameter is not necessary
         if (name === undefined) {
             name = namespaceOrName;
             namespaceOrName = Constants.ConfigNamespace;
         }
 
-        // require the configuration to exist in the schema
+        // Require the configuration to exist in the schema
         if (!Object.keys(this._schema).includes(namespaceOrName) || !Object.keys(this._schema[namespaceOrName]).includes(name)) {
             Console.Error("Invalid config", `${namespaceOrName}:${name}`.green);
             return null;
         }
 
-        // retrieve the relevant config object
+        // Retrieve the relevant config object
         const config = await r.table<ConfigModel>("config")
             .getAll([
                 namespaceOrName,
@@ -171,7 +171,7 @@ export class Settings {
             .limit(1)
             .run();
 
-        // return the loaded value or the default
+        // Return the loaded value or the default
         if (config.length > 0)
             return config.pop().value;
         else
@@ -192,18 +192,18 @@ export class Settings {
     public static async Set(namespace: string, name: string, value: any): Promise<void>;
     /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
     public static async Set(namespaceOrName: string, nameOrValue: any, value?: any): Promise<void> {
-        // support an overload which assumes the namespace as the first parameter is not necessary
+        // Support an overload which assumes the namespace as the first parameter is not necessary
         if (value === undefined) {
             value = nameOrValue;
             nameOrValue = namespaceOrName;
             namespaceOrName = Constants.ConfigNamespace;
         }
 
-        // require the configuration to exist in the schema
+        // Require the configuration to exist in the schema
         if (!Object.keys(this._schema).includes(namespaceOrName) || !Object.keys(this._schema[namespaceOrName]).includes(nameOrValue))
             return Console.Error("Invalid config", `${namespaceOrName}:${nameOrValue}`.green);
 
-        // test the config against the validation schema
+        // Test the config against the validation schema
         const test = this._schema[namespaceOrName][nameOrValue].schema.validate(value, { presence: "required" });
         if (test.error)
             return Console.Error("Invalid config value", test.error.message.red);
@@ -225,9 +225,7 @@ export class State {
     public static Keypair: Keypair;
     public static ClientBus: ClientBus;
     public static PacketFactory: PacketFactory;
-    public static Worlds: {
-        [id: string]: World
-    };
+    public static Worlds: Record<string, World>;
 }
 
 export class Constants {
@@ -239,4 +237,5 @@ export class Constants {
     public static VerificationTokenLength = 8;
     public static MessageBufferSize = 1000000;
     public static KeepAliveInterval = 5000;
+    public static SupportedVersions = [versionSpec("578")];
 }
