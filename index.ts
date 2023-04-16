@@ -1,10 +1,10 @@
-import { Server } from "net";
+import { Server as TCPServer } from "net";
 import * as crypto from "crypto";
 import "colors";
 
 import { Settings, State, MinecraftConfigs } from "./src/Configuration";
 import { Database } from "./src/Database";
-import { ClientBus } from "./src/protocol/ClientBus";
+import { Server } from "./src/protocol/Server";
 import { Keypair } from "./src/protocol/Encryption";
 import { World } from "./src/game/World";
 import { Console } from "./src/game/Console";
@@ -61,10 +61,10 @@ async function bootstrap() {
  * @async
  */
 async function startListener() {
-    const server = new Server();
+    const server = new TCPServer();
 
     // Attach a connection handler
-    State.ClientBus = new ClientBus(server);
+    State.Server = new Server(server);
 
     // Set up a packet factory
     State.PacketFactory = new PacketFactory();

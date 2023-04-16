@@ -217,7 +217,7 @@ export class Client extends EventEmitter {
 
         // Save the player state before destroying the client
         if (this.Player) {
-            State.ClientBus.Broadcast((client: Client ) => {
+            State.Server.Broadcast((client: Client ) => {
                 // Remove the player from the list of online players
                 if (client.Protocol.state == ClientState.Play)
                     client.Queue(new PlayerInfoPacket(client, PlayerInfoActions.RemovePlayer, [this]));

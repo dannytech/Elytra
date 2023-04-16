@@ -1,4 +1,4 @@
-import { Socket, Server } from "net";
+import { Socket, Server as TCPServer } from "net";
 import { Constants } from "../Configuration";
 import { Client, ClientState } from "./Client";
 import { ServerKeepAlivePacket } from "./states/play/ServerKeepAlivePacket";
@@ -10,8 +10,8 @@ type ClientArray = {
     counter: number;
 };
 
-export class ClientBus {
-    private _Server: Server;
+export class Server {
+    private _Server: TCPServer;
     private _Clients: ClientArray;
 
     /**
@@ -22,7 +22,7 @@ export class ClientBus {
         return this._Clients.clients;
     }
 
-    constructor(server: Server) {
+    constructor(server: TCPServer) {
         this._Server = server;
         this._Clients = {
             clients: [],

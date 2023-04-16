@@ -14,7 +14,7 @@ export class ResponsePacket extends ClientboundPacket {
      * @async
      */
     public async Write(buf: WritableBuffer) {
-        const onlinePlayers: Client[] = State.ClientBus.Clients.filter((client: Client) => client.Protocol.state === ClientState.Play && client.Player.Metadata.uuid);
+        const onlinePlayers: Client[] = State.Server.Clients.filter((client: Client) => client.Protocol.state === ClientState.Play && client.Player.Metadata.uuid);
         const maximumPlayers: number = await Settings.Get(MinecraftConfigs.MaximumPlayers);
         const motd: string = await Settings.Get(MinecraftConfigs.MOTD);
 

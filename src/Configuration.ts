@@ -1,7 +1,7 @@
 import * as dotenv from "dotenv-extended";
 import { ConfigModel } from "./database/models/ConfigModel";
 import { Keypair } from "./protocol/Encryption";
-import { ClientBus } from "./protocol/ClientBus";
+import { Server } from "./protocol/Server";
 import { World } from "./game/World";
 import { PacketFactory } from "./protocol/PacketFactory";
 import { VersionSpec, versionSpec } from "./Masking";
@@ -223,7 +223,7 @@ export class Settings {
 
 export class State {
     public static Keypair: Keypair;
-    public static ClientBus: ClientBus;
+    public static Server: Server;
     public static PacketFactory: PacketFactory;
     public static Worlds: Record<string, World>;
 }
