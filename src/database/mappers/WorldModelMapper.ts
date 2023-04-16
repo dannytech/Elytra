@@ -5,7 +5,10 @@ import { WorldModel } from "../models/WorldModel";
 
 export class WorldModelMapper extends ModelMapper<WorldModel, World> {
     /**
-     * Convert retrieved player documents into Player objects
+     * Convert retrieved world documents into World objects
+     * @param {WorldModel} model The world document to convert
+     * @param {boolean} proxy Whether to proxy the world object or not
+     * @returns {World} A world object
      * @public
      */
     public load(model: WorldModel, proxy = false): World {
@@ -23,6 +26,12 @@ export class WorldModelMapper extends ModelMapper<WorldModel, World> {
         return proxy ? this.proxy(newWorld) : newWorld;
     }
 
+    /**
+     * Proxy World objects for write operations
+     * @param {World} world The world object to create a proxy on
+     * @returns {World} A proxied world object
+     * @public
+     */
     public proxy(world: World): World {
         // Construct an object proxy to save mapped values to the database
         return new Proxy(world, {
@@ -40,7 +49,9 @@ export class WorldModelMapper extends ModelMapper<WorldModel, World> {
     }
 
     /**
-     * Convert Player objects into serializable documents
+     * Convert World objects into serializable documents
+     * @param {World} world The world object to convert
+     * @returns {WorldModel} A serializable world document
      * @public
      */
     public save(world: World): WorldModel {

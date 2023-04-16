@@ -14,7 +14,10 @@ export class ChunkletModelMapper extends ModelMapper<ChunkletModel, Chunklet> {
     }
 
     /**
-     * Convert retrieved player documents into Player objects
+     * Convert retrieved chunklet documents into Player objects
+     * @param {ChunkletModel} model The chunklet document to create a proxy on
+     * @param {boolean} proxy Whether to proxy the chunklet object or not
+     * @returns {Chunklet} A chunklet object
      * @public
      */
     public load(model: ChunkletModel, proxy = false): Chunklet {
@@ -39,6 +42,12 @@ export class ChunkletModelMapper extends ModelMapper<ChunkletModel, Chunklet> {
         return proxy ? this.proxy(newChunklet) : newChunklet;
     }
 
+    /**
+     * Proxy Chunklet objects for write operations
+     * @param {Chunklet} chunklet The chunklet object to create a proxy on
+     * @returns {Chunklet} A proxied chunklet object
+     * @public
+     */
     public proxy(chunklet: Chunklet): Chunklet {
         // Construct an object proxy to save mapped values to the database
         return new Proxy(chunklet, {
@@ -58,7 +67,9 @@ export class ChunkletModelMapper extends ModelMapper<ChunkletModel, Chunklet> {
     }
 
     /**
-     * Convert Player objects into serializable documents
+     * Convert Chunklet objects into serializable documents
+     * @param {Chunklet} chunklet The chunklet object to convert
+     * @returns {ChunkletModel} A serializable chunklet document
      * @public
      */
     public save(chunklet: Chunklet): ChunkletModel {

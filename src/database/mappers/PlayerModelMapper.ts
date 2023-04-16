@@ -8,6 +8,7 @@ export class PlayerModelMapper extends ModelMapper<PlayerModel, Player> {
     /**
      * Convert retrieved player documents into Player objects
      * @param {PlayerModel} model The player document to convert
+     * @param {boolean} proxy Whether to proxy the player object or not
      * @returns {Player} A player object
      * @public
      */
