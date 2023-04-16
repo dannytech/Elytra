@@ -1,22 +1,18 @@
 import * as dotenv from "dotenv-extended";
-import { ConfigModel, IConfigDocument } from "./database/ConfigModel";
+import { ConfigModel } from "./database/models/ConfigModel";
 import { Keypair } from "./protocol/Encryption";
 import { ClientBus } from "./protocol/ClientBus";
 import { World } from "./game/World";
 import { PacketFactory } from "./protocol/PacketFactory";
-import { versionSpec } from "./Masking";
-
-type SettingsDefault = {
-    [namespace: string]: {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        [name: string]: any
-    }
-};
+import { VersionSpec, versionSpec } from "./Masking";
+import * as joi from "joi";
+import { Console } from "./game/Console";
+import { r } from "rethinkdb-ts";
 
 export enum MinecraftConfigs {
-    ServerIP = "serverIP",
+    ServerIP = "serverIp",
     ServerPort = "serverPort",
-    ServerVersion = "serverVersion",
+    ServerVersion = "serverVersionSpec",
     Online = "online",
     PreventProxy = "preventProxy",
     MaximumPlayers = "maximumPlayers",
@@ -30,33 +26,101 @@ export enum MinecraftConfigs {
 }
 
 export enum ElytraConfigs {
-    ApiIP = "apiIP",
+    ApiIP = "apiIp",
     ApiPort = "apiPort"
 }
 
+type SettingsSchema = {
+    [namespace: string]: {
+        [name: string]: {
+            default: unknown,
+            schema: joi.Schema
+        }
+    }
+};
+
 export class Settings {
-    private static _Defaults: SettingsDefault = {
-        minecraft: {
-            [MinecraftConfigs.ServerIP]: "0.0.0.0",
-            [MinecraftConfigs.ServerPort]: 25565,
-            [MinecraftConfigs.ServerVersion]: [versionSpec("578")],
-            [MinecraftConfigs.Online]: true,
-            [MinecraftConfigs.PreventProxy]: true,
-            [MinecraftConfigs.MaximumPlayers]: 20,
-            [MinecraftConfigs.RenderDistance]: 20,
-            [MinecraftConfigs.ReducedDebug]: false,
-            [MinecraftConfigs.RespawnScreen]: true,
-            [MinecraftConfigs.MOTD]: "An Elytra server",
-            [MinecraftConfigs.EULA]: false,
-            [MinecraftConfigs.Filter]: {
-                mode: "deny",
-                players: []
+    private static _schema: SettingsSchema = {
+        "minecraft": {
+            "serverIp": {
+                default: "0.0.0.0",
+                schema: joi.string().ip()
             },
-            [MinecraftConfigs.Debug]: false
+            "serverPort": {
+                default: 25565,
+                schema: joi.number().integer().min(1024).max(65535)
+            },
+            "serverVersionSpec": {
+                default: [versionSpec("578")],
+                schema: joi.array().items(joi.object({
+                    start: joi.number().integer(),
+                    end: joi.number().integer().optional()
+                }).custom((value: VersionSpec, helper) => {
+                    // attempts to identify overlapping version specs
+                    const overlaps = Constants.SupportedVersions.some((supported: VersionSpec) => {
+                        return supported.start <= value.start && value.end <= supported.end;
+                    });
+
+                    // check if there is an overlapping version
+                    if (!overlaps)
+                        return helper.message({ custom: "Version spec does not include a supported range" });
+                    else return true;
+                }))
+            },
+            "online": {
+                default: true,
+                schema: joi.boolean()
+            },
+            "preventProxy": {
+                default: true,
+                schema: joi.boolean()
+            },
+            "maximumPlayers": {
+                default: 20,
+                schema: joi.number().integer().min(1)
+            },
+            "renderDistance": {
+                default: 20,
+                schema: joi.number().integer().min(2)
+            },
+            "reducedDebug": {
+                default: false,
+                schema: joi.boolean()
+            },
+            "respawnScreen": {
+                default: true,
+                schema: joi.boolean()
+            },
+            "motd": {
+                default: "An Elytra server",
+                schema: joi.string()
+            },
+            "eula": {
+                default: false,
+                schema: joi.boolean()
+            },
+            "filter": {
+                default: [],
+                schema: joi.array().items(joi.string().uuid())
+            },
+            "filterMode": {
+                default: "deny",
+                schema: joi.string().allow("allow", "deny")
+            },
+            "debug": {
+                default: false,
+                schema: joi.boolean()
+            }
         },
         elytra: {
-            [ElytraConfigs.ApiIP]: "127.0.0.1",
-            [ElytraConfigs.ApiPort]: 25575
+            "apiIp": {
+                default: "127.0.0.1",
+                schema: joi.string().ip()
+            },
+            "apiPort": {
+                default: 25575,
+                schema: joi.number().integer().min(1024).max(65535)
+            }
         }
     };
 
@@ -91,13 +155,27 @@ export class Settings {
             namespaceOrName = Constants.ConfigNamespace;
         }
 
-        const playerDocument: IConfigDocument = await ConfigModel.findOne({
-            namespace: namespaceOrName,
-            name: name
-        }, [ "value" ]);
+        // require the configuration to exist in the schema
+        if (!Object.keys(this._schema).includes(namespaceOrName) || !Object.keys(this._schema[namespaceOrName]).includes(name)) {
+            Console.Error("Invalid config", `${namespaceOrName}:${name}`.green);
+            return null;
+        }
 
-        if (playerDocument) return playerDocument.value;
-        else if (namespaceOrName === Constants.ConfigNamespace) return this._Defaults[namespaceOrName][name];
+        // retrieve the relevant config object
+        const config = await r.table<ConfigModel>("config")
+            .getAll([
+                namespaceOrName,
+                name
+            ], { index: "namespaced_config" })
+            .pluck("value")
+            .limit(1)
+            .run();
+
+        // return the loaded value or the default
+        if (config.length > 0)
+            return config.pop().value;
+        else
+            return this._schema[namespaceOrName][name].default;
     }
 
     /**
@@ -113,7 +191,7 @@ export class Settings {
     /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
     public static async Set(namespace: string, name: string, value: any): Promise<void>;
     /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
-    public static async Set(namespaceOrName: string, nameOrValue: any, value?: any) {
+    public static async Set(namespaceOrName: string, nameOrValue: any, value?: any): Promise<void> {
         // support an overload which assumes the namespace as the first parameter is not necessary
         if (value === undefined) {
             value = nameOrValue;
@@ -121,21 +199,25 @@ export class Settings {
             namespaceOrName = Constants.ConfigNamespace;
         }
 
+        // require the configuration to exist in the schema
+        if (!Object.keys(this._schema).includes(namespaceOrName) || !Object.keys(this._schema[namespaceOrName]).includes(nameOrValue))
+            return Console.Error("Invalid config", `${namespaceOrName}:${nameOrValue}`.green);
+
+        // test the config against the validation schema
+        const test = this._schema[namespaceOrName][nameOrValue].schema.validate(value, { presence: "required" });
+        if (test.error)
+            return Console.Error("Invalid config value", test.error.message.red);
+
         // Update or insert the configuration value
-        await ConfigModel.updateOne({
-            namespace: namespaceOrName,
-            name: nameOrValue
-        }, {
-            $set: {
-                value: value
-            },
-            $setOnInsert: {
+        await r.table<ConfigModel>("config")
+            .insert({
                 namespace: namespaceOrName,
-                name: nameOrValue
-            }
-        }, {
-            upsert: true
-        });
+                name: nameOrValue,
+                value
+            }, {
+                conflict: "update"
+            })
+            .run();
     }
 }
 
