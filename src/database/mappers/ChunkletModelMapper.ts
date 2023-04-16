@@ -51,7 +51,7 @@ export class ChunkletModelMapper extends ModelMapper<ChunkletModel, Chunklet> {
     public proxy(chunklet: Chunklet): Chunklet {
         // Construct an object proxy to save mapped values to the database
         return new Proxy(chunklet, {
-            set(target, property: keyof Chunklet, value) {
+            set: (target, property: keyof Chunklet, value) => {
                 const prop: PropertyDescriptor = Object.getOwnPropertyDescriptor.call(target, property);
                 if (prop && prop.writable)
                     target[property] = value;

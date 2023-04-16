@@ -37,7 +37,7 @@ export class PlayerModelMapper extends ModelMapper<PlayerModel, Player> {
      */
     public proxy(player: Player): Player {
         return new Proxy(player, {
-            set(target, property: keyof Player, value) {
+            set: (target, property: keyof Player, value) => {
                 target[property as keyof Player] = value;
 
                 // Flush changes to the database

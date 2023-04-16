@@ -35,7 +35,7 @@ export class WorldModelMapper extends ModelMapper<WorldModel, World> {
     public proxy(world: World): World {
         // Construct an object proxy to save mapped values to the database
         return new Proxy(world, {
-            set(target, property: keyof World, value) {
+            set: (target, property: keyof World, value) => {
                 target[property] = value;
 
                 // Flush changes to the database
