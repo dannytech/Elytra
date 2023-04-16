@@ -7,7 +7,7 @@ export interface ConfigModel {
     value: unknown
 }
 
-export async function ConfigModelBinder() {
+export async function ModelBinder() {
     await r.branch(
         r.tableList().contains("config"),
         null,

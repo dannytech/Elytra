@@ -11,7 +11,7 @@ export interface PlayerModel {
     positionAndLook: EntityPositionAndLook
 }
 
-export async function PlayerModelBinder() {
+export async function ModelBinder() {
     await r.branch(
         r.tableList().contains("player"),
         null,

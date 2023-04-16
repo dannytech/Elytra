@@ -7,7 +7,7 @@ export interface WorldModel {
     generator: string
 }
 
-export async function WorldModelBinder() {
+export async function ModelBinder() {
     // Create config tables
     await r.branch(
         r.tableList().contains("world"),

@@ -10,7 +10,7 @@ export interface ChunkletModel {
     blocks: Uint16Array // at 2 bytes each, a total of 8KB
 }
 
-export async function ChunkletModelBinder() {
+export async function ModelBinder() {
     await r.branch(
         r.tableList().contains("chunklet"),
         null,
