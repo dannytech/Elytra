@@ -1,5 +1,5 @@
 import { State } from "../../../Configuration";
-import { Chunklet, ChunkPosition } from "../../../game/Chunk";
+import { Chunklet, ChunkPosition } from "../../../game/Chunklet";
 import { Client } from "../../Client";
 import { ClientboundPacket } from "../../Packet";
 import { WritableBuffer } from "../../WritableBuffer";
@@ -55,10 +55,12 @@ export class UpdateLightPacket extends ClientboundPacket {
         this._Chunklets = await State.Worlds[world].GetChunklets(this._Position);
 
         let nonEmptyMask = 0b000000000000000000;
-        for (let i = 1; i < 17; i++) {
+        for (let i = 0; i < 16; i++) {
+            const blocks = this._Chunklets[i].Blocks;
+
             // Add non-empty chunklets to the mask
-            if (this._Chunklets[i - 1].BlockCount > 0)
-                nonEmptyMask |= (0b1 << i);
+            if (blocks.some((block: number) => block > 0))
+                nonEmptyMask |= (0b1 << i + 1);
         }
 
         // X and Y coordinates of this vertical chunk

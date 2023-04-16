@@ -27,8 +27,8 @@ type PacketMappings = {
 };
 
 type SourceMap = {
-    [key: string]: number | {
-        [key: string]: number
+    [name: string]: number | {
+        [versionSpec: string]: number
     }
 };
 
