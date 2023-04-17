@@ -1,6 +1,5 @@
 import { parse } from "yaml";
 import { readFile } from "fs/promises";
-
 import { Client, ClientState } from "./Client";
 import { Console } from "../game/Console";
 import { ReadableBuffer } from "./ReadableBuffer";
@@ -23,6 +22,7 @@ type PacketMappings = {
     direction: PacketDirection;
     state: ClientState;
     names: string[];
+    classes?: Map<string, IServerboundConstructor>;
     mappings: PacketMapping;
 };
 
@@ -55,11 +55,18 @@ export class PacketFactory {
             for (const state in mappings[direction]) {
                 const def: SourceMap = mappings[direction][state as ClientState];
 
-                this._LoadPacketSpec(direction as PacketDirection, state as ClientState, def);
+                Console.Debug(`Loading ${direction.green} packets for ${state.blue} state`);
+                await this._LoadPacketSpec(direction as PacketDirection, state as ClientState, def);
             }
     }
 
-    private _LoadPacketSpec(direction: PacketDirection, state: ClientState, def: SourceMap) {
+    /**
+     * Build a forward and reverse lookup table for packet IDs and names
+     * @param direction The packet direction to construct the mapping for
+     * @param state The client state to construct the mapping for
+     * @param def The raw mapping for the above states to process
+     */
+    private async _LoadPacketSpec(direction: PacketDirection, state: ClientState, def: SourceMap) {
         const spec: PacketMappings = {
             direction: direction,
             state: state,
@@ -67,15 +74,31 @@ export class PacketFactory {
             mappings: {}
         };
 
-        Object.entries(def).forEach(([packetName, packetId]) => {
+        // For serverbound mappings, cache the packet classes
+        if (direction == PacketDirection.Serverbound)
+            spec.classes = new Map();
+
+        // Create a mapping for each packet
+        for (const packetName of Object.keys(def)) {
+            // Extract the packet ID or an array of version specifications mapped to packet IDs
+            const packetId = def[packetName];
+
+            // Store the packet name in an array later used to load the packet
             const index: number = spec.names.push(packetName) - 1;
 
             // Dynamically set the direction of the search
             let query: number;
             let result: number;
-            if (direction == PacketDirection.Serverbound)
+            if (direction == PacketDirection.Serverbound) {
                 result = index;
-            else
+
+                // Load the packet class
+                const packetClass = await import(`./states/${state}/${packetName}`);
+
+                // Cache the packet class for faster loading
+                if (packetName in packetClass)
+                    spec.classes.set(packetName, packetClass[packetName]);
+            } else
                 query = index;
 
             if (typeof packetId == "number") {
@@ -135,7 +158,7 @@ export class PacketFactory {
                     return currentSpec.start;
                 }, null);
             }
-        });
+        }
 
         // Add the compiled specification
         this._PacketSpec.push(spec);
@@ -144,9 +167,9 @@ export class PacketFactory {
     /**
      * Convert from a packet name to the corresponding version-specific packet ID
      * @param {PacketDirection} direction The direction of the packet
-     * @param {Client} client The client connecting, used to determine state and protocol version.
-     * @param {string|number} packetNameOrId The name of the packet to convert.
-     * @returns {string|number} The packet ID.
+     * @param {Client} client The client connecting, used to determine state and protocol version
+     * @param {string|number} packetNameOrId The name of the packet to convert
+     * @returns {string|number} The packet ID
      */
     public Lookup(direction: PacketDirection, client: Client, packetNameOrId: string | number): string | number {
         // Load the mappings for the current state
@@ -195,14 +218,14 @@ export class PacketFactory {
     public async Parse(buf: ReadableBuffer, client: Client) {
         const packetId: number = buf.ReadVarInt();
 
+        // Load the mappings for the current state
+        const statePackets = this._PacketSpec.find(spec => spec.direction == PacketDirection.Serverbound && spec.state == client.Protocol.state);
+
         // Determine the incoming packet identity based on current state and the packet ID
         const packetName: string = this.Lookup(PacketDirection.Serverbound, client, packetId) as string;
+        const packetClass: IServerboundConstructor = statePackets.classes.get(packetName);
 
-        if (packetName) {
-            // Dynamically load the packet class
-            /* eslint-disable-next-line @typescript-eslint/no-var-requires */
-            const packetClass: IServerboundConstructor = require(`./states/${client.Protocol.state}/${packetName}`)[packetName];
-
+        if (packetClass) {
             // Assemble a new object reflectively
             const packet: ServerboundPacket = Reflect.construct(packetClass, [client]);
 
