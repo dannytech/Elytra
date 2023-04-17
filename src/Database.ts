@@ -68,8 +68,8 @@ export class Database {
             if (!binder.endsWith(".js"))
                 continue;
 
-            /* eslint-disable-next-line @typescript-eslint/no-var-requires */
-            const model = require(`./database/models/${binder}`);
+            // Load the class file
+            const model = await import(`./database/models/${binder}`);
 
             // Call the model binder function
             if ("ModelBinder" in model) {
