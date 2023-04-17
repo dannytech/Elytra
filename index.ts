@@ -39,11 +39,11 @@ async function bootstrap() {
     const worlds = await r.table<WorldModel>("world")
         .run();
 
-    State.Worlds = {};
+    State.Worlds = new Map();
     if (worlds.length > 0) {
         // Convert and proxy the world objects
         worlds.forEach((world: WorldModel) => {
-            State.Worlds[world.id] = World.Mapper.load(world, true);
+            State.Worlds.set(world.id, World.Mapper.load(world, true));
         });
     } else {
         Console.Info("Creating default world");
@@ -52,7 +52,7 @@ async function bootstrap() {
         const newWorld: World = new World();
 
         // Proxy and map the world
-        State.Worlds[newWorld.Metadata.id] = World.Mapper.proxy(newWorld);
+        State.Worlds.set(newWorld.Metadata.id, World.Mapper.proxy(newWorld));
     }
 }
 

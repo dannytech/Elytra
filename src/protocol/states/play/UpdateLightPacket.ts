@@ -52,7 +52,7 @@ export class UpdateLightPacket extends ClientboundPacket {
      */
     public async Write(buf: WritableBuffer) {
         const world: string = this._Client.Player.State.position.world;
-        this._Chunklets = await State.Worlds[world].GetChunklets(this._Position);
+        this._Chunklets = await State.Worlds.get(world).GetChunklets(this._Position);
 
         let nonEmptyMask = 0b000000000000000000;
         for (let i = 0; i < 16; i++) {

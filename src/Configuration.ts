@@ -225,7 +225,7 @@ export class State {
     public static Keypair: Keypair;
     public static Server: Server;
     public static PacketFactory: PacketFactory;
-    public static Worlds: Record<string, World>;
+    public static Worlds: Map<string, World>;
 }
 
 export class Constants {
