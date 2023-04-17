@@ -51,7 +51,7 @@ export class Player extends Entity {
             x: 0,
             y: 0,
             z: 0,
-            world: Object.values(State.Worlds)[0].Metadata.id,
+            world: State.Worlds.values().next().value.Metadata.id,
             yaw: 0,
             pitch: 0
         };
