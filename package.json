@@ -22,7 +22,7 @@
     "joi": "^17.9.1",
     "rethinkdb-ts": "^2.5.4",
     "uuid": "^8.1.0",
-    "yaml": "^2.1.1"
+    "yaml": "^2.2.2"
   },
   "devDependencies": {
     "@types/node": "^17.0.39",
