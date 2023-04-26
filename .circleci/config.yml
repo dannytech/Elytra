@@ -5,22 +5,25 @@ jobs:
   test:
     docker:
       - image: cimg/node:lts
-
+      - image: rethinkdb:latest
+    parallelism: 4
     steps:
       - checkout
-      - restore_cache:
-          keys:
-            - &node_modules node_modules-{{ .Branch }}-{{checksum "package-lock.json"}}
+      - node/install-packages:
+          cache-path: ~/node_modules
       - run:
-          name: Install packages
-          command: npm install
-      - save_cache:
-          key: *node_modules
-          paths:
-            - node_modules/
+          name: Create test results directory
+          command: mkdir -p $CIRCLE_TEST_REPORTS/report/
       - run:
           name: Check code style
-          command: npm run lint
+          command: npm run lint:ci > $CIRCLE_TEST_REPORTS/report/eslint.xml
+      - run:
+          name: Run tests
+          command: npm run test:ci > $CIRCLE_TEST_REPORTS/report/ava.xml
+      - store_artifacts:
+          path: coverage
+      - store_test_results:
+          path: $CIRCLE_TEST_REPORTS/report/
 
   # build a production bundle for deployment
   build:
@@ -29,19 +32,11 @@ jobs:
 
     steps:
       - checkout
-      - restore_cache:
-          keys:
-            - *node_modules
-      - run:
-          name: Install packages
-          command: npm install
-      - save_cache:
-          key: *node_modules
-          paths:
-            - node_modules/
+      - node/install-packages:
+          cache-path: ~/node_modules
       - run:
           name: Build the server
-          command: npm run build -- --sourceMap false
+          command: npm run build:ci
       - run:
           name: Bundle the server
           command: tar czf dist.tar.gz dist/

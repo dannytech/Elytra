@@ -7,10 +7,14 @@
   "author": "Daniel Hellstern <elytra@daniel.hellstern.org>",
   "license": "GPL-3.0-or-later",
   "scripts": {
-    "build": "tsc",
+    "start": "npm run build && node dist/index.js",
     "dev": "tsc-watch --incremental --noClear --onSuccess 'node dist/index.js'",
+    "build": "tsc",
+    "build:ci": "tsc --sourceMap false",
+    "test": "c8 ava",
+    "test:ci": "c8 ava --tap | tap-xunit",
     "lint": "eslint .",
-    "start": "npm run build && node dist/index.js"
+    "lint:ci": "eslint --format junit ."
   },
   "engines": {
     "node": ">=10"
@@ -29,7 +33,10 @@
     "@types/uuid": "^8.3.4",
     "@typescript-eslint/eslint-plugin": "^5.27.0",
     "@typescript-eslint/parser": "^5.27.0",
+    "ava": "^5.2.0",
+    "c8": "^7.13.0",
     "eslint": "^8.17.0",
+    "tap-xunit": "^2.4.1",
     "ts-node": "^8.10.2",
     "tsc-watch": "^5.0.3",
     "typescript": "^3.9.6"

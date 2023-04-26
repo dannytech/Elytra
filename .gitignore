@@ -6,3 +6,6 @@ dist/
 
 # server settings
 .env
+
+# code coverage results
+coverage/

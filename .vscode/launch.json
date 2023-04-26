@@ -4,7 +4,7 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "Start Server (watch)",
+            "name": "Start Server",
             "skipFiles": [
                 "<node_internals>/**"
             ],
@@ -15,6 +15,18 @@
             "restart": true,
             "outFiles": [
                 "${workspaceFolder}/dist/**/*.js"
+            ]
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Debug Test",
+            "program": "${workspaceFolder}/node_modules/ava/entrypoints/cli.mjs",
+            "args": [ "--serial", "${file}" ],
+            "outputCapture": "std",
+            "console": "integratedTerminal",
+            "skipFiles": [
+                "<node_internals>/**/*.js"
             ]
         }
     ]
