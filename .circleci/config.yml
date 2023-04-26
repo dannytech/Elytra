@@ -19,10 +19,10 @@ jobs:
           command: mkdir -p report/
       - run:
           name: Check code style
-          command: npm run lint:ci > $CIRCLE_TEST_REPORTS/report/eslint.xml
+          command: npm run lint:ci > report/eslint.xml
       - run:
           name: Run tests
-          command: npm run test:ci > $CIRCLE_TEST_REPORTS/report/ava.xml
+          command: npm run test:ci > report/ava.xml
       - store_artifacts:
           path: coverage/
       - store_test_results:
