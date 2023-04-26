@@ -37,7 +37,7 @@ export class Server {
             this.Broadcast((client: Client) => {
                 if (client.Protocol.state == ClientState.Play) {
                     // If the client keepalive has expired, disconnect it uncleanly
-                    if (client.KeepAlive?.last && Date.now() - client.KeepAlive.last > 20000)
+                    if (client.KeepAlive?.last && Date.now() - client.KeepAlive.last > Constants.KeepAliveInterval * 4)
                         client.Disconnect();
                     else
                         client.Queue(new ServerKeepAlivePacket(client));
@@ -47,12 +47,13 @@ export class Server {
 
         // Send regular client latency updates
         setInterval(() => {
-            this.Broadcast((client: Client) => {
-                if (client.Protocol.state == ClientState.Play) {
-                    const onlinePlayers: Client[] = this.Clients.filter((client: Client) => client.Protocol.state == ClientState.Play && client.Player.Metadata.uuid);
+            // Collect online clients
+            const onlinePlayers: Client[] = this.Clients.filter((client: Client) => client.Protocol.state == ClientState.Play && client.Player.Metadata.uuid);
 
+            this.Broadcast((client: Client) => {
+                // Only send latency information to fully joined players
+                if (client.Protocol.state == ClientState.Play)
                     client.Queue(new PlayerInfoPacket(client, PlayerInfoActions.UpdateLatency, onlinePlayers));
-                }
             });
         }, Constants.KeepAliveInterval * 2);
     }
