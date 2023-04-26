@@ -16,7 +16,7 @@ jobs:
           cache-path: ~/node_modules
       - run:
           name: Create test results directory
-          command: mkdir -p $CIRCLE_TEST_REPORTS/report/
+          command: mkdir -p report/
       - run:
           name: Check code style
           command: npm run lint:ci > $CIRCLE_TEST_REPORTS/report/eslint.xml
@@ -24,9 +24,9 @@ jobs:
           name: Run tests
           command: npm run test:ci > $CIRCLE_TEST_REPORTS/report/ava.xml
       - store_artifacts:
-          path: coverage
+          path: coverage/
       - store_test_results:
-          path: $CIRCLE_TEST_REPORTS/report/
+          path: report/
 
   # build a production bundle for deployment
   build:
