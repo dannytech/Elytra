@@ -4,6 +4,8 @@ Elytra is a lightweight Minecraft server written in TypeScript. Although the pro
 
 **Supported client versions: 1.15.2 (protocol version 578)**.
 
+Portions of the codebase were developed using AI tools, including GitHub Copilot, AWS CodeWhisperer, and ChatGPT. Some examples of code written with the help of these tools are tests and complex functions such as those in [WritableBuffer.ts](src/protocol/WritableBuffer.ts).
+
 ## Getting Started
 
 Elytra uses a RethinkDB backend to store and interact with the server configuration and state. This allows many configuration options to be changed while the server is running, in addition to making it easier to store complex data structures like chunk data. RethinkDB also allows realtime game logic to be evaluated in a distributed manner within the database cluster. The simplest way to get started is to run the [`rethinkdb`](https://hub.docker.com/_/rethinkdb) Docker image and point this project to it. Setting up a RethinkDB server or cluster will not be covered here. Create a new file called `.env`, then add `RDB_HOST=` and paste the cluster IP. The options `RDB_PORT`, `RDB_USER`, and `RDB_PASS` are also supported.
