@@ -49,6 +49,18 @@ export class WritableBuffer {
     }
 
     /**
+     * Writes a single byte to the buffer.
+     * @param {number} value The byte to write, in numerical form.
+     */
+    public WriteByte(value: number) {
+        // Ensure only a single byte is written
+        const buf = Buffer.alloc(1);
+        buf.writeUInt8(value);
+
+        this.Write(buf);
+    }
+
+    /**
      * Writes a single-byte bool to the buffer.
      * @param {boolean} value The boolean to write.
      */
@@ -57,15 +69,7 @@ export class WritableBuffer {
     }
 
     /**
-     * Writes a single byte to the buffer.
-     * @param {number} value The byte to write, in numerical form.
-     */
-    public WriteByte(value: number) {
-        this.Write(Buffer.from([ value ]));
-    }
-
-    /**
-     * Writes a variable-length Minecraft VarInt to the buffer.
+     * Writes a variable-length Minecraft VarInt to the buffer. (little-endian)
      * @param {number} value The number to convert and write.
      */
     public WriteVarInt(value: number) {
@@ -81,26 +85,30 @@ export class WritableBuffer {
             temp.WriteByte(digit);
         } while (value != 0);
 
-        this.Write(temp._Buffer);
+        this.Write(temp.Buffer);
     }
 
     /**
-     * Writes a variable-length Minecraft VarLong to the buffer.
+     * Writes a variable-length Minecraft VarLong to the buffer. (little-endian)
      * Note that writing bigints is currently unsupported, and they are truncated on write.
      * @param {bigint} value The bigint to convert and write.
      */
     public WriteVarLong(value: bigint) {
-        this.WriteVarInt(Number(value));
-    }
-
-    /**
-     * Writes a length-prefixed string to the buffer.
-     * @param {string} value The string to write.
-     */
-    public WriteVarChar(value: string) {
         const temp: WritableBuffer = new WritableBuffer();
-        temp.WriteVarInt(value.length);
-        temp.Write(Buffer.from(value));
+
+        // Calculate the two's complement for negative bigints
+        if (value < 0)
+            value = (BigInt(1) << BigInt(64)) + value;
+
+        do {
+            let digit = Number(value & BigInt(0b01111111));
+
+            value = value >> BigInt(7);
+            if (value != BigInt(0))
+                digit |= 0b10000000;
+
+            temp.WriteByte(Number(digit));
+        } while (value != BigInt(0));
 
         this.Write(temp._Buffer);
     }
@@ -114,11 +122,15 @@ export class WritableBuffer {
     }
 
     /**
-     * Writes a stringified JSON object to the buffer as a VarChar.
-     * @param {object} value The JavaScript object to stringify and write.
+     * Writes a length-prefixed string to the buffer.
+     * @param {string} value The string to write.
      */
-    public WriteJSON(value: object) {
-        this.WriteVarChar(JSON.stringify(value));
+    public WriteVarChar(value: string) {
+        const temp: WritableBuffer = new WritableBuffer();
+        temp.WriteVarInt(value.length);
+        temp.Write(Buffer.from(value));
+
+        this.Write(temp._Buffer);
     }
 
     /**
@@ -207,6 +219,14 @@ export class WritableBuffer {
         buf.writeDoubleBE(value);
 
         this.Write(buf);
+    }
+
+    /**
+     * Writes a stringified JSON object to the buffer as a VarChar.
+     * @param {object} value The JavaScript object to stringify and write.
+     */
+    public WriteJSON(value: object) {
+        this.WriteVarChar(JSON.stringify(value));
     }
 
     /**
