@@ -18,6 +18,7 @@ COPY dist/ .env.schema ./
 
 # standard server port for documentation purposes
 EXPOSE 25565/tcp
+EXPOSE 25575/tcp
 
 # run the entrypoint
 CMD ["node", "index.js"]
