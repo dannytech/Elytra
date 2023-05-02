@@ -70,9 +70,17 @@ export class ReadableBuffer {
 
         do {
             read = this.ReadByte();
-            const value: number = (read & 0b01111111);
-            result |= (value << (7 * numRead));
 
+            // Capture the lowest 7 bits from the VarInt byte
+            const digit: number = (read & 0b01111111);
+
+            // Shift the bits to before existing blocks
+            const value: number = (digit << (7 * numRead));
+
+            // Insert the bits into the result
+            result |= value;
+
+            // Move the cursor forward
             numRead++;
             if (numRead > 5)
                 throw new Error("VarInt is too long");
@@ -93,13 +101,21 @@ export class ReadableBuffer {
 
         do {
             read = this.ReadByte();
-            const value = BigInt(read & 0b01111111);
-            result |= BigInt(value << BigInt(7 * numRead));
+
+            // Capture the lowest 7 bits from the VarLong byte
+            const digit = BigInt(read & 0b01111111);
+
+            // Shift the bits to before existing blocks
+            const value = BigInt(digit << BigInt(7 * numRead));
+
+            // Insert the bits into the result
+            result |= value;
 
             // Save the MSB to check for a sign bit later
             if (numRead == 0)
                 msb = read;
 
+            // Move the cursor forward
             numRead++;
             if (numRead > 10)
                 throw new Error("VarInt is too long");

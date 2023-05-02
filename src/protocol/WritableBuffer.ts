@@ -76,9 +76,13 @@ export class WritableBuffer {
         const temp: WritableBuffer = new WritableBuffer();
 
         do {
+            // Get 7 lowest bits to write
             let digit: number = value & 0b01111111;
 
+            // Shift away the lowest bits, moving the sign bit so that can be captured later
             value >>>= 7;
+
+            // If there are more digits to write, set the continuation bit
             if (value != 0)
                 digit |= 0b10000000;
 
@@ -95,18 +99,22 @@ export class WritableBuffer {
     public WriteVarLong(value: bigint) {
         const temp: WritableBuffer = new WritableBuffer();
 
-        // Calculate the two's complement for negative bigints
+        // Calculate the two's complement for negative bigints (since the sign will not be shifted below)
         if (value < 0)
             value = (BigInt(1) << BigInt(64)) + value;
 
         do {
+            // Get the 7 lowest bits to write
             let digit = Number(value & BigInt(0b01111111));
 
+            // Shift away the lowest bits
             value = value >> BigInt(7);
+
+            // If there are more digits to write, set the continuation bit
             if (value != BigInt(0))
                 digit |= 0b10000000;
 
-            temp.WriteByte(Number(digit));
+            temp.WriteByte(digit);
         } while (value != BigInt(0));
 
         this.Write(temp._Buffer);
