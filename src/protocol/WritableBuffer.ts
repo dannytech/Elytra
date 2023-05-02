@@ -89,9 +89,8 @@ export class WritableBuffer {
     }
 
     /**
-     * Writes a variable-length Minecraft VarLong to the buffer. (little-endian)
-     * Note that writing bigints is currently unsupported, and they are truncated on write.
-     * @param {bigint} value The bigint to convert and write.
+     * Writes a variable-length Minecraft VarLong to the buffer (little-endian)
+     * @param {bigint} value The bigint to convert and write
      */
     public WriteVarLong(value: bigint) {
         const temp: WritableBuffer = new WritableBuffer();
