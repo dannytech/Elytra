@@ -42,7 +42,7 @@ export class PacketFactory {
     private _PacketSpec: PacketMappings[] = [];
 
     /**
-     * Loads the packet specification from a YAML file.
+     * Loads the packet specification from a YAML file
      * @async
      */
     public async Load() {
@@ -209,9 +209,9 @@ export class PacketFactory {
     }
 
     /**
-     * Parse a packet, modifying game state and replying as necessary.
-     * @param {ReadableBuffer} buf A buffer containing a single packet to parse.
-     * @param {Client} client The client from which this packet was received.
+     * Parse a packet, modifying game state and replying as necessary
+     * @param {ReadableBuffer} buf A buffer containing a single packet to parse
+     * @param {Client} client The client from which this packet was received
      * @static
      * @async
      */

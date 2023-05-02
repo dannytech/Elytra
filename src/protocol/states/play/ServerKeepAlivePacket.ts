@@ -22,9 +22,9 @@ export class ServerKeepAlivePacket extends ClientboundPacket {
     }
 
     /**
-     * Send a keep alive packet.
-     * @param {WritableBuffer} buf The outgoing packet buffer.
-     * @property {bigint} KeepAliveId The keep alive ID.
+     * Send a keep alive packet
+     * @param {WritableBuffer} buf The outgoing packet buffer
+     * @property {bigint} KeepAliveId The keep alive ID
      * @async
      */
     public async Write(buf: WritableBuffer) {
@@ -33,7 +33,7 @@ export class ServerKeepAlivePacket extends ClientboundPacket {
     }
 
     /**
-     * Save the keep alive ID to verify it was replied to later.
+     * Save the keep alive ID to verify it was replied to later
      * @async
      */
     public async AfterSend() {

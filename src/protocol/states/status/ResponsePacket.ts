@@ -8,9 +8,9 @@ import { Client, ClientState } from "../../Client";
 
 export class ResponsePacket extends ClientboundPacket {
     /**
-     * Send the client the server's current status.
-     * @param {WritableBuffer} buf The outgoing packet buffer.
-     * @property {string} JSONResponse A JSON object representing the current server status.
+     * Send the client the server's current status
+     * @param {WritableBuffer} buf The outgoing packet buffer
+     * @property {string} JSONResponse A JSON object representing the current server status
      * @async
      */
     public async Write(buf: WritableBuffer) {

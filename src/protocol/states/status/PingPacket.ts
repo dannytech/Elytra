@@ -5,9 +5,9 @@ import { Console } from "../../../game/Console";
 
 export class PingPacket extends ServerboundPacket {
     /**
-     * Parse server pings.
-     * @param {ReadableBuffer} buf The incoming packet buffer.
-     * @property {bigint} Payload The ping payload, used to ensure pong integrity.
+     * Parse server pings
+     * @param {ReadableBuffer} buf The incoming packet buffer
+     * @property {bigint} Payload The ping payload, used to ensure pong integrity
      * @async
      */
     public async Parse(buf: ReadableBuffer) {

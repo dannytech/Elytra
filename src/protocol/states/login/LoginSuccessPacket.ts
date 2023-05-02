@@ -15,10 +15,10 @@ import { PlayerPositionAndLookPacket } from "../play/PlayerPositionAndLookPacket
 
 export class LoginSuccessPacket extends ClientboundPacket {
     /**
-     * Tell the client that the login process was successful.
-     * @param {WritableBuffer} buf The outgoing packet buffer.
-     * @property {string} UUID The player's UUID.
-     * @property {string} Username The player's username.
+     * Tell the client that the login process was successful
+     * @param {WritableBuffer} buf The outgoing packet buffer
+     * @property {string} UUID The player's UUID
+     * @property {string} Username The player's username
      * @async
      */
     public async Write(buf: WritableBuffer) {

@@ -7,8 +7,8 @@ import { ClientboundPacket, ServerboundPacket } from "../protocol/Packet";
 
 export class StandardConsole extends EventEmitter {
     /**
-     * Log to the console.
-     * @param {...any} message The message to write to the console.
+     * Log to the console
+     * @param {...any} message The message to write to the console
      */
     public Log(...message: any[]) {
         this.emit("message", ...message);
@@ -30,8 +30,8 @@ export class StandardConsole extends EventEmitter {
     }
 
     /**
-     * Logs debug messages to the console if debug mode is enabled.
-     * @param {...any} message The message to write to the console.
+     * Logs debug messages to the console if debug mode is enabled
+     * @param {...any} message The message to write to the console
      */
     public async Debug(...message: any[]) {
         const debug: boolean = await Settings.Get(MinecraftConfigs.Debug);
@@ -40,9 +40,9 @@ export class StandardConsole extends EventEmitter {
     }
 
     /**
-     * Print a message to the console in the context of a particular client and packet.
-     * @param {ClientboundPacket|ServerboundPacket} packet The packet which the message is related to.
-     * @param {...any} message The message to write to the console.
+     * Print a message to the console in the context of a particular client and packet
+     * @param {ClientboundPacket|ServerboundPacket} packet The packet which the message is related to
+     * @param {...any} message The message to write to the console
      */
     public async DebugPacket(packet: ClientboundPacket | ServerboundPacket, ...message: any[]) {
         // Determine the packet direction

@@ -6,9 +6,9 @@ export class Zlib {
     private static _Zlib: Buffer = Buffer.from([ 0x78, 0x01 ]);
 
     /**
-     * Compresses data using the Deflate algorithm, and prepends the Zlib header and an Adler32 checksum.
-     * @param {ReadableBuffer} uncompressed The buffer to compress.
-     * @returns {ReadableBuffer} The compressed buffer, including header and checksum.
+     * Compresses data using the Deflate algorithm, and prepends the Zlib header and an Adler32 checksum
+     * @param {ReadableBuffer} uncompressed The buffer to compress
+     * @returns {ReadableBuffer} The compressed buffer, including header and checksum
      * @static
      * @async
      */
@@ -36,11 +36,11 @@ export class Zlib {
     }
 
     /**
-     * Decompresses data using the Deflate algorithm, verifying integrity by validating the Zlib header and Adler32 checksum.
-     * @param {ReadableBuffer} compressed The buffer to decompress, including Zlib header and Adler32 checksum.
-     * @returns {ReadableBuffer} The decompressed buffer.
-     * @throws If the checksum verification fails, an error will be thrown.
-     * @throws If the Zlib header is missing, an error will be thrown.
+     * Decompresses data using the Deflate algorithm, verifying integrity by validating the Zlib header and Adler32 checksum
+     * @param {ReadableBuffer} compressed The buffer to decompress, including Zlib header and Adler32 checksum
+     * @returns {ReadableBuffer} The decompressed buffer
+     * @throws If the checksum verification fails, an error will be thrown
+     * @throws If the Zlib header is missing, an error will be thrown
      * @static
      * @async
      */
@@ -68,9 +68,9 @@ export class Zlib {
     }
 
     /**
-     * Computes an Adler32 checksum for the given uncompressed buffer.
-     * @param {Buffer} buf The uncompressed buffer to checksum.
-     * @returns {number} A 4-byte Adler32 checksum in numerical form.
+     * Computes an Adler32 checksum for the given uncompressed buffer
+     * @param {Buffer} buf The uncompressed buffer to checksum
+     * @returns {number} A 4-byte Adler32 checksum in numerical form
      */
     public static Adler32(buf: Buffer): number {
         const mod = 65521;

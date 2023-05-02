@@ -26,10 +26,10 @@ export class EntityStatusPacket extends ClientboundPacket {
     }
 
     /**
-     * Update a client entity in some way.
-     * @param {WritableBuffer} buf The outgoing packet buffer.
-     * @property {number} EntityId The entity ID to update.
-     * @property {number} Status The status to update the entity with.
+     * Update a client entity in some way
+     * @param {WritableBuffer} buf The outgoing packet buffer
+     * @property {number} EntityId The entity ID to update
+     * @property {number} Status The status to update the entity with
      */
     public async Write(buf: WritableBuffer) {
         Console.DebugPacket(this, "Sending entity status", EntityStatus[this._Status].green, "for entity", this._EntityId.toString().blue);

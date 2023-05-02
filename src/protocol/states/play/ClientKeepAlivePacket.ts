@@ -6,9 +6,9 @@ import { DisconnectPacket } from "./DisconnectPacket";
 
 export class ClientKeepAlivePacket extends ServerboundPacket {
     /**
-     * Verify the keep alive ID.
-     * @param {ReadableBuffer} buf The incoming packet buffer.
-     * @property {bigint} KeepAliveId The keep alive ID.
+     * Verify the keep alive ID
+     * @param {ReadableBuffer} buf The incoming packet buffer
+     * @property {bigint} KeepAliveId The keep alive ID
      * @async
      */
     public async Parse(buf: ReadableBuffer) {

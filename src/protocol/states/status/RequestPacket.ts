@@ -4,7 +4,7 @@ import { Console } from "../../../game/Console";
 
 export class RequestPacket extends ServerboundPacket {
     /**
-     * Handle requests for server information.
+     * Handle requests for server information
      * @async
      */
     public async Parse() {

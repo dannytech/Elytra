@@ -21,15 +21,15 @@ export class UnlockRecipesPacket extends ClientboundPacket {
     }
 
     /**
-     * Tell the client to unlock recipes.
-     * @param {WritableBuffer} buf The outgoing packet buffer.
-     * @property {number} Action The action to perform.
-     * @property {boolean} Crafting Whether to open the recipe book in crafting tables.
-     * @property {boolean} CraftingFilter Whether to enable filtering in crafting tables.
-     * @property {boolean} Smelting Whether to open the recipe book in smelting tables.
-     * @property {boolean} SmeltingFilter Whether to enable filtering in smelting tables.
-     * @property {string[]} Displayed The recipes to display.
-     * @property {string[]} Recipes Addition recipes to add to the recipe book.
+     * Tell the client to unlock recipes
+     * @param {WritableBuffer} buf The outgoing packet buffer
+     * @property {number} Action The action to perform
+     * @property {boolean} Crafting Whether to open the recipe book in crafting tables
+     * @property {boolean} CraftingFilter Whether to enable filtering in crafting tables
+     * @property {boolean} Smelting Whether to open the recipe book in smelting tables
+     * @property {boolean} SmeltingFilter Whether to enable filtering in smelting tables
+     * @property {string[]} Displayed The recipes to display
+     * @property {string[]} Recipes Addition recipes to add to the recipe book
      * @async
      */
     public async Write(buf: WritableBuffer) {

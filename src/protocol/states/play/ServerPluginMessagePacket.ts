@@ -16,10 +16,10 @@ export class ServerPluginMessagePacket extends ClientboundPacket {
     }
 
     /**
-     * Tell the client about a server plugin message.
-     * @param {WritableBuffer} buf The outgoing packet buffer.
-     * @property {string} Channel The channel the message is sent on.
-     * @property {Buffer} Data The message data.
+     * Tell the client about a server plugin message
+     * @param {WritableBuffer} buf The outgoing packet buffer
+     * @property {string} Channel The channel the message is sent on
+     * @property {Buffer} Data The message data
      * @async
      */
     public async Write(buf: WritableBuffer) {

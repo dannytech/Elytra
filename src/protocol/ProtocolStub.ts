@@ -8,17 +8,17 @@ export class ProtocolStub {
     }
 
     /**
-     * Returns the full-duplex stream being read from.
-     * @returns {Duplex} The underlying stream.
+     * Returns the full-duplex stream being read from
+     * @returns {Duplex} The underlying stream
      */
     public get Stream(): Duplex {
         return this._Stream;
     }
 
     /**
-     * Reads the specified amount of bytes from the buffer, blocking until fulfilled.
-     * @param {number} bytes The amount of bytes to read.
-     * @returns {ReadableBuffer} A ReadableBuffer containing the bytes read.
+     * Reads the specified amount of bytes from the buffer, blocking until fulfilled
+     * @param {number} bytes The amount of bytes to read
+     * @returns {ReadableBuffer} A ReadableBuffer containing the bytes read
      * @throws 
      * @async
      */
@@ -35,9 +35,9 @@ export class ProtocolStub {
     }
 
     /**
-     * Reads a variable-length Minecraft VarInt from the buffer.
-     * @returns {number} The converted number.
-     * @throws If the VarInt is over 5 bytes long, an error will be thrown.
+     * Reads a variable-length Minecraft VarInt from the buffer
+     * @returns {number} The converted number
+     * @throws If the VarInt is over 5 bytes long, an error will be thrown
      * @async
      */
     public async ReadVarInt(): Promise<number> {

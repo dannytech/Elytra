@@ -15,8 +15,8 @@ export class Server {
     private _Clients: ClientArray;
 
     /**
-     * Returns the list of clients currently connected to the server.
-     * @returns {Client[]} The list of clients.
+     * Returns the list of clients currently connected to the server
+     * @returns {Client[]} The list of clients
      */
     public get Clients(): Client[] {
         return this._Clients.clients;
@@ -59,8 +59,8 @@ export class Server {
     }
 
     /**
-     * Bootstrap a client to send and receive packets.
-     * @param {Socket} socket A reference to the TCP socket connection.
+     * Bootstrap a client to send and receive packets
+     * @param {Socket} socket A reference to the TCP socket connection
      * @async
      */
     private async _HandleConnection(socket: Socket) {
@@ -81,8 +81,8 @@ export class Server {
     }
 
     /**
-     * Send one or more packets to all clients.
-     * @param {function} callback A callback to generate per-client packets.
+     * Send one or more packets to all clients
+     * @param {function} callback A callback to generate per-client packets
      */
     public async Broadcast(callback: (client: Client) => void) {
         return new Promise<void>((resolve) => {
@@ -98,7 +98,7 @@ export class Server {
     }
 
     /**
-     * Close down the server, disconnecting clients and refusing incoming connections.
+     * Close down the server, disconnecting clients and refusing incoming connections
      */
     public Stop() {
         // Stop accepting new clients

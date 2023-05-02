@@ -17,9 +17,9 @@ export class TeleportConfirmPacket extends ServerboundPacket {
     }
 
     /**
-     * Read a confirmed teleport packet.
-     * @param {ReadableBuffer} buf The incoming packet buffer.
-     * @property {number} TeleportId The ID of the teleport.
+     * Read a confirmed teleport packet
+     * @param {ReadableBuffer} buf The incoming packet buffer
+     * @property {number} TeleportId The ID of the teleport
      * @async
      */
     public async Parse(buf: ReadableBuffer) {

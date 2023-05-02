@@ -6,16 +6,16 @@ export class WritableBuffer {
     private _Buffer: Buffer;
 
     /**
-     * Returns the current buffer.
-     * @returns {Buffer} The underlying buffer.
+     * Returns the current buffer
+     * @returns {Buffer} The underlying buffer
      */
     public get Buffer(): Buffer {
         return this._Buffer;
     }
 
     /**
-     * Returns a readable buffer of the current buffer.
-     * @returns {ReadableBuffer} A readable version of the underlying buffer.
+     * Returns a readable buffer of the current buffer
+     * @returns {ReadableBuffer} A readable version of the underlying buffer
      */
     public get ReadableBuffer(): ReadableBuffer {
         return new ReadableBuffer(this._Buffer);
@@ -27,8 +27,8 @@ export class WritableBuffer {
     }
 
     /**
-     * Enables prepend mode for a single write operation.
-     * @returns {WritableBuffer} The current WritableBuffer with prepend mode enabled.
+     * Enables prepend mode for a single write operation
+     * @returns {WritableBuffer} The current WritableBuffer with prepend mode enabled
      */
     public Prepend(): WritableBuffer {
         this._Prepend = true;
@@ -37,8 +37,8 @@ export class WritableBuffer {
     }
 
     /**
-     * Writes multiple bytes to the buffer.
-     * @param {Buffer} value The buffer to write.
+     * Writes multiple bytes to the buffer
+     * @param {Buffer} value The buffer to write
      */
     public Write(value: Buffer) {
         if (this._Prepend) {
@@ -49,8 +49,8 @@ export class WritableBuffer {
     }
 
     /**
-     * Writes a single byte to the buffer.
-     * @param {number} value The byte to write, in numerical form.
+     * Writes a single byte to the buffer
+     * @param {number} value The byte to write, in numerical form
      */
     public WriteByte(value: number) {
         // Ensure only a single byte is written
@@ -61,8 +61,8 @@ export class WritableBuffer {
     }
 
     /**
-     * Writes a single-byte bool to the buffer.
-     * @param {boolean} value The boolean to write.
+     * Writes a single-byte bool to the buffer
+     * @param {boolean} value The boolean to write
      */
     public WriteBool(value: boolean) {
         this.WriteByte(value ? 0x1 : 0x0);
@@ -70,7 +70,7 @@ export class WritableBuffer {
 
     /**
      * Writes a variable-length Minecraft VarInt to the buffer. (little-endian)
-     * @param {number} value The number to convert and write.
+     * @param {number} value The number to convert and write
      */
     public WriteVarInt(value: number) {
         const temp: WritableBuffer = new WritableBuffer();
@@ -121,16 +121,16 @@ export class WritableBuffer {
     }
 
     /**
-     * Writes a single-byte character to the buffer.
-     * @param {string} value The character to write.
+     * Writes a single-byte character to the buffer
+     * @param {string} value The character to write
      */
     public WriteChar(value: string) {
         this.WriteByte(value.charCodeAt(0));
     }
 
     /**
-     * Writes a length-prefixed string to the buffer.
-     * @param {string} value The string to write.
+     * Writes a length-prefixed string to the buffer
+     * @param {string} value The string to write
      */
     public WriteVarChar(value: string) {
         const temp: WritableBuffer = new WritableBuffer();
@@ -141,8 +141,8 @@ export class WritableBuffer {
     }
 
     /**
-     * Writes a two-byte positive integer to the buffer.
-     * @param {number} value The integer to write.
+     * Writes a two-byte positive integer to the buffer
+     * @param {number} value The integer to write
      */
     public WriteUint16(value: number) {
         const buf: Buffer = Buffer.alloc(2);
@@ -152,8 +152,8 @@ export class WritableBuffer {
     }
 
     /**
-     * Writes a four-byte positive integer to the buffer.
-     * @param {number} value The integer to write.
+     * Writes a four-byte positive integer to the buffer
+     * @param {number} value The integer to write
      */
     public WriteUint32(value: number) {
         const buf: Buffer = Buffer.alloc(4);
@@ -163,8 +163,8 @@ export class WritableBuffer {
     }
 
     /**
-     * Writes an eight-byte positive long integer to the buffer.
-     * @param {number} value The long integer to write.
+     * Writes an eight-byte positive long integer to the buffer
+     * @param {number} value The long integer to write
      */
     public WriteUint64(value: bigint) {
         const buf: Buffer = Buffer.alloc(8);
@@ -174,8 +174,8 @@ export class WritableBuffer {
     }
 
     /**
-     * Writes a two-byte positive or negative integer to the buffer.
-     * @param {number} value The integer to write.
+     * Writes a two-byte positive or negative integer to the buffer
+     * @param {number} value The integer to write
      */
     public WriteInt16(value: number) {
         const buf: Buffer = Buffer.alloc(2);
@@ -185,8 +185,8 @@ export class WritableBuffer {
     }
 
     /**
-     * Writes a four-byte positive or negative integer to the buffer.
-     * @param {number} value The integer to write.
+     * Writes a four-byte positive or negative integer to the buffer
+     * @param {number} value The integer to write
      */
     public WriteInt32(value: number) {
         const buf: Buffer = Buffer.alloc(4);
@@ -196,8 +196,8 @@ export class WritableBuffer {
     }
 
     /**
-     * Writes an eight-byte positive or negative long integer to the buffer.
-     * @param {number} value The long integer to write.
+     * Writes an eight-byte positive or negative long integer to the buffer
+     * @param {number} value The long integer to write
      */
     public WriteInt64(value: bigint) {
         const buf: Buffer = Buffer.alloc(8);
@@ -207,8 +207,8 @@ export class WritableBuffer {
     }
 
     /**
-     * Writes a four-byte float to the buffer.
-     * @param {number} value The float to write.
+     * Writes a four-byte float to the buffer
+     * @param {number} value The float to write
      */
     public WriteSingle(value: number) {
         const buf: Buffer = Buffer.alloc(4);
@@ -218,8 +218,8 @@ export class WritableBuffer {
     }
 
     /**
-     * Writes an eight-byte double to the buffer.
-     * @param {number} value The double to write.
+     * Writes an eight-byte double to the buffer
+     * @param {number} value The double to write
      */
     public WriteDouble(value: number) {
         const buf: Buffer = Buffer.alloc(8);
@@ -229,16 +229,16 @@ export class WritableBuffer {
     }
 
     /**
-     * Writes a stringified JSON object to the buffer as a VarChar.
-     * @param {object} value The JavaScript object to stringify and write.
+     * Writes a stringified JSON object to the buffer as a VarChar
+     * @param {object} value The JavaScript object to stringify and write
      */
     public WriteJSON(value: object) {
         this.WriteVarChar(JSON.stringify(value));
     }
 
     /**
-     * Writes a Minecraft UUID to the buffer.
-     * @param {UUID} value The UUID to write.
+     * Writes a Minecraft UUID to the buffer
+     * @param {UUID} value The UUID to write
      */
     public WriteUUID(value: UUID) {
         // Split the UUID into two bigints

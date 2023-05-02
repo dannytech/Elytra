@@ -13,9 +13,9 @@ export class PongPacket extends ClientboundPacket {
     }
 
     /**
-     * Echo back a ping payload to the client.
-     * @param {WritableBuffer} buf The outgoing packet buffer.
-     * @property {bigint} Payload The ping payload, used to verify pong integrity.
+     * Echo back a ping payload to the client
+     * @param {WritableBuffer} buf The outgoing packet buffer
+     * @property {bigint} Payload The ping payload, used to verify pong integrity
      * @async
      */
     public async Write(buf: WritableBuffer) {

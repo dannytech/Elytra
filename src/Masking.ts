@@ -4,10 +4,10 @@ export type VersionSpec = {
 }
 
 /**
- * Determines whether the given protocol version falls into the provided version specification.
- * @param {number} version The protocol version to check.
- * @param {VersionSpec[]} ranges The version specification to check against.
- * @returns {boolean} Whether the version is compatible with the specification.
+ * Determines whether the given protocol version falls into the provided version specification
+ * @param {number} version The protocol version to check
+ * @param {VersionSpec[]} ranges The version specification to check against
+ * @returns {boolean} Whether the version is compatible with the specification
  */
 export function checkVersion(version: number, ranges: VersionSpec[]): boolean {
     for (const range of ranges)
@@ -20,13 +20,13 @@ export function checkVersion(version: number, ranges: VersionSpec[]): boolean {
 }
 
 /**
- * Converts a version string into a version specification.
+ * Converts a version string into a version specification
  *
- * NOTE: This handles most cases (including swapping start and end if the order is wrong).
- * The only edge case is if the range is n-0, in which case the start rather than the end will be n.
- * @param {string} spec The version string to convert.
- * @param {number} [ceiling] Used as a ceiling if no end is specified.
- * @returns {VersionSpec} The version specification.
+ * NOTE: This handles most cases (including swapping start and end if the order is wrong)
+ * The only edge case is if the range is n-0, in which case the start rather than the end will be n
+ * @param {string} spec The version string to convert
+ * @param {number} [ceiling] Used as a ceiling if no end is specified
+ * @returns {VersionSpec} The version specification
  */
 export function versionSpec(spec: string, ceiling?: number): VersionSpec {
     const parts: number[] = spec.split("-").map(Number);

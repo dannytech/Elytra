@@ -24,15 +24,15 @@ export class PlayerPositionAndLookPacket extends ClientboundPacket {
     }
 
     /**
-     * Tell the client to move to a new position and look.
-     * @param {WritableBuffer} buf The outgoing packet buffer.
-     * @property {number} X The X coordinate to move to.
-     * @property {number} Y The Y coordinate to move to.
-     * @property {number} Z The Z coordinate to move to.
-     * @property {number} Yaw The Yaw to look at.
-     * @property {number} Pitch The Pitch to look at.
-     * @property {number} Flags Flags for the packet.
-     * @property {number} TeleportId The teleport ID, to be confirmed later.
+     * Tell the client to move to a new position and look
+     * @param {WritableBuffer} buf The outgoing packet buffer
+     * @property {number} X The X coordinate to move to
+     * @property {number} Y The Y coordinate to move to
+     * @property {number} Z The Z coordinate to move to
+     * @property {number} Yaw The Yaw to look at
+     * @property {number} Pitch The Pitch to look at
+     * @property {number} Flags Flags for the packet
+     * @property {number} TeleportId The teleport ID, to be confirmed later
      * @async
      */
     public async Write(buf: WritableBuffer) {

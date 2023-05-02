@@ -15,8 +15,8 @@ export class Keypair {
     }
 
     /**
-     * Decrypt the given buffer using the keypair's private key.
-     * @param {Buffer} buf The buffer to decrypt.
+     * Decrypt the given buffer using the keypair's private key
+     * @param {Buffer} buf The buffer to decrypt
      */
     public Decrypt(buf: Buffer): Buffer {
         return privateDecrypt({
@@ -26,8 +26,8 @@ export class Keypair {
     }
 
     /**
-     * Generate a new RSA keypair.
-     * @returns {Keypair} The newly-generated keypair.
+     * Generate a new RSA keypair
+     * @returns {Keypair} The newly-generated keypair
      * @static
      * @async
      */
@@ -42,8 +42,8 @@ export class Keypair {
 }
 
 /**
- * Generates a Minecraft-style hex digest of the given buffer.
- * @param {Buffer} buf The buffer to hash.
+ * Generates a Minecraft-style hex digest of the given buffer
+ * @param {Buffer} buf The buffer to hash
  */
 export function digest(buf: Buffer): string {
     // Generate a standard SHA-1 hash

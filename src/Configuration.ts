@@ -136,10 +136,10 @@ export class Settings {
     }
 
     /**
-     * Load a configuration node from the database.
-     * @param {string} [namespace=minecraft] The namespace within which the configuration node resides.
-     * @param {string} name The name of the configuration node to retrieve.
-     * @returns {any} The retrieved configuration value, or null.
+     * Load a configuration node from the database
+     * @param {string} [namespace=minecraft] The namespace within which the configuration node resides
+     * @param {string} name The name of the configuration node to retrieve
+     * @returns {any} The retrieved configuration value, or null
      * @static
      * @async
      */
@@ -179,10 +179,10 @@ export class Settings {
     }
 
     /**
-     * Update a configuration node in the database.
-     * @param {string} [namespace=minecraft] The namespace within which the configuration node should reside.
-     * @param {string} name The name of the configuration node to update.
-     * @param {any} value The value to enter as the configuration.
+     * Update a configuration node in the database
+     * @param {string} [namespace=minecraft] The namespace within which the configuration node should reside
+     * @param {string} name The name of the configuration node to update
+     * @param {any} value The value to enter as the configuration
      * @static
      * @async
      */

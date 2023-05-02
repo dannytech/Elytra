@@ -6,9 +6,9 @@ import { Console } from "../../../game/Console";
 
 export class SetCompressionPacket extends ClientboundPacket {
     /**
-     * Tell the client to enable compression.
-     * @param {WritableBuffer} buf The outgoing packet buffer.
-     * @property {number} Threshold The threshold at which to use compression, in bytes.
+     * Tell the client to enable compression
+     * @param {WritableBuffer} buf The outgoing packet buffer
+     * @property {number} Threshold The threshold at which to use compression, in bytes
      * @async
      */
     public async Write(buf: WritableBuffer) {

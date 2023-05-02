@@ -36,18 +36,18 @@ export class UpdateLightPacket extends ClientboundPacket {
     }
 
     /**
-     * Tell the client to update the light levels of a chunk.
-     * @param {WritableBuffer} buf The outgoing packet buffer.
-     * @property {number} ChunkX The X coordinate of the chunk.
-     * @property {number} ChunkY The Y coordinate of the chunk.
-     * @property {number} SkyLightMask The 18-bit mask of the sky light.
-     * @property {number} BlockLightMask The 18-bit mask of the block light.
-     * @property {number} EmptySkyLightMask The 18-bit mask of the empty sky light.
-     * @property {number} EmptyBlockLightMask The 18-bit mask of the empty block light.
-     * @property {number} SkyLightChunkletSize The size of the chunklet sky lighting array.
-     * @property {number} SkyLightChunklet The sky lighting for a given chunklet.
-     * @property {number} BlockLightChunkletSize The size of the chunklet block lighting array.
-     * @property {number} BlockLightChunklet The block lighting for a given chunklet.
+     * Tell the client to update the light levels of a chunk
+     * @param {WritableBuffer} buf The outgoing packet buffer
+     * @property {number} ChunkX The X coordinate of the chunk
+     * @property {number} ChunkY The Y coordinate of the chunk
+     * @property {number} SkyLightMask The 18-bit mask of the sky light
+     * @property {number} BlockLightMask The 18-bit mask of the block light
+     * @property {number} EmptySkyLightMask The 18-bit mask of the empty sky light
+     * @property {number} EmptyBlockLightMask The 18-bit mask of the empty block light
+     * @property {number} SkyLightChunkletSize The size of the chunklet sky lighting array
+     * @property {number} SkyLightChunklet The sky lighting for a given chunklet
+     * @property {number} BlockLightChunkletSize The size of the chunklet block lighting array
+     * @property {number} BlockLightChunklet The block lighting for a given chunklet
      * @async
      */
     public async Write(buf: WritableBuffer) {

@@ -15,9 +15,9 @@ export class DisconnectPacket extends ClientboundPacket {
     }
 
     /**
-     * Tell the client to disconnect, sending the reason as a Chat messagae.
-     * @param {WritableBuffer} buf The outgoing packet buffer.
-     * @property {string} Reason A JSON Chat object containing the reason for the disconnect.
+     * Tell the client to disconnect, sending the reason as a Chat messagae
+     * @param {WritableBuffer} buf The outgoing packet buffer
+     * @property {string} Reason A JSON Chat object containing the reason for the disconnect
      * @async
      */
     public async Write(buf: WritableBuffer) {
@@ -29,7 +29,7 @@ export class DisconnectPacket extends ClientboundPacket {
     }
 
     /**
-     * Disconnect the client after sending the packet.
+     * Disconnect the client after sending the packet
      * @async
      */
     public async AfterSend() {

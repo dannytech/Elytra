@@ -5,10 +5,10 @@ import { WritableBuffer } from "../../WritableBuffer";
 
 export class UpdateViewPositionPacket extends ClientboundPacket {
     /**
-     * Update the client's view position.
-     * @param {WritableBuffer} buf The packet buffer.
-     * @property {number} X The chunk X position.
-     * @property {number} Y The chunk Y position.
+     * Update the client's view position
+     * @param {WritableBuffer} buf The packet buffer
+     * @property {number} X The chunk X position
+     * @property {number} Y The chunk Y position
      * @async
      */
     public async Write(buf: WritableBuffer) {

@@ -20,14 +20,14 @@ enum SkinParts {
 
 export class ClientSettingsPacket extends ServerboundPacket {
     /**
-     * Processes client settings.
-     * @param {ReadableBuffer} buf The incoming packet buffer.
-     * @property {string} Locale The language code.
-     * @property {string} ViewDistance The client view distance.
-     * @property {string} ChatMode The chat mode.
-     * @property {string} ChatColors Whether chat colors are enabled.
-     * @property {string} DisplayedSkinParts The skin parts which should be displayed.
-     * @property {string} MainHand Whether the main hand is enabled.
+     * Processes client settings
+     * @param {ReadableBuffer} buf The incoming packet buffer
+     * @property {string} Locale The language code
+     * @property {string} ViewDistance The client view distance
+     * @property {string} ChatMode The chat mode
+     * @property {string} ChatColors Whether chat colors are enabled
+     * @property {string} DisplayedSkinParts The skin parts which should be displayed
+     * @property {string} MainHand Whether the main hand is enabled
      * @async
      */
     public async Parse(buf: ReadableBuffer) {

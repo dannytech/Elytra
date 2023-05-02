@@ -41,9 +41,9 @@ export class World {
     }
 
     /**
-     * Keep track of the given entity as part of the world.
-     * @param {Entity} entity The entity to register.
-     * @returns {number} The unique entity ID within the world.
+     * Keep track of the given entity as part of the world
+     * @param {Entity} entity The entity to register
+     * @returns {number} The unique entity ID within the world
      */
     public RegisterEntity(entity: Entity): number {
         this._Entities.entities.push(entity);
@@ -52,9 +52,9 @@ export class World {
     }
 
     /**
-     * Gets the chunklets for a given chunk position.
-     * @param {ChunkPosition} coords The chunk coordinates to enumerate.
-     * @returns {Chunklet[]} The chunklets for the given chunk position.
+     * Gets the chunklets for a given chunk position
+     * @param {ChunkPosition} coords The chunk coordinates to enumerate
+     * @returns {Chunklet[]} The chunklets for the given chunk position
      * @async
      */
     public async GetChunklets(coords: ChunkPosition): Promise<Chunklet[]> {

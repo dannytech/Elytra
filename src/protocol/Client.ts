@@ -81,8 +81,8 @@ export class Client extends EventEmitter {
     }
 
     /**
-     * Parses and processes an incoming packet(s) from the given buffer.
-     * @param {ProtocolStub} packetStream The incoming buffer of packet(s).
+     * Parses and processes an incoming packet(s) from the given buffer
+     * @param {ProtocolStub} packetStream The incoming buffer of packet(s)
      * @async
      */
     public async Receive(packetStream: ProtocolStub) {
@@ -129,8 +129,8 @@ export class Client extends EventEmitter {
     }
 
     /**
-     * Wrapper for the socket's write method.
-     * @param {WritableBuffer} payload The payload to send.
+     * Wrapper for the socket's write method
+     * @param {WritableBuffer} payload The payload to send
      * @async
      */
     private async _Write(payload: WritableBuffer) {
@@ -145,7 +145,7 @@ export class Client extends EventEmitter {
     }
 
     /**
-     * Dispatches queued clientbound packets to the client.
+     * Dispatches queued clientbound packets to the client
      * @async
      */
     public async Send() {
@@ -205,7 +205,7 @@ export class Client extends EventEmitter {
     }
 
     /**
-     * Cleans up and destroys the client connection.
+     * Cleans up and destroys the client connection
      * @fires Client#disconnected
      */
     public Disconnect() {
@@ -235,9 +235,9 @@ export class Client extends EventEmitter {
     }
 
     /**
-     * Appends a clientbound packet to the client queue.
-     * @param {ClientboundPacket} packet The packet to queue.
-     * @param {boolean} [priority=false] Whether to put the packet at the beginning of the queue.
+     * Appends a clientbound packet to the client queue
+     * @param {ClientboundPacket} packet The packet to queue
+     * @param {boolean} [priority=false] Whether to put the packet at the beginning of the queue
      */
     public Queue(packet: ClientboundPacket, priority = false) {
         if (priority) this._ClientboundQueue.unshift(packet);

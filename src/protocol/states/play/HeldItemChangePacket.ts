@@ -14,9 +14,9 @@ export class HeldItemChangePacket extends ClientboundPacket {
     }
 
     /**
-     * Tell the client which slot they are holding.
-     * @param {WritableBuffer} buf The outgoing packet buffer.
-     * @property {number} Slot The slot the player is holding.
+     * Tell the client which slot they are holding
+     * @param {WritableBuffer} buf The outgoing packet buffer
+     * @property {number} Slot The slot the player is holding
      * @async
      */
     public async Write(buf: WritableBuffer) {

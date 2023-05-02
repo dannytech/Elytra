@@ -54,11 +54,11 @@ type CommandNode = {
 
 export class DeclareCommandsPacket extends ClientboundPacket {
     /**
-     * Tell the client which commands are available.
-     * @param {WritableBuffer} buf The outgoing packet buffer.
-     * @property {number} CommandCount The number of commands to send.
-     * @property {CommandNode[]} Commands The commands to send.
-     * @property {number} RootIndex The index of the root command.
+     * Tell the client which commands are available
+     * @param {WritableBuffer} buf The outgoing packet buffer
+     * @property {number} CommandCount The number of commands to send
+     * @property {CommandNode[]} Commands The commands to send
+     * @property {number} RootIndex The index of the root command
      * @async
      */
     public async Write(buf: WritableBuffer) {

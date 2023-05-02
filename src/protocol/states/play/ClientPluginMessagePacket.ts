@@ -4,10 +4,10 @@ import { ReadableBuffer } from "../../ReadableBuffer";
 
 export class ClientPluginMessagePacket extends ServerboundPacket {
     /**
-     * Parse a plugin message from the client.
-     * @param {ReadableBuffer} buf The incoming packet buffer.
-     * @property {string} Channel The channel the message is sent on.
-     * @property {Buffer} Data The message data.
+     * Parse a plugin message from the client
+     * @param {ReadableBuffer} buf The incoming packet buffer
+     * @property {string} Channel The channel the message is sent on
+     * @property {Buffer} Data The message data
      * @async
      */
     public async Parse(buf: ReadableBuffer) {

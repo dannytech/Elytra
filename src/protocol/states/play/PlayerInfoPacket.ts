@@ -24,10 +24,10 @@ export class PlayerInfoPacket extends ClientboundPacket {
     }
 
     /**
-     * Send information about players on the server to the client.
-     * @param {WritableBuffer} buf The outgoing packet buffer.
-     * @property {PlayerInfoActions} Action The action to perform.
-     * @property {Player[]} Players The players to send information about.
+     * Send information about players on the server to the client
+     * @param {WritableBuffer} buf The outgoing packet buffer
+     * @property {PlayerInfoActions} Action The action to perform
+     * @property {Player[]} Players The players to send information about
      * @async
      */
     public async Write(buf: WritableBuffer) {

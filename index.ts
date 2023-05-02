@@ -13,7 +13,7 @@ import { WorldModel } from "./src/database/models/WorldModel";
 import { r } from "rethinkdb-ts";
 
 /**
- * Prepare the server to accept players.
+ * Prepare the server to accept players
  * @async
  */
 async function bootstrap() {
@@ -57,7 +57,7 @@ async function bootstrap() {
 }
 
 /**
- * Start listening for connections from Minecraft clients.
+ * Start listening for connections from Minecraft clients
  * @async
  */
 async function startListener() {
@@ -79,7 +79,7 @@ async function startListener() {
 }
 
 /**
- * Start the REST and Websocket APIs to allow for remote management and synchronization.
+ * Start the REST and Websocket APIs to allow for remote management and synchronization
  * @async
  */
 /* eslint-disable-next-line @typescript-eslint/no-empty-function */

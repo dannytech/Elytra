@@ -9,13 +9,13 @@ const randomBytesAsync = promisify(crypto.randomBytes);
 
 export class EncryptionRequestPacket extends ClientboundPacket {
     /**
-     * Tell the client to authenticate and negotiate encryption.
-     * @param {WritableBuffer} buf The outgoing packet buffer.
-     * @property {string} ServerID The server ID, not included in this protocol version.
-     * @property {number} PublicKeyLength The length of the public key, in bytes.
-     * @property {Buffer} PublicKey A byte array of the specified length, containing the server's public key.
-     * @property {number} VerifyTokenLength The length of the verification token, in bytes.
-     * @property {Buffer} VerifyToken A byte array of the specified length, to verify shared secret integrity.
+     * Tell the client to authenticate and negotiate encryption
+     * @param {WritableBuffer} buf The outgoing packet buffer
+     * @property {string} ServerID The server ID, not included in this protocol version
+     * @property {number} PublicKeyLength The length of the public key, in bytes
+     * @property {Buffer} PublicKey A byte array of the specified length, containing the server's public key
+     * @property {number} VerifyTokenLength The length of the verification token, in bytes
+     * @property {Buffer} VerifyToken A byte array of the specified length, to verify shared secret integrity
      * @async
      */
     public async Write(buf: WritableBuffer) {

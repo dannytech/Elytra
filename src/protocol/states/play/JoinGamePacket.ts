@@ -5,17 +5,17 @@ import { Console } from "../../../game/Console";
 
 export class JoinGamePacket extends ClientboundPacket {
     /**
-     * Tell the client their game status.
-     * @param {WritableBuffer} buf The outgoing packet buffer.
-     * @property {number} EntityID The player's entity ID.
-     * @property {number} Gamemode The player's current gamemode.
-     * @property {number} Dimension The dimension the player is in.
-     * @property {bigint} HashedSeed A hash of the server's seed.
-     * @property {number} MaxPlayers The server player cap, ignored and not calculated.
-     * @property {string} LevelType The world generator used.
-     * @property {number} ViewDistance The server's support view distance.
-     * @property {boolean} ReducedDebugInfo Whether to suppress debug information.
-     * @property {boolean} EnableRespawnScreen Whether to bypass the respawn screen.
+     * Tell the client their game status
+     * @param {WritableBuffer} buf The outgoing packet buffer
+     * @property {number} EntityID The player's entity ID
+     * @property {number} Gamemode The player's current gamemode
+     * @property {number} Dimension The dimension the player is in
+     * @property {bigint} HashedSeed A hash of the server's seed
+     * @property {number} MaxPlayers The server player cap, ignored and not calculated
+     * @property {string} LevelType The world generator used
+     * @property {number} ViewDistance The server's support view distance
+     * @property {boolean} ReducedDebugInfo Whether to suppress debug information
+     * @property {boolean} EnableRespawnScreen Whether to bypass the respawn screen
      * @async
      */
     public async Write(buf: WritableBuffer) {

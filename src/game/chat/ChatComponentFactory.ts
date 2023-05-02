@@ -8,9 +8,9 @@ type StringCursor = {
 
 export class ChatComponentFactory {
     /**
-     * Parse a text component from the given string containing formatting codes.
-     * @param {StringCursor} parsable The string to parse, wrapped with a cursor.
-     * @returns {ChatTextComponent} A parsed JSON object containing text and formatting.
+     * Parse a text component from the given string containing formatting codes
+     * @param {StringCursor} parsable The string to parse, wrapped with a cursor
+     * @returns {ChatTextComponent} A parsed JSON object containing text and formatting
      * @static
      */
     private static _ParseFormattedString(parsable: StringCursor): ChatTextComponent {
@@ -143,9 +143,9 @@ export class ChatComponentFactory {
     }
 
     /**
-     * Wrap a plain string into a text component.
-     * @param {string} str The string to wrap.
-     * @returns {ChatTextComponent} The parsed component.
+     * Wrap a plain string into a text component
+     * @param {string} str The string to wrap
+     * @returns {ChatTextComponent} The parsed component
      * @static
      *
      */
@@ -156,9 +156,9 @@ export class ChatComponentFactory {
     }
 
     /**
-     * Parse an entire formatted string into JSON.
-     * @param {string} str The string to parse.
-     * @returns {ChatTextComponent} The parsed component.
+     * Parse an entire formatted string into JSON
+     * @param {string} str The string to parse
+     * @returns {ChatTextComponent} The parsed component
      * @static
      */
     public static FromFormattedString(str: string): ChatTextComponent {
@@ -189,9 +189,9 @@ export class ChatComponentFactory {
     }
 
     /**
-     * Convert a text component and its children into a string.
-     * @param {ChatComponent} component The component to convert.
-     * @returns {string} The converted string.
+     * Convert a text component and its children into a string
+     * @param {ChatComponent} component The component to convert
+     * @returns {string} The converted string
      * @static
      */
     public static GetRaw(component: ChatComponent): string {

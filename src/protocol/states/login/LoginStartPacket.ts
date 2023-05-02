@@ -10,9 +10,9 @@ import { UUID } from "../../../game/UUID";
 
 export class LoginStartPacket extends ServerboundPacket {
     /**
-     * Parse requests to begin the login process.
-     * @param {ReadableBuffer} buf The incoming packet buffer.
-     * @property {string} Name The player's username.
+     * Parse requests to begin the login process
+     * @param {ReadableBuffer} buf The incoming packet buffer
+     * @property {string} Name The player's username
      * @async
      */
     public async Parse(buf: ReadableBuffer) {
