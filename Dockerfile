@@ -4,7 +4,7 @@ FROM node:lts
 COPY package.json package-lock.json ./
 
 # install production dependencies
-RUN ["npm", "install", "--production"]
+RUN ["npm", "install", "--omit=dev"]
 
 # final build stage
 FROM node:lts
