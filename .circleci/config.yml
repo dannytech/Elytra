@@ -12,6 +12,9 @@ jobs:
     steps:
       - checkout
       - run:
+          name: Install ESLint
+          command: npm install eslint @typescript-eslint/eslint-plugin @typescript-eslint/parser
+      - run:
           name: Create test results directory
           command: mkdir -p reports/
       - run:
