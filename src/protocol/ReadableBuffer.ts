@@ -83,11 +83,33 @@ export class ReadableBuffer {
 
     /**
      * Reads a variable-length Minecraft VarLong from the buffer.
-     * Note that reading bigints is currently unsupported, so normal VarInts are read.
      * @returns {bigint} The converted bigint.
      */
     public ReadVarLong(): bigint {
-        return BigInt(this.ReadVarInt());
+        let numRead = 0;
+        let result = BigInt(0);
+        let read: number;
+        let msb: number;
+
+        do {
+            read = this.ReadByte();
+            const value = BigInt(read & 0b01111111);
+            result |= BigInt(value << BigInt(7 * numRead));
+
+            // Save the MSB to check for a sign bit later
+            if (numRead == 0)
+                msb = read;
+
+            numRead++;
+            if (numRead > 10)
+                throw new Error("VarInt is too long");
+        } while ((read & 0b10000000) != 0);
+
+        // If the sign bit is set, compute the two's complement of the result and negate it
+        if (numRead == 10 && (msb & 0b10000000) != 0)
+            result = -((BigInt(1) << BigInt(64)) - result);
+
+        return result;
     }
 
     /**
