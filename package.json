@@ -14,7 +14,7 @@
     "test": "c8 ava",
     "test:ci": "c8 ava --tap | tap-xunit",
     "lint": "eslint .",
-    "lint:ci": "eslint --format junit ."
+    "lint:ci": "eslint --format junit $(circleci tests glob \"src/**/*.ts\" | circleci tests split)"
   },
   "engines": {
     "node": ">=10"

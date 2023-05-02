@@ -4,28 +4,7 @@ orbs:
   node: circleci/node@5.1.0
 
 jobs:
-  # run code style checks
-  lint:
-    docker:
-      - image: cimg/node:lts
-
-    steps:
-      - checkout
-      - run:
-          name: Install ESLint
-          command: npm install eslint @typescript-eslint/eslint-plugin @typescript-eslint/parser
-      - run:
-          name: Create test results directory
-          command: mkdir -p reports/
-      - run:
-          name: Check code style
-          command: npm run lint:ci > reports/eslint.xml
-      - store_artifacts:
-          path: reports/
-      - store_test_results:
-          path: reports/
-
-  # run automated tests
+  # run linting and automated tests
   test:
     docker:
       - image: cimg/node:lts
@@ -40,6 +19,9 @@ jobs:
       - run:
           name: Create test results directory
           command: mkdir -p reports/
+      - run:
+          name: Check code style
+          command: npm run lint:ci > reports/eslint.xml
       - run:
           name: Run tests
           command: npm run test:ci > reports/ava.xml
@@ -115,7 +97,6 @@ jobs:
 workflows:
   main:
     jobs:
-      - lint
       - test
       - build:
           filters:
