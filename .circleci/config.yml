@@ -4,12 +4,32 @@ orbs:
   node: circleci/node@5.1.0
 
 jobs:
-  # run automated tests (just linting for now)
+  # run code style checks
+  lint:
+    docker:
+      - image: cimg/node:lts
+
+    steps:
+      - checkout
+      - run:
+          name: Create test results directory
+          command: mkdir -p reports/
+      - run:
+          name: Check code style
+          command: npm run lint:ci > reports/eslint.xml
+      - store_artifacts:
+          path: reports/
+      - store_test_results:
+          path: reports/
+
+  # run automated tests
   test:
     docker:
       - image: cimg/node:lts
       - image: rethinkdb:latest
+
     parallelism: 4
+
     steps:
       - checkout
       - node/install-packages:
@@ -17,9 +37,6 @@ jobs:
       - run:
           name: Create test results directory
           command: mkdir -p reports/
-      - run:
-          name: Check code style
-          command: npm run lint:ci > reports/eslint.xml
       - run:
           name: Run tests
           command: npm run test:ci > reports/ava.xml
@@ -95,6 +112,7 @@ jobs:
 workflows:
   main:
     jobs:
+      - lint
       - test
       - build:
           filters:
