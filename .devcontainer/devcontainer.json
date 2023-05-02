@@ -12,7 +12,8 @@
 		"vscode": {
 			"extensions": [
 				"dbaeumer.vscode-eslint",
-				"ms-vscode.vscode-js-profile-flame"
+				"ms-vscode.vscode-js-profile-flame",
+				"CircleCI.circleci"
 			]
 		}
 	},
