@@ -1,6 +1,5 @@
 import { Server as TCPServer } from "net";
 import * as crypto from "crypto";
-import "colors";
 
 import { Settings, State, MinecraftConfigs } from "./src/Configuration";
 import { Database } from "./src/Database";

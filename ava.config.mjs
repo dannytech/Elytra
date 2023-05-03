@@ -5,5 +5,8 @@ export default {
     "require": [
         "ts-node/register/transpile-only"
     ],
-    "verbose": true
+    "verbose": true,
+    "environmentVariables": {
+        "NODE_ENV": "test"
+    }
 };

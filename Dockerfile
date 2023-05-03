@@ -16,6 +16,9 @@ WORKDIR /app
 COPY --from=0 node_modules/ ./node_modules/
 COPY dist/ .env.schema ./
 
+# set the node environment, used by things like logging
+ENV NODE_ENV=production
+
 # standard server port for documentation purposes
 EXPOSE 25565/tcp
 EXPOSE 25575/tcp
