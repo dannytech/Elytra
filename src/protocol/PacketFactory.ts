@@ -34,7 +34,7 @@ type SourceMap = {
 
 type SourceMappings = {
     [key in PacketDirection]: {
-        [key in ClientState]:  SourceMap
+        [key in ClientState]: SourceMap
     }
 };
 

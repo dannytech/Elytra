@@ -22,7 +22,7 @@ clientbound:
     ResponsePacket: 0x00
     PongPacket: 0x01
   login:
-    LoginDisconnectPacket: 0x00
+    DisconnectPacket: 0x00
     EncryptionRequestPacket: 0x01
     LoginSuccessPacket: 0x02
     SetCompressionPacket: 0x03
