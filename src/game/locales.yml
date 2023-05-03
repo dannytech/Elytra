@@ -1,21 +1,36 @@
 ---
+translation.test.none:
+  versions:
+    - 578
+  translations:
+    en_US: Hello, world!
+translation.test.complex:
+  versions:
+    - 578
+  translations:
+    en_US: "Prefix, %s%2$s again %s and %1$s lastly %s and also %1$s again!"
 translation.test.escape:
   versions:
     - 578
   translations:
     en_US: "%%s %%%s %%%%s %%%%%s"
-translation.test.args:
+translation.test.invalid:
   versions:
     - 578
   translations:
-    en_US: "%s %s"
-translation.test.none:
-  versions:
-    - 578
-  translations:
-    en_US: "Hello, world!"
+    en_US: "hi %"
 translation.test.invalid2:
   versions:
     - 578
   translations:
     en_US: "hi % s"
+translation.test.args:
+  versions:
+    - 578
+  translations:
+    en_US: "%s %s"
+translation.test.world:
+  versions:
+    - 578
+  translations:
+    en_US: world
