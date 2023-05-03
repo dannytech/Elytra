@@ -1,5 +1,5 @@
 import { EventEmitter } from "events";
-import { Settings, MinecraftConfigs } from "../Configuration";
+import { Settings, MinecraftConfigs, State, Environment } from "../Configuration";
 import { Client } from "../protocol/Client";
 import { ClientboundPacket, ServerboundPacket } from "../protocol/Packet";
 import "colors";
@@ -15,7 +15,7 @@ export class StandardConsole extends EventEmitter {
         this.emit("message", ...message);
 
         // Writes messages to the console if it is currently unblocked
-        if (process.env.NODE_ENV !== "test")
+        if (State.Environment !== Environment.TEST)
             console.log(...message);
     }
 

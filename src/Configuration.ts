@@ -9,6 +9,12 @@ import * as joi from "joi";
 import { Console } from "./game/Console";
 import { r } from "rethinkdb-ts";
 
+export enum Environment {
+    PRODUCTION,
+    DEVELOPMENT,
+    TEST
+}
+
 export enum MinecraftConfigs {
     ServerIP = "serverIp",
     ServerPort = "serverPort",
@@ -226,6 +232,22 @@ export class State {
     public static Server: Server;
     public static PacketFactory: PacketFactory;
     public static Worlds: Map<string, World>;
+
+    /**
+     * Get the current Node environment
+     * @returns {Environment} The current Node environment
+     * @static
+     */
+    public static get Environment(): Environment {
+        switch (process.env.NODE_ENV) {
+            case "test":
+                return Environment.TEST;
+            case "production":
+                return Environment.PRODUCTION;
+            default:
+                return Environment.DEVELOPMENT;
+        }
+    }
 }
 
 export class Constants {
