@@ -15,7 +15,7 @@ export class ChatTranslationComponentFactory {
      */
     public static FromKey(key: string, ...args: Array<string | number | bigint>): ChatTranslationComponent {
         // Warn if the key is invalid (it's possible the client will understand it even if we don't)
-        if (!(key in Locale))
+        if (!(key in Locale.Mapping))
             Console.Warn("Invalid translation key", key);
 
         // Wrap the key in a component

@@ -13,7 +13,7 @@ export type TranslationMapping = Record<string, Translation>;
 
 export class Locale {
     // YAML file schema
-    private static Schema: Schema = joi.object().pattern(/[a-zA-Z0-9.]+$/, joi.object({
+    private static _Schema: Schema = joi.object().pattern(/[a-zA-Z0-9.]+$/, joi.object({
         versions: joi.array().items(joi.alternatives(joi.string(), joi.number())),
         translations: joi.object().pattern(/[a-z]{2,4}(_[A-Z]{2,4})?/, joi.string()).min(1)
     })).min(1);
@@ -29,7 +29,7 @@ export class Locale {
         const mapping = parse(locales);
 
         // Validate them with Joi
-        await this.Schema.validateAsync(mapping);
+        await this._Schema.validateAsync(mapping);
 
         // Parse the version specifications
         for (const key of Object.keys(mapping)) {
