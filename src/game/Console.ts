@@ -1,4 +1,3 @@
-import { EventEmitter } from "events";
 import { Settings, MinecraftConfigs, State, Environment } from "../Configuration";
 import { Client } from "../protocol/Client";
 import { ClientboundPacket, ServerboundPacket } from "../protocol/Packet";
@@ -6,14 +5,12 @@ import "colors";
 
 /*eslint @typescript-eslint/no-explicit-any: ["error", { "ignoreRestArgs": true }]*/
 
-export class StandardConsole extends EventEmitter {
+export class StandardConsole {
     /**
      * Log to the console
      * @param {...any} message The message to write to the console
      */
     public Log(...message: any[]) {
-        this.emit("message", ...message);
-
         // Writes messages to the console if it is currently unblocked
         if (State.Environment !== Environment.TEST)
             console.log(...message);
