@@ -5,6 +5,8 @@ import { Console } from "../game/Console";
 import { ReadableBuffer } from "./ReadableBuffer";
 import { ServerboundPacket, IServerboundConstructor } from "./Packet";
 import { checkVersion, versionSpec, VersionSpec } from "../Masking";
+import { Schema } from "joi";
+import * as joi from "joi";
 
 export enum PacketDirection {
     Serverbound = "serverbound",
@@ -26,20 +28,30 @@ type PacketMappings = {
     mappings: PacketMapping;
 };
 
-type SourceMap = {
+type SourcePacketMapping = {
     [name: string]: number | {
         [versionSpec: string]: number
     }
 };
-
-type SourceMappings = {
+type SourceStateMapping = {
     [key in PacketDirection]: {
-        [key in ClientState]: SourceMap
+        [key in ClientState]: SourcePacketMapping
     }
 };
 
+const SourcePacketMappingSchema = joi.object().pattern(/^[a-zA-Z]+$/, joi.alternatives(
+    joi.number(),
+    joi.object().pattern(/^\d{0,3}-\d{0,3}$/, joi.number()).min(2)
+));
+const SourceStateMappingSchema = joi.object().pattern(/^(handshaking|status|login|play)$/, SourcePacketMappingSchema.min(1));
+
 export class PacketFactory {
-    private _PacketSpec: PacketMappings[] = [];
+    private static _Schema: Schema = joi.object({
+        serverbound: SourceStateMappingSchema,
+        clientbound: SourceStateMappingSchema
+    });
+
+    private static _PacketSpec: PacketMappings[] = [];
 
     /**
      * Loads the packet specification from a YAML file
@@ -48,12 +60,15 @@ export class PacketFactory {
     public static async Load() {
         // Load the packet mappingss
         const packets: string = await readFile("./src/protocol/packets.yml", "utf8");
-        const mappings: SourceMappings = parse(packets);
+        const mappings: SourceStateMapping = parse(packets);
+
+        // Validate with Joi
+        await PacketFactory._Schema.validateAsync(mappings);
 
         // Parse the packet names/IDs into a versioned lookup table
         for (const direction of Object.values(PacketDirection))
             for (const state in mappings[direction]) {
-                const def: SourceMap = mappings[direction][state as ClientState];
+                const def: SourcePacketMapping = mappings[direction][state as ClientState];
 
                 Console.Debug(`Loading ${direction.green} packets for ${state.blue} state`);
                 await this._LoadPacketSpec(direction as PacketDirection, state as ClientState, def);
@@ -66,7 +81,7 @@ export class PacketFactory {
      * @param state The client state to construct the mapping for
      * @param def The raw mapping for the above states to process
      */
-    private static async _LoadPacketSpec(direction: PacketDirection, state: ClientState, def: SourceMap) {
+    private static async _LoadPacketSpec(direction: PacketDirection, state: ClientState, def: SourcePacketMapping) {
         const spec: PacketMappings = {
             direction: direction,
             state: state,
