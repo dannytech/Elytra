@@ -6,7 +6,7 @@ type StringCursor = {
     cursor: number
 }
 
-export class ChatComponentFactory {
+export class ChatTextComponentFactory {
     /**
      * Parse a text component from the given string containing formatting codes
      * @param {StringCursor} parsable The string to parse, wrapped with a cursor
@@ -147,7 +147,6 @@ export class ChatComponentFactory {
      * @param {string} str The string to wrap
      * @returns {ChatTextComponent} The parsed component
      * @static
-     *
      */
     public static FromString(str: string): ChatTextComponent {
         return {

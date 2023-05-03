@@ -31,7 +31,10 @@ export class ClientSettingsPacket extends ServerboundPacket {
      * @async
      */
     public async Parse(buf: ReadableBuffer) {
+        // Set the locale for manual translation, if needed (e.g. en_GB)
         const locale: string = buf.ReadVarChar();
+        this.Client.Locale = locale;
+
         const viewDistance: number = buf.ReadVarInt();
         const chatMode: ChatMode = buf.ReadVarInt();
         const chatColors: boolean = buf.ReadBool();

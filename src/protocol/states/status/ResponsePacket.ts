@@ -1,7 +1,7 @@
 import { Settings, Constants, State, MinecraftConfigs } from "../../../Configuration";
 import { ClientboundPacket } from "../../Packet";
 import { WritableBuffer } from "../../WritableBuffer";
-import { ChatComponentFactory } from "../../../game/chat/ChatComponentFactory";
+import { ChatTextComponentFactory } from "../../../game/chat/ChatTextComponentFactory";
 import { Console } from "../../../game/Console";
 import { checkVersion, VersionSpec } from "../../../Masking";
 import { Client, ClientState } from "../../Client";
@@ -46,7 +46,7 @@ export class ResponsePacket extends ClientboundPacket {
                     };
                 })
             },
-            description: ChatComponentFactory.FromFormattedString(motd)
+            description: ChatTextComponentFactory.FromFormattedString(motd)
         });
     }
 }

@@ -59,6 +59,7 @@ export class Client extends EventEmitter {
     public Protocol: ProtocolState;
     public KeepAlive: KeepAliveState;
     public Player: Player;
+    public Locale: string;
 
     constructor(socket: Socket, id: number) {
         super();

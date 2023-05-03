@@ -10,6 +10,7 @@ import { Console } from "./src/game/Console";
 import { PacketFactory } from "./src/protocol/PacketFactory";
 import { WorldModel } from "./src/database/models/WorldModel";
 import { r } from "rethinkdb-ts";
+import { Locale } from "./src/game/Locale";
 
 /**
  * Prepare the server to accept players
@@ -33,6 +34,9 @@ async function bootstrap() {
 
     // Connect to the database
     await Database.Connect();
+
+    // Load chat translations
+    await Locale.Load();
 
     // Retrieve all existing world data
     const worlds = await r.table<WorldModel>("world")

@@ -25,11 +25,11 @@ export type ChatTextComponent = {
 /**
  * A translatable component with values for translation slots
  * @property {string} translate A translation identifier for the client to parse
- * @property {object[]} [with] An array of text components to be inserted into translation slots
+ * @property {Array<string | number | bigint>} [with] An array of text components to be inserted into translation slots
  */
 export type ChatTranslationComponent = {
     translate: string;
-    with?: object[];
+    with?: Array<string | number | bigint>;
 }
 
 /**
