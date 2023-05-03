@@ -28,8 +28,14 @@ export function checkVersion(version: number, ranges: VersionSpec[]): boolean {
  * @param {number} [ceiling] Used as a ceiling if no end is specified
  * @returns {VersionSpec} The version specification
  */
-export function versionSpec(spec: string, ceiling?: number): VersionSpec {
-    const parts: number[] = spec.split("-").map(Number);
+export function versionSpec(spec: string | number, ceiling?: number): VersionSpec {
+    let parts: number[];
+
+    // Allow a number to be passed as the start and endpoint
+    if (typeof spec === "number")
+        parts = [spec];
+    else
+        parts = spec.split("-").map(Number);
 
     // Allows 0-n ranges, n-infinity ranges, and specific n
     if (parts.length == 1)

@@ -147,7 +147,6 @@ export class ChatTextComponentFactory {
      * @param {string} str The string to wrap
      * @returns {ChatTextComponent} The parsed component
      * @static
-     *
      */
     public static FromString(str: string): ChatTextComponent {
         return {

@@ -1,0 +1,21 @@
+---
+translation.test.escape:
+  versions:
+    - 578
+  translations:
+    en_US: "%%s %%%s %%%%s %%%%%s"
+translation.test.args:
+  versions:
+    - 578
+  translations:
+    en_US: "%s %s"
+translation.test.none:
+  versions:
+    - 578
+  translations:
+    en_US: "Hello, world!"
+translation.test.invalid2:
+  versions:
+    - 578
+  translations:
+    en_US: "hi % s"
