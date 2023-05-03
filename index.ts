@@ -70,8 +70,7 @@ async function startListener() {
     State.Server = new Server(server);
 
     // Set up a packet factory
-    State.PacketFactory = new PacketFactory();
-    await State.PacketFactory.Load();
+    await PacketFactory.Load();
 
     // Start the server
     const port: number = await Settings.Get(MinecraftConfigs.ServerPort);

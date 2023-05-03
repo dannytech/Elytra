@@ -3,7 +3,6 @@ import { ConfigModel } from "./database/models/ConfigModel";
 import { Keypair } from "./protocol/Encryption";
 import { Server } from "./protocol/Server";
 import { World } from "./game/World";
-import { PacketFactory } from "./protocol/PacketFactory";
 import { VersionSpec, versionSpec } from "./Masking";
 import * as joi from "joi";
 import { Console } from "./game/Console";
@@ -230,7 +229,6 @@ export class Settings {
 export class State {
     public static Keypair: Keypair;
     public static Server: Server;
-    public static PacketFactory: PacketFactory;
     public static Worlds: Map<string, World>;
 
     /**

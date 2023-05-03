@@ -45,7 +45,7 @@ export class PacketFactory {
      * Loads the packet specification from a YAML file
      * @async
      */
-    public async Load() {
+    public static async Load() {
         // Load the packet mappingss
         const packets: string = await readFile("./src/protocol/packets.yml", "utf8");
         const mappings: SourceMappings = parse(packets);
@@ -66,7 +66,7 @@ export class PacketFactory {
      * @param state The client state to construct the mapping for
      * @param def The raw mapping for the above states to process
      */
-    private async _LoadPacketSpec(direction: PacketDirection, state: ClientState, def: SourceMap) {
+    private static async _LoadPacketSpec(direction: PacketDirection, state: ClientState, def: SourceMap) {
         const spec: PacketMappings = {
             direction: direction,
             state: state,
@@ -171,7 +171,7 @@ export class PacketFactory {
      * @param {string|number} packetNameOrId The name of the packet to convert
      * @returns {string|number} The packet ID
      */
-    public Lookup(direction: PacketDirection, client: Client, packetNameOrId: string | number): string | number {
+    public static Lookup(direction: PacketDirection, client: Client, packetNameOrId: string | number): string | number {
         // Load the mappings for the current state
         const statePackets = this._PacketSpec.find(spec => spec.direction == direction && spec.state == client.Protocol.state);
 
@@ -215,7 +215,7 @@ export class PacketFactory {
      * @static
      * @async
      */
-    public async Parse(buf: ReadableBuffer, client: Client) {
+    public static async Parse(buf: ReadableBuffer, client: Client) {
         const packetId: number = buf.ReadVarInt();
 
         // Load the mappings for the current state

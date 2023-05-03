@@ -11,7 +11,7 @@ import { Zlib } from "./Zlib";
 import { Player } from "../game/Player";
 import { Console } from "../game/Console";
 import { PlayerInfoActions, PlayerInfoPacket } from "./states/play/PlayerInfoPacket";
-import { PacketDirection } from "./PacketFactory";
+import { PacketDirection, PacketFactory } from "./PacketFactory";
 import { r } from "rethinkdb-ts";
 import { PlayerModel } from "../database/models/PlayerModel";
 
@@ -125,7 +125,7 @@ export class Client extends EventEmitter {
             }
 
             // Generate a response to the packet
-            State.PacketFactory.Parse(packet, this);
+            PacketFactory.Parse(packet, this);
         }
     }
 
@@ -161,7 +161,7 @@ export class Client extends EventEmitter {
             await packet.Write(payload);
 
             // Resolve the packet ID
-            const packetId: number = State.PacketFactory.Lookup(PacketDirection.Clientbound, this, packet.constructor.name) as number;
+            const packetId: number = PacketFactory.Lookup(PacketDirection.Clientbound, this, packet.constructor.name) as number;
             if (packetId == null) {
                 Console.DebugPacket(packet, "Not sending due to missing packet ID");
                 continue;
