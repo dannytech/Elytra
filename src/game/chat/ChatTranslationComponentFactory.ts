@@ -74,21 +74,37 @@ export class ChatTranslationComponentFactory {
         const strings = component.with.filter(value => typeof value === "string");
         const numbers = component.with.filter(value => typeof value === "number" && typeof value === "bigint");
 
+        // Cursor values
+        let [ sIndex, nIndex ] = [ 0, 0 ];
+
         // Find and replace available parameters as long as parameters are available
-        const resolved = translation.replace(/%[%sd]/g, (substring) => {
+        const resolved = translation.replace(/%(%|(?:\d+?\$)?[sd])/g, (_, arg) => {
             let substitution: string | number | bigint;
 
-            switch (substring) {
-                // Allow escaping of parameters
-                case "%%":
+            switch (arg) {
+                case "%":
+                    // Allow escaping of the control character
                     substitution = "%";
                     break;
-                case "%s":
-                    substitution = strings.shift();
+                case "s":
+                    substitution = strings[sIndex++];
                     break;
-                case "%d":
-                    substitution = numbers.shift();
+                case "d":
+                    substitution = numbers[nIndex++];
                     break;
+                default: {
+                    // Support indexed arguments
+                    const [ index, type ] = arg.split("$");
+
+                    switch (type) {
+                        case "s":
+                            substitution = strings[Number(index) - 1];
+                            break;
+                        case "d":
+                            substitution = numbers[Number(index) - 1];
+                            break;
+                    }
+                }
             }
 
             // Provide a default value if no arguments remain

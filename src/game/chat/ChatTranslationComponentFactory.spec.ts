@@ -109,6 +109,20 @@ test("Masking with escape characters", t => {
     });
 });
 
+test("Masking with indexed parameters", t => {
+    const key = "translation.test.complex";
+
+    // Create the translation component
+    const component = ChatTranslationComponentFactory.FromKey(key, "arg1", "arg2", "arg3");
+
+    // Convert it to a text component
+    const masked = ChatTranslationComponentFactory.Mask(t.context, component);
+
+    t.deepEqual(masked, {
+        text: "Prefix, arg1arg2 again arg2 and arg1 lastly arg3 and also arg1 again!"
+    });
+});
+
 test("Masking with an invalid key", t => {
     const key = "translation.test.doesntexist";
 
