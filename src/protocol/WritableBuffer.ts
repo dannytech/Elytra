@@ -61,6 +61,18 @@ export class WritableBuffer {
     }
 
     /**
+     * Writes a signed byte to the buffer
+     * @param {number} value The byte to write, in numerical form
+     */
+    public WriteSignedByte(value: number) {
+        // Ensure only a single byte is written
+        const buf = Buffer.alloc(1);
+        buf.writeInt8(value);
+
+        this.Write(buf);
+    }
+
+    /**
      * Writes a single-byte bool to the buffer
      * @param {boolean} value The boolean to write
      */

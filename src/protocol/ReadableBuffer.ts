@@ -44,10 +44,23 @@ export class ReadableBuffer {
 
     /**
      * Reads a single byte from the buffer
-     * @returns {number} The byte, represented as a number in the range 0-255
+     * @returns {number} The byte, between 0 and 255
      */
     public ReadByte(): number {
         return this.Read(1)[0];
+    }
+
+    /**
+     * Reads a single signed byte from the buffer
+     * @returns {number} The signed byte, between -128 and 127
+     */
+    public ReadSignedByte(): number {
+        const byte = this.ReadByte();
+
+        // Calculate the two's complement of the byte if the sign bit is set
+        if (byte & 0x80)
+            return byte - 256;
+        else return byte;
     }
 
     /**

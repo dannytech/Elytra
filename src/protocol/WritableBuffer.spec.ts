@@ -24,6 +24,24 @@ test("Write byte", t => {
     t.deepEqual(t.context.Buffer, Buffer.from([ 0xFF ]));
 });
 
+test("Write negative signed byte", t => {
+    t.context.WriteSignedByte(-0x80);
+
+    t.deepEqual(t.context.Buffer, Buffer.from([ 0x80 ]));
+});
+
+test("Write zero signed byte", t => {
+    t.context.WriteSignedByte(0x00);
+
+    t.deepEqual(t.context.Buffer, Buffer.from([ 0x00 ]));
+});
+
+test("Write positive signed byte", t => {
+    t.context.WriteSignedByte(0x7F);
+
+    t.deepEqual(t.context.Buffer, Buffer.from([ 0x7F ]));
+});
+
 test("Write prepended byte", t => {
     t.context.WriteByte(0x00);
     t.context.Prepend().WriteByte(0xFF);

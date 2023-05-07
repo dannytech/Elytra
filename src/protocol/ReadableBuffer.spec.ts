@@ -28,6 +28,30 @@ test("Read byte", t => {
     t.is(t.context.ReadByte(), 0xFF);
 });
 
+test("Read negative signed byte", t => {
+    t.context = new ReadableBuffer(buf);
+
+    t.is(t.context.ReadSignedByte(), -0x01);
+});
+
+test("Read zero signed byte", t => {
+    t.context = new ReadableBuffer(buf);
+
+    // Discard the first byte
+    t.context.ReadByte();
+
+    t.is(t.context.ReadSignedByte(), 0x00);
+});
+
+test("Read positive signed byte", t => {
+    t.context = new ReadableBuffer(buf);
+
+    // Discard the first two bytes
+    t.context.Read(2);
+
+    t.is(t.context.ReadSignedByte(), 0x1F);
+});
+
 test("Read boolean", t => {
     t.context = new ReadableBuffer(Buffer.from([ 0x00 ]));
 
