@@ -26,7 +26,7 @@ export type ComponentOptions = {
  */
 export type ChatTextComponent = ComponentOptions & {
     text: string;
-}
+};
 
 /**
  * A translatable component with values for translation slots
