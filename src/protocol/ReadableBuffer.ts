@@ -72,7 +72,7 @@ export class ReadableBuffer {
     }
 
     /**
-     * Reads a variable-length Minecraft VarInt from the buffer
+     * Reads a Minecraft VarInt from the buffer
      * @returns {number} The converted number
      * @throws If the VarInt is over 5 bytes long, an error will be thrown
      */
@@ -103,7 +103,7 @@ export class ReadableBuffer {
     }
 
     /**
-     * Reads a variable-length Minecraft VarLong from the buffer
+     * Reads a Minecraft VarLong from the buffer
      * @returns {bigint} The converted bigint
      */
     public ReadVarLong(): bigint {

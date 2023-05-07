@@ -35,21 +35,29 @@ export class ProtocolStub {
     }
 
     /**
-     * Reads a variable-length Minecraft VarInt from the buffer
-     * @returns {number} The converted number
+     * Reads the Minecraft VarInt packet length from the stream
+     * @returns {number} The packet length
      * @throws If the VarInt is over 5 bytes long, an error will be thrown
      * @async
      */
-    public async ReadVarInt(): Promise<number> {
+    public async ReadPacketLength(): Promise<number> {
         let numRead = 0;
         let result = 0;
         let read: number;
 
         do {
             read = (await this.Read(1)).readUInt8();
-            const value: number = (read & 0b01111111);
-            result |= (value << (7 * numRead));
 
+            // Capture the lowest 7 bits from the VarInt byte
+            const digit: number = (read & 0b01111111);
+
+            // Shift bit bits to before existing blocks
+            const value: number = (digit << (7 * numRead));
+
+            // Insert the bits into the result
+            result |= value;
+
+            // Move the cursor forward
             numRead++;
             if (numRead > 5)
                 throw new Error("VarInt is too long");

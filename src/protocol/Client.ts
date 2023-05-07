@@ -100,7 +100,7 @@ export class Client extends EventEmitter {
             }
 
             // Get the length of the next packet
-            const packetLength: number = await packetStream.ReadVarInt();
+            const packetLength: number = await packetStream.ReadPacketLength();
 
             // A zero-length packet indicates the end of a connection (a FIN)
             // Legacy server list ping uses the packet ID 0xFE, which is not supported by Elytra
@@ -124,7 +124,7 @@ export class Client extends EventEmitter {
                 }
             }
 
-            // Generate a response to the packet
+            // Process the packet
             PacketFactory.Parse(packet, this);
         }
     }
