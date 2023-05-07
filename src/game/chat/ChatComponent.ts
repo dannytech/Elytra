@@ -1,6 +1,5 @@
 /**
- * A plaintext component with optional formatting attributes
- * @property {string} text A string containing plain text
+ * Shared options for all component types
  * @property {string} [color] The text color
  * @property {string} [font] The text font
  * @property {boolean} [bold] Whether to bold the text
@@ -10,8 +9,7 @@
  * @property {boolean} [obfuscated] Whether to obfuscate the text
  * @property {object[]} [extra] Child text components to inherit from this
  */
-export type ChatTextComponent = {
-    text: string;
+export type ComponentOptions = {
     color?: string;
     font?: string;
     bold?: boolean;
@@ -20,7 +18,15 @@ export type ChatTextComponent = {
     strikethrough?: boolean;
     obfuscated?: boolean;
     extra?: ChatComponent[];
-}
+};
+
+/**
+ * A plaintext component with optional formatting attributes
+ * @property {string} text A string containing plain text
+ */
+export type ChatTextComponent = {
+    text: string;
+} & ComponentOptions;
 
 /**
  * A translatable component with values for translation slots
@@ -30,7 +36,7 @@ export type ChatTextComponent = {
 export type ChatTranslationComponent = {
     translate: string;
     with?: Array<string | number | bigint>;
-}
+} & ComponentOptions;
 
 /**
  * A resolvable score component
@@ -45,7 +51,7 @@ export type ChatScoreComponent = {
         objective: string;
         value?: string;
     };
-}
+} & ComponentOptions;
 
 /**
  * A player selector component
@@ -53,7 +59,7 @@ export type ChatScoreComponent = {
  */
 export type ChatSelectorComponent = {
     selector: string;
-}
+} & ComponentOptions;
 
 /**
  * A client keybind component
@@ -61,7 +67,7 @@ export type ChatSelectorComponent = {
  */
 export type ChatKeybindComponent = {
     keybind: string;
-}
+} & ComponentOptions;
 
 /**
  * A resolvable NBT component
@@ -77,6 +83,6 @@ export type ChatNBTComponent = {
     block?: string;
     entity?: string;
     storage?: string;
-}
+} & ComponentOptions;
 
 export type ChatComponent = ChatTextComponent | ChatTranslationComponent | ChatScoreComponent | ChatSelectorComponent | ChatKeybindComponent | ChatNBTComponent;
