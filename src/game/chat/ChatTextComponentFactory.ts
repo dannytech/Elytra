@@ -157,10 +157,10 @@ export class ChatTextComponentFactory {
     /**
      * Parse an entire formatted string into JSON
      * @param {string} str The string to parse
-     * @returns {ChatTextComponent} The parsed component
+     * @returns {ChatComponent} The parsed component
      * @static
      */
-    public static FromFormattedString(str: string): ChatTextComponent {
+    public static FromFormattedString(str: string): ChatComponent | ChatComponent[] {
         const parsable: StringCursor = {
             string: str,
             reset: false,
@@ -184,7 +184,12 @@ export class ChatTextComponentFactory {
             root.extra.push(subcomponent);
         }
 
-        return root;
+        if (root.extra.length == 1)
+            return root.extra[0];
+        if (root.extra.length == 0)
+            return [];
+        else
+            return root;
     }
 
     /**
@@ -193,8 +198,14 @@ export class ChatTextComponentFactory {
      * @returns {string} The converted string
      * @static
      */
-    public static GetRaw(component: ChatComponent): string {
+    public static GetRaw(component: ChatComponent | ChatComponent[]): string {
         let raw = "";
+
+        if (Array.isArray(component))
+            component = {
+                text: "",
+                extra: component
+            };
 
         // Append the element text
         if ("text" in component) raw += component.text;

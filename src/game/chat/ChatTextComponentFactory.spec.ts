@@ -12,31 +12,25 @@ test("Simple component", t => {
 });
 
 test("Complex component", t => {
-    const component: ChatTextComponent = ChatTextComponentFactory.FromFormattedString("&l&eHello, &n&bworld!");
+    const component = ChatTextComponentFactory.FromFormattedString("&l&eHello, &n&bworld!");
 
     // Deeply nested structure
     t.deepEqual(component, {
-        text: "",
-        color: "reset",
+        text: "Hello, ",
+        color: "yellow",
         extra: [
             {
-                text: "Hello, ",
-                color: "yellow",
-                extra: [
-                    {
-                        text: "world!",
-                        color: "aqua",
-                        underline: true
-                    }
-                ],
-                bold: true
+                text: "world!",
+                color: "aqua",
+                underline: true
             }
-        ]
+        ],
+        bold: true
     });
 });
 
 test("Complex component with reset", t => {
-    const component: ChatTextComponent = ChatTextComponentFactory.FromFormattedString("&dHello, &r&a&kworld!");
+    const component = ChatTextComponentFactory.FromFormattedString("&dHello, &r&a&kworld!");
 
     // Flattened structure due to reset
     t.deepEqual(component, {
@@ -66,7 +60,7 @@ test("Raw text from simple component", t => {
 });
 
 test("Raw text from complex component", t => {
-    const component: ChatTextComponent = ChatTextComponentFactory.FromFormattedString("&l&6Hello, &r&8world!");
+    const component = ChatTextComponentFactory.FromFormattedString("&l&6Hello, &r&8world!");
 
     // Flatten and extract the text from the component
     t.is(ChatTextComponentFactory.GetRaw(component), "Hello, world!");
