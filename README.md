@@ -4,7 +4,7 @@ Elytra is a lightweight Minecraft server written in TypeScript. Although the pro
 
 **Supported client versions: 1.15.2 (protocol version 578)**.
 
-Portions of the codebase were developed using AI tools, including GitHub Copilot, AWS CodeWhisperer, and ChatGPT. Some examples of code written with the help of these tools are tests and complex functions such as those in [WritableBuffer.ts](src/protocol/WritableBuffer.ts).
+Portions of the codebase were developed using AI tools, including GitHub Copilot, AWS CodeWhisperer, ChatGPT, and more. Some examples of code written with the help of these tools are tests and complex functions such as those in [WritableBuffer.ts](src/protocol/WritableBuffer.ts).
 
 ## Getting Started
 
@@ -35,10 +35,9 @@ There are many features still to implement, not the less something more than jus
     - [ ] Versioned packet ID mappings (either requires manual data entry or a scraping script)
     - [ ] Block and item masking (if a block or item is not supported in a particular version, telling those clients it's a similar block or item)
     - [ ] Pre- and post-1.9 combat
-- [ ] Automated testing
+- [X] Automated testing
 - [ ] World generation and loading
 - [ ] Entities
 - [ ] Tile entities
 - [ ] NBT
 - [ ] Plugin API
-    - [ ] EventEmitters for most game components
