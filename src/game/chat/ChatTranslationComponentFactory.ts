@@ -84,9 +84,10 @@ export class ChatTranslationComponentFactory {
         const resolved = translation.replace(/%(%|(?:\d+?\$)?[sd])/g, (_, arg) => {
             let substitution: string | number | bigint;
 
+            // TODO Support indexed arguments
             switch (arg) {
-                case "%":
-                    // Allow escaping of the control character
+                // Allow escaping of parameters
+                case "%%":
                     substitution = "%";
                     break;
                 case "s":
