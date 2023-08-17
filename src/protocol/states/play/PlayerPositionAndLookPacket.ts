@@ -5,6 +5,7 @@ import { ClientboundPacket } from "../../Packet";
 import { WritableBuffer } from "../../WritableBuffer";
 
 export enum PlayerPositionAndLookFlags {
+    None = 0x00,
     XRelative = 0x01,
     YRelative = 0x02,
     ZRelative = 0x04,
@@ -47,7 +48,7 @@ export class PlayerPositionAndLookPacket extends ClientboundPacket {
         buf.WriteByte(this._Flags);
 
         // Teleport ID (dummy value)
-        Console.DebugPacket(this, "Sending position/look and teleport ID");
+        Console.DebugPacket(this, "Sending position/look and teleport request", ...Object.values(this._PositionAndLook));
         buf.WriteVarInt(0);
     }
 }
