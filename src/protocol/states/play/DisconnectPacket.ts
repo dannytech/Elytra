@@ -21,7 +21,7 @@ export class DisconnectPacket extends ClientboundPacket {
      * @async
      */
     public async Write(buf: WritableBuffer) {
-        const reason: string = ChatComponentFactory.GetRaw(this._Reason);
+        const reason: string = await ChatComponentFactory.GetRaw(this._Reason);
         Console.DebugPacket(this, "Disconnecting client for", reason.green);
 
         // Chat component containing reason for disconnect

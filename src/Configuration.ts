@@ -18,6 +18,7 @@ export enum MinecraftConfigs {
     ServerIP = "serverIp",
     ServerPort = "serverPort",
     ServerVersion = "serverVersionSpec",
+    ServerLocale = "serverLocale",
     Online = "online",
     PreventProxy = "preventProxy",
     MaximumPlayers = "maximumPlayers",
@@ -71,6 +72,10 @@ export class Settings {
                         return helper.message({ custom: "Version spec does not include a supported range" });
                     else return true;
                 }))
+            },
+            "serverLocale": {
+                default: "en_US",
+                schema: joi.string()
             },
             "online": {
                 default: true,

@@ -1,5 +1,6 @@
-import { ChatComponent } from "./ChatComponent";
+import { ChatComponent, ChatTextComponent } from "./ChatComponent";
 import { Start, parse as chatParser } from "./ChatComponentParser";
+import { ChatTranslationComponentFactory } from "./ChatTranslationComponentFactory";
 
 export class ChatComponentFactory {
     /**
@@ -56,15 +57,20 @@ export class ChatComponentFactory {
      * @param {ChatComponent} component The component to convert
      * @returns {string} The converted string
      * @static
+     * @async
      */
-    public static GetRaw(component: ChatComponent): string {
+    public static async GetRaw(component: ChatComponent): Promise<string> {
         let raw = "";
 
         // Append the element text
         if ("text" in component) raw += component.text;
 
-        // TODO Translate translation components
-        else if ("translate" in component) null;
+        // Translate components server-side
+        else if ("translate" in component) {
+            const translatedComponent = await ChatTranslationComponentFactory.Mask(component) as ChatTextComponent;
+
+            raw += translatedComponent.text;
+        }
 
         // TODO Evaluate score components
         else if ("score" in component) null;
