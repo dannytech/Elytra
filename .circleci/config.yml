@@ -10,6 +10,9 @@ jobs:
       - image: cimg/node:lts
       - image: rethinkdb:latest
 
+    environment:
+      RDB_URI: rethinkdb://admin@localhost/elytra
+
     parallelism: 4
 
     steps:
