@@ -87,7 +87,7 @@ export class ChatComponentFactory {
         // Recurse through all the children
         if ("extra" in component)
             for (let i = 0; i < component.extra.length; i++) {
-                raw += this.GetRaw(component.extra[i]);
+                raw += await this.GetRaw(component.extra[i]);
             }
 
         return raw;
