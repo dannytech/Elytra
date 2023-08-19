@@ -136,7 +136,8 @@ export class Settings {
     public static Load() {
         // Load the database URI
         dotenv.load({
-            errorOnMissing: true
+            errorOnMissing: true,
+            includeProcessEnv: true
         });
     }
 
