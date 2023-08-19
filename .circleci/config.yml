@@ -30,9 +30,7 @@ jobs:
           command: npm run build:ci
       - run:
           name: Run tests
-          command: |
-            RDB_URI=rethinkdb://admin@localhost/elytra
-            npm run test:ci > reports/ava.xml
+          command: npm run test:ci > reports/ava.xml
       - store_artifacts:
           path: coverage/
       - store_artifacts:
