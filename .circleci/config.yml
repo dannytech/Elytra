@@ -11,7 +11,7 @@ jobs:
       - image: rethinkdb:latest
 
     environment:
-      RDB_URI: rethinkdb://admin@localhost/elytra
+      RDB_URI: rethinkdb://admin@localhost/test
 
     parallelism: 4
 
