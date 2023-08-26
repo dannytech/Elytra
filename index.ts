@@ -24,6 +24,9 @@ async function bootstrap() {
     // Connect to the database
     await Database.Connect();
 
+    // Cache all settings
+    await Settings.Cache();
+
     // Generate a keypair for protocol encryption
     State.Keypair = await Keypair.Generate();
 

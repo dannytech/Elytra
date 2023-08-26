@@ -40,6 +40,7 @@ type SettingsSchema = {
     [namespace: string]: {
         [name: string]: {
             default: unknown,
+            cache?: unknown,
             schema: joi.Schema
         }
     }
@@ -147,6 +148,50 @@ export class Settings {
     }
 
     /**
+     * Loads specific configs before caching configs to ensure consistent behavior
+     */
+    private static async _PreCache() {
+        // Load/set tracing to capture all below logs
+        const trace = await r.table<ConfigModel>("config")
+            .getAll([
+                Constants.ConfigNamespace,
+                MinecraftConfigs.Trace
+            ], { index: "namespaced_config" })
+            .pluck("value")
+            .limit(1)
+            .run();
+
+        if (trace.length > 0)
+            this._schema[Constants.ConfigNamespace][MinecraftConfigs.Trace].cache = trace.pop().value;
+    }
+
+    /**
+     * Loads the current configs and begins a changestream to receive and cache changes
+     */
+    public static async Cache() {
+        await this._PreCache();
+
+        // Load all configs
+        const configs = await r.table<ConfigModel>("config")
+            .changes({
+                includeInitial: true
+            })
+            .run();
+
+        // Populate the cache array with the configs
+        configs.each((_, config) => {
+            const newVal = config.new_val;
+
+            // Update the cache to the received value
+            Console.Trace("Received config value", `${newVal.namespace}:${newVal.name}`.green, "from database");
+            if (newVal.namespace in this._schema && newVal.name in this._schema[newVal.namespace])
+                this._schema[newVal.namespace][newVal.name].cache = newVal.value;
+            else
+                Console.Trace("Rejected config change due to invalid namespace or name", `${newVal.namespace}:${newVal.name}`.green);
+        });
+    }
+
+    /**
      * Load a configuration node from the database
      * @param {string} [namespace=minecraft] The namespace within which the configuration node resides
      * @param {string} name The name of the configuration node to retrieve
@@ -167,24 +212,17 @@ export class Settings {
         }
 
         // Require the configuration to exist in the schema
-        if (!Object.keys(this._schema).includes(namespaceOrName) || !Object.keys(this._schema[namespaceOrName]).includes(name)) {
+        if (!(namespaceOrName in this._schema) || !(name in this._schema[namespaceOrName])) {
             Console.Error("Invalid config", `${namespaceOrName}:${name}`.green);
             return null;
         }
 
-        // Retrieve the relevant config object
-        const config = await r.table<ConfigModel>("config")
-            .getAll([
-                namespaceOrName,
-                name
-            ], { index: "namespaced_config" })
-            .pluck("value")
-            .limit(1)
-            .run();
+        // Attempt to load the value from the cache
+        const config = this._schema[namespaceOrName][name].cache;
 
         // Return the loaded value or the default
-        if (config.length > 0)
-            return config.pop().value;
+        if (config)
+            return config;
         else
             return this._schema[namespaceOrName][name].default;
     }
@@ -211,7 +249,7 @@ export class Settings {
         }
 
         // Require the configuration to exist in the schema
-        if (!Object.keys(this._schema).includes(namespaceOrName) || !Object.keys(this._schema[namespaceOrName]).includes(nameOrValue))
+        if (!(namespaceOrName in this._schema) || !(nameOrValue in this._schema[namespaceOrName]))
             return Console.Error("Invalid config", `${namespaceOrName}:${nameOrValue}`.green);
 
         // Test the config against the validation schema
