@@ -37,6 +37,7 @@ export type EncryptionState = {
 export type ProtocolState = {
     clientId: number;
     ip: string;
+    port: number;
     latency: number;
     state: ClientState;
     compression: CompressionState;
@@ -71,6 +72,7 @@ export class Client extends EventEmitter {
         this.Protocol = {
             clientId: id,
             ip: socket.remoteAddress,
+            port: socket.remotePort,
             latency: -1,
             state: ClientState.Handshaking,
             compression: CompressionState.Disabled,
@@ -79,6 +81,9 @@ export class Client extends EventEmitter {
             }
         };
         this.KeepAlive = {};
+
+        Console.Debug(`(${this.Protocol.clientId})`.magenta, "Connecting");
+        Console.Info("Connection from", `${socket.remoteAddress}:${socket.remotePort}`.green);
     }
 
     /**
