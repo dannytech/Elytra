@@ -37,6 +37,7 @@ export type EncryptionState = {
 export type ProtocolState = {
     clientId: number;
     ip: string;
+    port: number;
     latency: number;
     state: ClientState;
     compression: CompressionState;
@@ -71,6 +72,7 @@ export class Client extends EventEmitter {
         this.Protocol = {
             clientId: id,
             ip: socket.remoteAddress,
+            port: socket.remotePort,
             latency: -1,
             state: ClientState.Handshaking,
             compression: CompressionState.Disabled,
@@ -79,6 +81,9 @@ export class Client extends EventEmitter {
             }
         };
         this.KeepAlive = {};
+
+        Console.Debug(`(${this.Protocol.clientId})`.magenta, "Connecting");
+        Console.Info("Connection from", `${socket.remoteAddress}:${socket.remotePort}`.green);
     }
 
     /**
@@ -102,6 +107,14 @@ export class Client extends EventEmitter {
             // Get the length of the next packet
             const packetLength: number = await packetStream.ReadPacketLength();
 
+            // Check packet length and reject too-large packets
+            if (packetLength > Constants.MaximumPacketLength) {
+                Console.Error("Disconnecting client", `${this.Protocol.ip}:${this.Protocol.port}`.green, "for corrupted packet");
+                Console.Debug(`(${this.Protocol.clientId})`.magenta, "Client sent packet with length", packetLength.toString().blue);
+
+                return this.Disconnect();
+            }
+
             // A zero-length packet indicates the end of a connection (a FIN)
             // Legacy server list ping uses the packet ID 0xFE, which is not supported by Elytra
             if (packetLength == 0x00 || packetLength == 0xFE)
@@ -123,6 +136,9 @@ export class Client extends EventEmitter {
                     packet = await Zlib.Inflate(new ReadableBuffer(compressed));
                 }
             }
+
+            // If tracing is enabled, log the packet contents
+            Console.Trace(`(${this.Protocol.clientId})`.magenta, "[C → S]".blue, "Packet:", packet.Buffer.toString("hex").green);
 
             // Process the packet
             PacketFactory.Parse(packet, this);
@@ -169,6 +185,9 @@ export class Client extends EventEmitter {
 
             // Prepend the packet ID
             payload.Prepend().WriteVarInt(packetId);
+
+            // If tracing is enabled, log the packet contents
+            Console.Trace(`(${this.Protocol.clientId})`.magenta, "[S → C]".blue, "Packet:", payload.Buffer.toString("hex").green);
 
             // Compress the packet
             if (this.Protocol.compression === CompressionState.Enabled) {

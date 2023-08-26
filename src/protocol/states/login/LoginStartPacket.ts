@@ -21,7 +21,7 @@ export class LoginStartPacket extends ServerboundPacket {
         // Create an unauthenticated player object (which will remain if offline mode is enabled)
         this._Client.Player = new Player(username);
 
-        const online: boolean = await Settings.Get(MinecraftConfigs.Online);
+        const online: boolean = Settings.Get(MinecraftConfigs.Online);
         if (online) {
             // Begin the encryption/authentication process
             Console.DebugPacket(this, "Beginning encryption/authentication process");
@@ -30,7 +30,7 @@ export class LoginStartPacket extends ServerboundPacket {
             Console.Warn("Online mode is off, allowing alleged player", this._Client.Player.Metadata.username.green, "to connect");
 
             // Prepare the player to join
-            const debug: boolean = await Settings.Get(MinecraftConfigs.Debug);
+            const debug: boolean = Settings.Get(MinecraftConfigs.Debug);
             if (!debug)
                 this._Client.Queue(new SetCompressionPacket(this._Client));
 

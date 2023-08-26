@@ -21,6 +21,12 @@ async function bootstrap() {
     Settings.Load();
     Console.Info("Loaded database configuration");
 
+    // Connect to the database
+    await Database.Connect();
+
+    // Cache all settings
+    await Settings.Cache();
+
     // Generate a keypair for protocol encryption
     State.Keypair = await Keypair.Generate();
 
@@ -31,9 +37,7 @@ async function bootstrap() {
         .digest("hex")
         .replace(/(\w{2})(?!$)/g, "$1:");
     Console.Info("Server public key has fingerprint", fingerprint.green);
-
-    // Connect to the database
-    await Database.Connect();
+    Console.Trace("Server public keypair:", publicKey.toString("hex").green);
 
     // Load chat translations
     await Locale.Load();
@@ -73,8 +77,8 @@ async function startListener() {
     await PacketFactory.Load();
 
     // Start the server
-    const port: number = await Settings.Get(MinecraftConfigs.ServerPort);
-    const ip: number = await Settings.Get(MinecraftConfigs.ServerIP);
+    const port: number = Settings.Get(MinecraftConfigs.ServerPort);
+    const ip: number = Settings.Get(MinecraftConfigs.ServerIP);
     server.listen(port, ip, () => {
         Console.Info("Server listening on", `${ip}:${port}`.green);
     });
@@ -94,15 +98,10 @@ async function startAPI() {}
     // Start the API
     await startAPI();
 
-    const eula: boolean = await Settings.Get(MinecraftConfigs.EULA);
+    const eula: boolean = Settings.Get(MinecraftConfigs.EULA);
     if (eula)
         // Start the Minecraft server
         await startListener();
     else
-        Console.Error(
-            "You must accept the EULA first. Go to https://account.mojang.com/documents/minecraft_eula, then set",
-            "eula".green,
-            "to",
-            "true".blue
-        );
+        Console.Error("You must accept the EULA first. Go to https://account.mojang.com/documents/minecraft_eula, then set", "eula".green, "to", "true".blue);
 })();

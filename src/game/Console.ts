@@ -32,8 +32,8 @@ export class StandardConsole {
      * Logs debug messages to the console if debug mode is enabled
      * @param {...any} message The message to write to the console
      */
-    public async Debug(...message: any[]) {
-        const debug: boolean = await Settings.Get(MinecraftConfigs.Debug);
+    public Debug(...message: any[]) {
+        const debug: boolean = Settings.Get(MinecraftConfigs.Debug);
         if (debug)
             this.Log("[DEBUG]".black.bgGreen, ...message);
     }
@@ -43,7 +43,7 @@ export class StandardConsole {
      * @param {ClientboundPacket|ServerboundPacket} packet The packet which the message is related to
      * @param {...any} message The message to write to the console
      */
-    public async DebugPacket(packet: ClientboundPacket | ServerboundPacket, ...message: any[]) {
+    public DebugPacket(packet: ClientboundPacket | ServerboundPacket, ...message: any[]) {
         // Determine the packet direction
         const direction: string[] = ["S", "C"];
         if ("Parse" in packet) direction.reverse();
@@ -51,6 +51,16 @@ export class StandardConsole {
         // Print details about the client and packet, in addition to the message
         const client: Client = packet.Client;
         this.Debug(`(${client.Protocol.clientId})`.magenta, `[${direction[0]} → ${direction[1]}]`.blue, `[${packet.constructor.name}]`.cyan, ...message);
+    }
+
+    /**
+     * Print a message to the console if tracing is enabled
+     * @param {...any} message The detailed message to write to the console
+     */
+    public Trace(...message: any[]) {
+        const trace: boolean = Settings.Get(MinecraftConfigs.Trace);
+        if (trace)
+            this.Log("[TRACE]".white.bgBlack, ...message);
     }
 }
 

@@ -40,15 +40,15 @@ export class JoinGamePacket extends ClientboundPacket {
         buf.WriteVarChar(State.Worlds.get(this._Client.Player.State.position.world).Metadata.generator);
 
         // View distance
-        const renderDistance: number = await Settings.Get(MinecraftConfigs.RenderDistance);
+        const renderDistance: number = Settings.Get(MinecraftConfigs.RenderDistance);
         buf.WriteVarInt(renderDistance);
 
         // Reduced debug info
-        const reducedDebug: boolean = await Settings.Get(MinecraftConfigs.ReducedDebug);
+        const reducedDebug: boolean = Settings.Get(MinecraftConfigs.ReducedDebug);
         buf.WriteBool(reducedDebug);
 
         // Enable respawn screen
-        const respawnScreen: boolean = await Settings.Get(MinecraftConfigs.RespawnScreen);
+        const respawnScreen: boolean = Settings.Get(MinecraftConfigs.RespawnScreen);
         buf.WriteBool(respawnScreen);
     }
 }

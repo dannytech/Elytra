@@ -28,7 +28,8 @@ export enum MinecraftConfigs {
     MOTD = "motd",
     EULA = "eula",
     Filter = "filter",
-    Debug = "debug"
+    Debug = "debug",
+    Trace = "trace"
 }
 
 export enum ElytraConfigs {
@@ -40,6 +41,7 @@ type SettingsSchema = {
     [namespace: string]: {
         [name: string]: {
             default: unknown,
+            cache?: unknown,
             schema: joi.Schema
         }
     }
@@ -120,6 +122,10 @@ export class Settings {
             "debug": {
                 default: false,
                 schema: joi.boolean()
+            },
+            "trace": {
+                default: false,
+                schema: joi.boolean()
             }
         },
         elytra: {
@@ -147,6 +153,50 @@ export class Settings {
     }
 
     /**
+     * Loads specific configs before caching configs to ensure consistent behavior
+     */
+    private static async _PreCache() {
+        // Load/set tracing to capture all below logs
+        const trace = await r.table<ConfigModel>("config")
+            .getAll([
+                Constants.ConfigNamespace,
+                MinecraftConfigs.Trace
+            ], { index: "namespaced_config" })
+            .pluck("value")
+            .limit(1)
+            .run();
+
+        if (trace.length > 0)
+            this._schema[Constants.ConfigNamespace][MinecraftConfigs.Trace].cache = trace.pop().value;
+    }
+
+    /**
+     * Loads the current configs and begins a changestream to receive and cache changes
+     */
+    public static async Cache() {
+        await this._PreCache();
+
+        // Load all configs
+        const configs = await r.table<ConfigModel>("config")
+            .changes({
+                includeInitial: true
+            })
+            .run();
+
+        // Populate the cache array with the configs
+        configs.each((_, config) => {
+            const newVal = config.new_val;
+
+            // Update the cache to the received value
+            Console.Trace("Received config value", `${newVal.namespace}:${newVal.name}`.green, "from database");
+            if (newVal.namespace in this._schema && newVal.name in this._schema[newVal.namespace])
+                this._schema[newVal.namespace][newVal.name].cache = newVal.value;
+            else
+                Console.Trace("Rejected config change due to invalid namespace or name", `${newVal.namespace}:${newVal.name}`.green);
+        });
+    }
+
+    /**
      * Load a configuration node from the database
      * @param {string} [namespace=minecraft] The namespace within which the configuration node resides
      * @param {string} name The name of the configuration node to retrieve
@@ -155,11 +205,11 @@ export class Settings {
      * @async
      */
     /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
-    public static async Get(name: string): Promise<any>;
+    public static Get(name: string): any;
     /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
-    public static async Get(namespace: string, name: string): Promise<any>;
+    public static Get(namespace: string, name: string): any;
     /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
-    public static async Get(namespaceOrName: string, name?: string): Promise<any> {
+    public static Get(namespaceOrName: string, name?: string): any {
         // Support an overload which assumes the namespace as the first parameter is not necessary
         if (name === undefined) {
             name = namespaceOrName;
@@ -167,24 +217,17 @@ export class Settings {
         }
 
         // Require the configuration to exist in the schema
-        if (!Object.keys(this._schema).includes(namespaceOrName) || !Object.keys(this._schema[namespaceOrName]).includes(name)) {
+        if (!(namespaceOrName in this._schema) || !(name in this._schema[namespaceOrName])) {
             Console.Error("Invalid config", `${namespaceOrName}:${name}`.green);
             return null;
         }
 
-        // Retrieve the relevant config object
-        const config = await r.table<ConfigModel>("config")
-            .getAll([
-                namespaceOrName,
-                name
-            ], { index: "namespaced_config" })
-            .pluck("value")
-            .limit(1)
-            .run();
+        // Attempt to load the value from the cache
+        const config = this._schema[namespaceOrName][name].cache;
 
         // Return the loaded value or the default
-        if (config.length > 0)
-            return config.pop().value;
+        if (config)
+            return config;
         else
             return this._schema[namespaceOrName][name].default;
     }
@@ -198,11 +241,11 @@ export class Settings {
      * @async
      */
     /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
-    public static async Set(name: string, value: any): Promise<void>;
+    public static Set(name: string, value: any): void;
     /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
-    public static async Set(namespace: string, name: string, value: any): Promise<void>;
+    public static Set(namespace: string, name: string, value: any): void;
     /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
-    public static async Set(namespaceOrName: string, nameOrValue: any, value?: any): Promise<void> {
+    public static Set(namespaceOrName: string, nameOrValue: any, value?: any): void {
         // Support an overload which assumes the namespace as the first parameter is not necessary
         if (value === undefined) {
             value = nameOrValue;
@@ -211,7 +254,7 @@ export class Settings {
         }
 
         // Require the configuration to exist in the schema
-        if (!Object.keys(this._schema).includes(namespaceOrName) || !Object.keys(this._schema[namespaceOrName]).includes(nameOrValue))
+        if (!(namespaceOrName in this._schema) || !(nameOrValue in this._schema[namespaceOrName]))
             return Console.Error("Invalid config", `${namespaceOrName}:${nameOrValue}`.green);
 
         // Test the config against the validation schema
@@ -219,8 +262,8 @@ export class Settings {
         if (test.error)
             return Console.Error("Invalid config value", test.error.message.red);
 
-        // Update or insert the configuration value
-        await r.table<ConfigModel>("config")
+        // Asynchronously update or insert the configuration value
+        r.table<ConfigModel>("config")
             .insert({
                 namespace: namespaceOrName,
                 name: nameOrValue,
@@ -261,7 +304,7 @@ export class Constants {
     public static CompressionThreshold = 64;
     public static KeyLength = 1024;
     public static VerificationTokenLength = 8;
-    public static MessageBufferSize = 1000000;
+    public static MaximumPacketLength = 2 * 1024 * 1024;
     public static KeepAliveInterval = 5000;
     public static SupportedVersions = [versionSpec("578")];
 }
