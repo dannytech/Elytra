@@ -261,7 +261,7 @@ export class Constants {
     public static CompressionThreshold = 64;
     public static KeyLength = 1024;
     public static VerificationTokenLength = 8;
-    public static MessageBufferSize = 1000000;
+    public static MaximumPacketLength = 2 * 1024 * 1024;
     public static KeepAliveInterval = 5000;
     public static SupportedVersions = [versionSpec("578")];
 }
