@@ -184,7 +184,10 @@ export class Settings {
             .run();
 
         // Populate the cache array with the configs
-        configs.each((_, config) => {
+        configs.each((err, config) => {
+            if (err)
+                return Console.Error("Config sync error:", err.message);
+
             const newVal = config.new_val;
 
             // Update the cache to the received value
@@ -192,7 +195,7 @@ export class Settings {
             if (newVal.namespace in this._schema && newVal.name in this._schema[newVal.namespace])
                 this._schema[newVal.namespace][newVal.name].cache = newVal.value;
             else
-                Console.Trace("Rejected config change due to invalid namespace or name", `${newVal.namespace}:${newVal.name}`.green);
+                Console.Error("Rejected config sync due to invalid namespace or name", `${newVal.namespace}:${newVal.name}`.green);
         });
     }
 
