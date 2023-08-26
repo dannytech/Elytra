@@ -19,6 +19,7 @@ export enum MinecraftConfigs {
     ServerPort = "serverPort",
     ServerVersion = "serverVersionSpec",
     Online = "online",
+    AllowCompression = "allowCompression",
     PreventProxy = "preventProxy",
     MaximumPlayers = "maximumPlayers",
     RenderDistance = "renderDistance",
@@ -79,6 +80,10 @@ export class Settings {
                 schema: joi.boolean()
             },
             "preventProxy": {
+                default: true,
+                schema: joi.boolean()
+            },
+            "allowCompression": {
                 default: true,
                 schema: joi.boolean()
             },
