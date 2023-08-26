@@ -34,9 +34,7 @@ async function bootstrap() {
         .digest("hex")
         .replace(/(\w{2})(?!$)/g, "$1:");
     Console.Info("Server public key has fingerprint", fingerprint.green);
-
-    // Connect to the database
-    await Database.Connect();
+    Console.Trace("Server public keypair:", publicKey.toString("hex").green);
 
     // Load chat translations
     await Locale.Load();

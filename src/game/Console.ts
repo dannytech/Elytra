@@ -52,6 +52,16 @@ export class StandardConsole {
         const client: Client = packet.Client;
         this.Debug(`(${client.Protocol.clientId})`.magenta, `[${direction[0]} → ${direction[1]}]`.blue, `[${packet.constructor.name}]`.cyan, ...message);
     }
+
+    /**
+     * Print a message to the console if tracing is enabled
+     * @param {...any} message The detailed message to write to the console
+     */
+    public async Trace(...message: any[]) {
+        const trace: boolean = await Settings.Get(MinecraftConfigs.Trace);
+        if (trace)
+            this.Log("[TRACE]".white.bgBlack, ...message);
+    }
 }
 
 export const Console: StandardConsole = new StandardConsole();

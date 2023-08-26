@@ -27,7 +27,8 @@ export enum MinecraftConfigs {
     MOTD = "motd",
     EULA = "eula",
     Filter = "filter",
-    Debug = "debug"
+    Debug = "debug",
+    Trace = "trace"
 }
 
 export enum ElytraConfigs {
@@ -113,6 +114,10 @@ export class Settings {
                 schema: joi.string().allow("allow", "deny")
             },
             "debug": {
+                default: false,
+                schema: joi.boolean()
+            },
+            "trace": {
                 default: false,
                 schema: joi.boolean()
             }
