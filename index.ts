@@ -77,8 +77,8 @@ async function startListener() {
     await PacketFactory.Load();
 
     // Start the server
-    const port: number = await Settings.Get(MinecraftConfigs.ServerPort);
-    const ip: number = await Settings.Get(MinecraftConfigs.ServerIP);
+    const port: number = Settings.Get(MinecraftConfigs.ServerPort);
+    const ip: number = Settings.Get(MinecraftConfigs.ServerIP);
     server.listen(port, ip, () => {
         Console.Info("Server listening on", `${ip}:${port}`.green);
     });
@@ -98,7 +98,7 @@ async function startAPI() {}
     // Start the API
     await startAPI();
 
-    const eula: boolean = await Settings.Get(MinecraftConfigs.EULA);
+    const eula: boolean = Settings.Get(MinecraftConfigs.EULA);
     if (eula)
         // Start the Minecraft server
         await startListener();

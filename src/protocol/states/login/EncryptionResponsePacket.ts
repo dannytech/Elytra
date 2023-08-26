@@ -81,8 +81,8 @@ export class EncryptionResponsePacket extends ServerboundPacket {
             };
 
             // Ensures the client authentication and joining client originate from the same source
-            const preventProxy: boolean = await Settings.Get(MinecraftConfigs.PreventProxy);
-            const debug: boolean = await Settings.Get(MinecraftConfigs.Debug);
+            const preventProxy: boolean = Settings.Get(MinecraftConfigs.PreventProxy);
+            const debug: boolean = Settings.Get(MinecraftConfigs.Debug);
             if (preventProxy && !debug) params["ip"] = this._Client.Protocol.ip;
 
             // Authenticate the client
@@ -109,7 +109,7 @@ export class EncryptionResponsePacket extends ServerboundPacket {
                 Console.Info(this._Client.Player.Metadata.username.green, "authenticated successfully with UUID", this._Client.Player.Metadata.uuid.Format(true).blue);
 
                 // Finish the handshake and proceed to the play state
-                const debug: boolean = await Settings.Get(MinecraftConfigs.Debug);
+                const debug: boolean = Settings.Get(MinecraftConfigs.Debug);
                 if (!debug)
                     this._Client.Queue(new SetCompressionPacket(this._Client));
 
@@ -127,7 +127,7 @@ export class EncryptionResponsePacket extends ServerboundPacket {
         }
 
         // Load the player filter
-        const filter: FilterList = await Settings.Get(MinecraftConfigs.Filter);
+        const filter: FilterList = Settings.Get(MinecraftConfigs.Filter);
         const inFilter: boolean = filter?.players?.some(uuid => uuid == this._Client.Player.Metadata.uuid.Format());
 
         // Determine whether the player is allowed to join

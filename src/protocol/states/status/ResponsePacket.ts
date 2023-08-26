@@ -15,11 +15,11 @@ export class ResponsePacket extends ClientboundPacket {
      */
     public async Write(buf: WritableBuffer) {
         const onlinePlayers: Client[] = State.Server.Clients.filter((client: Client) => client.Protocol.state === ClientState.Play && client.Player.Metadata.uuid);
-        const maximumPlayers: number = await Settings.Get(MinecraftConfigs.MaximumPlayers);
-        const motd: string = await Settings.Get(MinecraftConfigs.MOTD);
+        const maximumPlayers: number = Settings.Get(MinecraftConfigs.MaximumPlayers);
+        const motd: string = Settings.Get(MinecraftConfigs.MOTD);
 
         // Either echo the protocol version if supported or tell the client to update to a newer version
-        const serverVersionSpec: VersionSpec[] = await Settings.Get(MinecraftConfigs.ServerVersion);
+        const serverVersionSpec: VersionSpec[] = Settings.Get(MinecraftConfigs.ServerVersion);
         let protocolVersion: number = this._Client.Protocol.version;
         if (!checkVersion(this._Client.Protocol.version, serverVersionSpec)) {
             const lastVersionSpec = serverVersionSpec[serverVersionSpec.length - 1];

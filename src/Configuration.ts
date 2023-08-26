@@ -200,11 +200,11 @@ export class Settings {
      * @async
      */
     /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
-    public static async Get(name: string): Promise<any>;
+    public static Get(name: string): any;
     /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
-    public static async Get(namespace: string, name: string): Promise<any>;
+    public static Get(namespace: string, name: string): any;
     /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
-    public static async Get(namespaceOrName: string, name?: string): Promise<any> {
+    public static Get(namespaceOrName: string, name?: string): any {
         // Support an overload which assumes the namespace as the first parameter is not necessary
         if (name === undefined) {
             name = namespaceOrName;
@@ -236,11 +236,11 @@ export class Settings {
      * @async
      */
     /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
-    public static async Set(name: string, value: any): Promise<void>;
+    public static Set(name: string, value: any): void;
     /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
-    public static async Set(namespace: string, name: string, value: any): Promise<void>;
+    public static Set(namespace: string, name: string, value: any): void;
     /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
-    public static async Set(namespaceOrName: string, nameOrValue: any, value?: any): Promise<void> {
+    public static Set(namespaceOrName: string, nameOrValue: any, value?: any): void {
         // Support an overload which assumes the namespace as the first parameter is not necessary
         if (value === undefined) {
             value = nameOrValue;
@@ -257,8 +257,8 @@ export class Settings {
         if (test.error)
             return Console.Error("Invalid config value", test.error.message.red);
 
-        // Update or insert the configuration value
-        await r.table<ConfigModel>("config")
+        // Asynchronously update or insert the configuration value
+        r.table<ConfigModel>("config")
             .insert({
                 namespace: namespaceOrName,
                 name: nameOrValue,
