@@ -1,4 +1,4 @@
-import { Console } from "../../../game/Console";
+import { Logging } from "../../../game/Logging";
 import { EntityPositionAndLook } from "../../../game/Entity";
 import { Client } from "../../Client";
 import { ClientboundPacket } from "../../Packet";
@@ -48,7 +48,7 @@ export class PlayerPositionAndLookPacket extends ClientboundPacket {
         buf.WriteByte(this._Flags);
 
         // Teleport ID (dummy value)
-        Console.DebugPacket(this, "Sending position/look and teleport request", ...Object.values(this._PositionAndLook));
+        Logging.DebugPacket(this, "Sending position/look and teleport request", ...Object.values(this._PositionAndLook));
         buf.WriteVarInt(0);
     }
 }

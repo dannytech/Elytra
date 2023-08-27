@@ -1,7 +1,7 @@
 import { ClientboundPacket } from "../../Packet";
 import { WritableBuffer } from "../../WritableBuffer";
 import { ChatComponent } from "../../../game/chat/ChatComponent";
-import { Console } from "../../../game/Console";
+import { Logging } from "../../../game/Logging";
 import { Client } from "../../Client";
 import { ChatTextComponentFactory } from "../../../game/chat/ChatTextComponentFactory";
 
@@ -22,7 +22,7 @@ export class DisconnectPacket extends ClientboundPacket {
      */
     public async Write(buf: WritableBuffer) {
         const reason: string = ChatTextComponentFactory.GetRaw(this._Reason);
-        Console.DebugPacket(this, "Disconnecting client for", reason.green);
+        Logging.DebugPacket(this, "Disconnecting client for", reason.green);
 
         // Chat component containing reason for disconnect
         buf.WriteJSON(this._Reason);

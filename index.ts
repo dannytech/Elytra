@@ -6,7 +6,7 @@ import { Database } from "./src/Database";
 import { Server } from "./src/protocol/Server";
 import { Keypair } from "./src/protocol/Encryption";
 import { World } from "./src/game/World";
-import { Console } from "./src/game/Console";
+import { Logging } from "./src/game/Logging";
 import { PacketFactory } from "./src/protocol/PacketFactory";
 import { WorldModel } from "./src/database/models/WorldModel";
 import { r } from "rethinkdb-ts";
@@ -19,7 +19,7 @@ import { Locale } from "./src/game/Locale";
 async function bootstrap() {
     // Load settings from the config file
     Settings.Load();
-    Console.Info("Loaded database configuration");
+    Logging.Info("Loaded database configuration");
 
     // Connect to the database
     await Database.Connect();
@@ -36,8 +36,8 @@ async function bootstrap() {
         .update(publicKey)
         .digest("hex")
         .replace(/(\w{2})(?!$)/g, "$1:");
-    Console.Info("Server public key has fingerprint", fingerprint.green);
-    Console.Trace("Server public keypair:", publicKey.toString("hex").green);
+    Logging.Info("Server public key has fingerprint", fingerprint.green);
+    Logging.Trace("Server public keypair:", publicKey.toString("hex").green);
 
     // Load chat translations
     await Locale.Load();
@@ -53,7 +53,7 @@ async function bootstrap() {
             State.Worlds.set(world.id, World.Mapper.load(world, true));
         });
     } else {
-        Console.Info("Creating default world");
+        Logging.Info("Creating default world");
 
         // Create a new world
         const newWorld: World = new World();
@@ -80,7 +80,7 @@ async function startListener() {
     const port: number = Settings.Get(MinecraftConfigs.ServerPort);
     const ip: number = Settings.Get(MinecraftConfigs.ServerIP);
     server.listen(port, ip, () => {
-        Console.Info("Server listening on", `${ip}:${port}`.green);
+        Logging.Info("Server listening on", `${ip}:${port}`.green);
     });
 }
 
@@ -103,5 +103,5 @@ async function startAPI() {}
         // Start the Minecraft server
         await startListener();
     else
-        Console.Error("You must accept the EULA first. Go to https://account.mojang.com/documents/minecraft_eula, then set", "eula".green, "to", "true".blue);
+        Logging.Error("You must accept the EULA first. Go to https://account.mojang.com/documents/minecraft_eula, then set", "eula".green, "to", "true".blue);
 })();

@@ -9,7 +9,7 @@ import { WritableBuffer } from "./WritableBuffer";
 import { ProtocolStub } from "./ProtocolStub";
 import { Zlib } from "./Zlib";
 import { Player } from "../game/Player";
-import { Console } from "../game/Console";
+import { Logging } from "../game/Logging";
 import { PlayerInfoActions, PlayerInfoPacket } from "./states/play/PlayerInfoPacket";
 import { PacketDirection, PacketFactory } from "./PacketFactory";
 import { r } from "rethinkdb-ts";
@@ -82,8 +82,8 @@ export class Client extends EventEmitter {
         };
         this.KeepAlive = {};
 
-        Console.Debug(`(${this.Protocol.clientId})`.magenta, "Connecting");
-        Console.Info("Connection from", `${socket.remoteAddress}:${socket.remotePort}`.green);
+        Logging.Debug(`(${this.Protocol.clientId})`.magenta, "Connecting");
+        Logging.Info("Connection from", `${socket.remoteAddress}:${socket.remotePort}`.green);
     }
 
     /**
@@ -109,8 +109,8 @@ export class Client extends EventEmitter {
 
             // Check packet length and reject too-large packets
             if (packetLength > Constants.MaximumPacketLength) {
-                Console.Error("Disconnecting client", `${this.Protocol.ip}:${this.Protocol.port}`.green, "for corrupted packet");
-                Console.Debug(`(${this.Protocol.clientId})`.magenta, "Client sent packet with length", packetLength.toString().blue);
+                Logging.Error("Disconnecting client", `${this.Protocol.ip}:${this.Protocol.port}`.green, "for corrupted packet");
+                Logging.Debug(`(${this.Protocol.clientId})`.magenta, "Client sent packet with length", packetLength.toString().blue);
 
                 return this.Disconnect();
             }
@@ -138,7 +138,7 @@ export class Client extends EventEmitter {
             }
 
             // If tracing is enabled, log the packet contents
-            Console.Trace(`(${this.Protocol.clientId})`.magenta, "[C → S]".blue, "Packet:", packet.Buffer.toString("hex").green);
+            Logging.Trace(`(${this.Protocol.clientId})`.magenta, "[C → S]".blue, "Packet:", packet.Buffer.toString("hex").green);
 
             // Process the packet
             PacketFactory.Parse(packet, this);
@@ -179,7 +179,7 @@ export class Client extends EventEmitter {
             // Resolve the packet ID
             const packetId: number = PacketFactory.Lookup(PacketDirection.Clientbound, this, packet.constructor.name) as number;
             if (packetId == null) {
-                Console.DebugPacket(packet, "Not sending due to missing packet ID");
+                Logging.DebugPacket(packet, "Not sending due to missing packet ID");
                 continue;
             }
 
@@ -187,7 +187,7 @@ export class Client extends EventEmitter {
             payload.Prepend().WriteVarInt(packetId);
 
             // If tracing is enabled, log the packet contents
-            Console.Trace(`(${this.Protocol.clientId})`.magenta, "[S → C]".blue, "Packet:", payload.Buffer.toString("hex").green);
+            Logging.Trace(`(${this.Protocol.clientId})`.magenta, "[S → C]".blue, "Packet:", payload.Buffer.toString("hex").green);
 
             // Compress the packet
             if (this.Protocol.compression === CompressionState.Enabled) {
@@ -232,7 +232,7 @@ export class Client extends EventEmitter {
         // Flush the clientbound queue
         this._ClientboundQueue.splice(0, this._ClientboundQueue.length);
 
-        Console.Debug(`(${this.Protocol.clientId})`.magenta, "Disconnecting");
+        Logging.Debug(`(${this.Protocol.clientId})`.magenta, "Disconnecting");
         this._Socket.destroy();
 
         // Save the player state before destroying the client

@@ -1,4 +1,4 @@
-import { Console } from "../../../game/Console";
+import { Logging } from "../../../game/Logging";
 import { ClientboundPacket } from "../../Packet";
 import { WritableBuffer } from "../../WritableBuffer";
 
@@ -11,7 +11,7 @@ export class DeclareRecipesPacket extends ClientboundPacket {
      */
     public async Write(buf: WritableBuffer) {
         // TODO Add recipes
-        Console.DebugPacket(this, "Sending dummy recipes");
+        Logging.DebugPacket(this, "Sending dummy recipes");
         buf.WriteVarInt(0);
     }
 }

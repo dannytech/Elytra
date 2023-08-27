@@ -1,5 +1,5 @@
 import { State } from "../../../Configuration";
-import { Console } from "../../../game/Console";
+import { Logging } from "../../../game/Logging";
 import { Client, ClientState } from "../../Client";
 import { ServerboundPacket } from "../../Packet";
 import { ReadableBuffer } from "../../ReadableBuffer";
@@ -24,7 +24,7 @@ export class TeleportConfirmPacket extends ServerboundPacket {
      */
     public async Parse(buf: ReadableBuffer) {
         this._TeleportId = buf.ReadVarInt();
-        Console.DebugPacket(this, "Teleport confirmed with ID", this._TeleportId.toString().green);
+        Logging.DebugPacket(this, "Teleport confirmed with ID", this._TeleportId.toString().green);
     }
 
     public async AfterReceive() {

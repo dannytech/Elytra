@@ -1,5 +1,5 @@
 import { ChatTextComponentFactory } from "../../../game/chat/ChatTextComponentFactory";
-import { Console } from "../../../game/Console";
+import { Logging } from "../../../game/Logging";
 import { ServerboundPacket } from "../../Packet";
 import { ReadableBuffer } from "../../ReadableBuffer";
 import { DisconnectPacket } from "./DisconnectPacket";
@@ -16,7 +16,7 @@ export class ClientKeepAlivePacket extends ServerboundPacket {
 
         // If the keepalives don't match, disconnect
         if (keepAliveId !== this._Client.KeepAlive.id) {
-            Console.DebugPacket(this, "Keep alive IDs do not match,", keepAliveId.toString().green, "!=", this._Client.KeepAlive.id.toString().green);
+            Logging.DebugPacket(this, "Keep alive IDs do not match,", keepAliveId.toString().green, "!=", this._Client.KeepAlive.id.toString().green);
             this._Client.Queue(new DisconnectPacket(this._Client, ChatTextComponentFactory.FromString("Client failed keep-alive")), true);
         } else {
             // Reset the keep alive timer

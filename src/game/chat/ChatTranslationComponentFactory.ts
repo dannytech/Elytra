@@ -2,7 +2,7 @@ import { Client } from "../../protocol/Client";
 import { ChatTextComponent, ChatTranslationComponent } from "./ChatComponent";
 import { checkVersion } from "../../Masking";
 import { ChatTextComponentFactory } from "./ChatTextComponentFactory";
-import { Console } from "../Console";
+import { Logging } from "../Logging";
 import { Locale } from "../Locale";
 
 export class ChatTranslationComponentFactory {
@@ -16,7 +16,7 @@ export class ChatTranslationComponentFactory {
     public static FromKey(key: string, ...args: Array<string | number | bigint>): ChatTranslationComponent {
         // Warn if the key is invalid (it's possible the client will understand it even if we don't)
         if (!(key in Locale.Mapping))
-            Console.Warn("Invalid translation key", key);
+            Logging.Warn("Invalid translation key", key);
 
         // Wrap the key in a component
         const component: ChatTranslationComponent = {

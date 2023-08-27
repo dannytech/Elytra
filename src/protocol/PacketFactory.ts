@@ -1,7 +1,7 @@
 import { parse } from "yaml";
 import { readFile } from "fs/promises";
 import { Client, ClientState } from "./Client";
-import { Console } from "../game/Console";
+import { Logging } from "../game/Logging";
 import { ReadableBuffer } from "./ReadableBuffer";
 import { ServerboundPacket, IServerboundConstructor } from "./Packet";
 import { checkVersion, versionSpec, VersionSpec } from "../Masking";
@@ -70,7 +70,7 @@ export class PacketFactory {
             for (const state in mappings[direction]) {
                 const def: SourcePacketMapping = mappings[direction][state as ClientState];
 
-                Console.Debug(`Loading ${direction.green} packets for ${state.blue} state`);
+                Logging.Debug(`Loading ${direction.green} packets for ${state.blue} state`);
                 await this._LoadPacketSpec(direction as PacketDirection, state as ClientState, def);
             }
     }
@@ -220,7 +220,7 @@ export class PacketFactory {
             diagnosticName = `0x${packetId.toString(16).padStart(2, "0")}`;
         } else
             diagnosticName = packetNameOrId as string;
-        Console.Error("Unable to resolve", direction.green, client.Protocol.state.green, "packet", diagnosticName.blue, "(please report this to the developer)");
+        Logging.Error("Unable to resolve", direction.green, client.Protocol.state.green, "packet", diagnosticName.blue, "(please report this to the developer)");
     }
 
     /**
@@ -253,7 +253,7 @@ export class PacketFactory {
             // Dispatch packets if a send is needed
             await client.Send();
         } else
-            Console.Debug(`(${client.Protocol.clientId})`.magenta, "Unrecognized", client.Protocol.state.green, "packet",
+            Logging.Debug(`(${client.Protocol.clientId})`.magenta, "Unrecognized", client.Protocol.state.green, "packet",
                 `0x${packetId.toString(16).padStart(2, "0")}`.blue, buf.Buffer.toString("hex").yellow);
     }
 }

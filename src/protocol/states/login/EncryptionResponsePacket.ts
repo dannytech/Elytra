@@ -10,7 +10,7 @@ import { digest } from "../../Encryption";
 import { Player } from "../../../game/Player";
 import { UUID } from "../../../game/UUID";
 import { ChatTextComponentFactory } from "../../../game/chat/ChatTextComponentFactory";
-import { Console } from "../../../game/Console";
+import { Logging } from "../../../game/Logging";
 import { PlayerModel } from "../../../database/models/PlayerModel";
 import { r } from "rethinkdb-ts";
 
@@ -60,7 +60,7 @@ export class EncryptionResponsePacket extends ServerboundPacket {
         const verifyToken: Buffer = buf.Read(verifyTokenLength);
 
         // Verify the token can be decrypted successfully
-        Console.DebugPacket(this, "Verifying nonce");
+        Logging.DebugPacket(this, "Verifying nonce");
         const decryptedToken: Buffer = State.Keypair.Decrypt(verifyToken);
         if (decryptedToken.equals(this._Client.Protocol.encryption.verificationToken)) {
             // Tell the socket to use encryption
@@ -69,7 +69,7 @@ export class EncryptionResponsePacket extends ServerboundPacket {
             delete this._Client.Protocol.encryption.verificationToken;
 
             // Log the session key at trace level
-            Console.Trace(`(${this._Client.Protocol.clientId})`.magenta, "Encrypting packets with key", this._Client.Protocol.encryption.sharedSecret.toString("hex").green);
+            Logging.Trace(`(${this._Client.Protocol.clientId})`.magenta, "Encrypting packets with key", this._Client.Protocol.encryption.sharedSecret.toString("hex").green);
 
             // Generate the server hash for authentication
             const serverHash: string = digest(Buffer.concat([
@@ -85,11 +85,10 @@ export class EncryptionResponsePacket extends ServerboundPacket {
 
             // Ensures the client authentication and joining client originate from the same source
             const preventProxy: boolean = Settings.Get(MinecraftConfigs.PreventProxy);
-            const debug: boolean = Settings.Get(MinecraftConfigs.Debug);
-            if (preventProxy && !debug) params["ip"] = this._Client.Protocol.ip;
+            if (preventProxy) params["ip"] = this._Client.Protocol.ip;
 
             // Authenticate the client
-            Console.DebugPacket(this, "Authenticating client against Mojang servers");
+            Logging.DebugPacket(this, "Authenticating client against Mojang servers");
             const res: AxiosResponse<SessionResponse> = await axios.get("https://sessionserver.mojang.com/session/minecraft/hasJoined", {
                 params
             });
@@ -109,24 +108,24 @@ export class EncryptionResponsePacket extends ServerboundPacket {
                 // Configure metadata received from Mojang servers
                 this._Client.Player.Metadata.properties = res.data.properties;
 
-                Console.Info(this._Client.Player.Metadata.username.green, "authenticated successfully with UUID", this._Client.Player.Metadata.uuid.Format(true).blue);
+                Logging.Info(this._Client.Player.Metadata.username.green, "authenticated successfully with UUID", this._Client.Player.Metadata.uuid.Format(true).blue);
 
                 // Finish the handshake and proceed to the play state
                 const allowCompression: boolean = Settings.Get(MinecraftConfigs.AllowCompression);
                 if (allowCompression)
                     this._Client.Queue(new SetCompressionPacket(this._Client));
 
-                Console.DebugPacket(this, "Switching to encrypted channel");
+                Logging.DebugPacket(this, "Switching to encrypted channel");
                 this._Client.Queue(new LoginSuccessPacket(this._Client));
             } else {
                 this._Client.Queue(new LoginDisconnectPacket(this._Client, ChatTextComponentFactory.FromString("Invalid session")), true);
 
-                Console.Error("Player", this._Client.Player.Metadata.username.green, "has invalid session (might be using a proxy)");
+                Logging.Error("Player", this._Client.Player.Metadata.username.green, "has invalid session (might be using a proxy)");
             }
         } else {
             this._Client.Queue(new LoginDisconnectPacket(this._Client, ChatTextComponentFactory.FromString("Failed to negotiate encrypted channel")), true);
 
-            Console.Error("Player", this._Client.Player.Metadata.username.green, "failed to negotiate encrypted channel");
+            Logging.Error("Player", this._Client.Player.Metadata.username.green, "failed to negotiate encrypted channel");
         }
 
         // Load the player filter
@@ -134,15 +133,15 @@ export class EncryptionResponsePacket extends ServerboundPacket {
         const inFilter: boolean = filter?.players?.some(uuid => uuid == this._Client.Player.Metadata.uuid.Format());
 
         // Determine whether the player is allowed to join
-        Console.DebugPacket(this, "Checking player against filter");
+        Logging.DebugPacket(this, "Checking player against filter");
         if (filter?.mode == "deny" && inFilter) {
             this._Client.Queue(new PlayDisconnectPacket(this._Client, ChatTextComponentFactory.FromString("You have been disallowed from this server")));
 
-            Console.Error("Player", this._Client.Player.Metadata.username.green, "is disallowed by filter");
+            Logging.Error("Player", this._Client.Player.Metadata.username.green, "is disallowed by filter");
         } else if (filter?.mode == "allow" && !inFilter) {
             this._Client.Queue(new PlayDisconnectPacket(this._Client, ChatTextComponentFactory.FromString("You have not been allowed on this server")));
 
-            Console.Warn("Player", this._Client.Player.Metadata.username.green, "is not allowed by filter");
+            Logging.Warn("Player", this._Client.Player.Metadata.username.green, "is not allowed by filter");
         }
     }
 }

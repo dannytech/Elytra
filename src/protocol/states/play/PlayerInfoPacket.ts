@@ -1,4 +1,4 @@
-import { Console } from "../../../game/Console";
+import { Logging } from "../../../game/Logging";
 import { PlayerProperty } from "../../../game/Player";
 import { Client } from "../../Client";
 import { ClientboundPacket } from "../../Packet";
@@ -35,7 +35,7 @@ export class PlayerInfoPacket extends ClientboundPacket {
         buf.WriteVarInt(this._Action);
 
         // List of players
-        Console.DebugPacket(this, "Sending", PlayerInfoActions[this._Action].green, "player information for", this._Clients.length.toString().blue, "player(s)");
+        Logging.DebugPacket(this, "Sending", PlayerInfoActions[this._Action].green, "player information for", this._Clients.length.toString().blue, "player(s)");
         buf.WriteVarInt(this._Clients.length);
         this._Clients.forEach((client: Client) => {
             // Write each player UUID

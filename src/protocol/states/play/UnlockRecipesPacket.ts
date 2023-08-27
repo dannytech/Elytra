@@ -1,4 +1,4 @@
-import { Console } from "../../../game/Console";
+import { Logging } from "../../../game/Logging";
 import { Client } from "../../Client";
 import { ClientboundPacket } from "../../Packet";
 import { WritableBuffer } from "../../WritableBuffer";
@@ -45,7 +45,7 @@ export class UnlockRecipesPacket extends ClientboundPacket {
         buf.WriteBool(true);
 
         // Write the recipes to display/remove
-        Console.DebugPacket(this, "Sending", this._Displayed.length.toString().green, "recipes to display");
+        Logging.DebugPacket(this, "Sending", this._Displayed.length.toString().green, "recipes to display");
         buf.WriteVarInt(this._Displayed.length);
         this._Displayed.forEach((recipe: string) => {
             buf.WriteVarChar(recipe);

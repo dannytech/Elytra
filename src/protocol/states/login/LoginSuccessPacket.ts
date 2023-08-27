@@ -1,7 +1,7 @@
 import { ClientboundPacket } from "../../Packet";
 import { WritableBuffer } from "../../WritableBuffer";
 import { ClientState } from "../../Client";
-import { Console } from "../../../game/Console";
+import { Logging } from "../../../game/Logging";
 import { JoinGamePacket } from "../play/JoinGamePacket";
 import { Constants } from "../../../Configuration";
 import { ServerPluginMessagePacket } from "../play/ServerPluginMessagePacket";
@@ -24,7 +24,7 @@ export class LoginSuccessPacket extends ClientboundPacket {
     public async Write(buf: WritableBuffer) {
         // Write the player UUID
         const uuid: string = this._Client.Player.Metadata.uuid.Format(true);
-        Console.DebugPacket(this, "Sending player UUID", uuid.green);
+        Logging.DebugPacket(this, "Sending player UUID", uuid.green);
         buf.WriteVarChar(uuid);
 
         // Write the username
@@ -37,11 +37,11 @@ export class LoginSuccessPacket extends ClientboundPacket {
      */
     public async AfterSend() {
         // Update the client's state
-        Console.DebugPacket(this, "Switching to state", "play".green);
+        Logging.DebugPacket(this, "Switching to state", "play".green);
         this._Client.Protocol.state = ClientState.Play;
 
         // Queue some more joining packets
-        Console.DebugPacket(this, "Queueing initial play state packets");
+        Logging.DebugPacket(this, "Queueing initial play state packets");
         this._Client.Queue(new JoinGamePacket(this._Client));
 
         // Send the server brand

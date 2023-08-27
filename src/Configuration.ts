@@ -5,7 +5,7 @@ import { Server } from "./protocol/Server";
 import { World } from "./game/World";
 import { VersionSpec, versionSpec } from "./Masking";
 import * as joi from "joi";
-import { Console } from "./game/Console";
+import { Logging } from "./game/Logging";
 import { r } from "rethinkdb-ts";
 
 export enum Environment {
@@ -27,9 +27,7 @@ export enum MinecraftConfigs {
     RespawnScreen = "respawnScreen",
     MOTD = "motd",
     EULA = "eula",
-    Filter = "filter",
-    Debug = "debug",
-    Trace = "trace"
+    Filter = "filter"
 }
 
 export enum ElytraConfigs {
@@ -118,14 +116,6 @@ export class Settings {
             "filterMode": {
                 default: "deny",
                 schema: joi.string().allow("allow", "deny")
-            },
-            "debug": {
-                default: false,
-                schema: joi.boolean()
-            },
-            "trace": {
-                default: false,
-                schema: joi.boolean()
             }
         },
         elytra: {
@@ -153,29 +143,9 @@ export class Settings {
     }
 
     /**
-     * Loads specific configs before caching configs to ensure consistent behavior
-     */
-    private static async _PreCache() {
-        // Load/set tracing to capture all below logs
-        const trace = await r.table<ConfigModel>("config")
-            .getAll([
-                Constants.ConfigNamespace,
-                MinecraftConfigs.Trace
-            ], { index: "namespaced_config" })
-            .pluck("value")
-            .limit(1)
-            .run();
-
-        if (trace.length > 0)
-            this._schema[Constants.ConfigNamespace][MinecraftConfigs.Trace].cache = trace.pop().value;
-    }
-
-    /**
      * Loads the current configs and begins a changestream to receive and cache changes
      */
     public static async Cache() {
-        await this._PreCache();
-
         // Load all configs
         const configs = await r.table<ConfigModel>("config")
             .changes({
@@ -186,16 +156,16 @@ export class Settings {
         // Populate the cache array with the configs
         configs.each((err, config) => {
             if (err)
-                return Console.Error("Config sync error:", err.message);
+                return Logging.Error("Config sync error:", err.message);
 
             const newVal = config.new_val;
 
             // Update the cache to the received value
-            Console.Trace("Received config value", `${newVal.namespace}:${newVal.name}`.green, "from database");
+            Logging.Trace("Received config value", `${newVal.namespace}:${newVal.name}`.green, "from database");
             if (newVal.namespace in this._schema && newVal.name in this._schema[newVal.namespace])
                 this._schema[newVal.namespace][newVal.name].cache = newVal.value;
             else
-                Console.Error("Rejected config sync due to invalid namespace or name", `${newVal.namespace}:${newVal.name}`.green);
+                Logging.Error("Rejected config sync due to invalid namespace or name", `${newVal.namespace}:${newVal.name}`.green);
         });
     }
 
@@ -221,7 +191,7 @@ export class Settings {
 
         // Require the configuration to exist in the schema
         if (!(namespaceOrName in this._schema) || !(name in this._schema[namespaceOrName])) {
-            Console.Error("Invalid config", `${namespaceOrName}:${name}`.green);
+            Logging.Error("Invalid config", `${namespaceOrName}:${name}`.green);
             return null;
         }
 
@@ -258,12 +228,12 @@ export class Settings {
 
         // Require the configuration to exist in the schema
         if (!(namespaceOrName in this._schema) || !(nameOrValue in this._schema[namespaceOrName]))
-            return Console.Error("Invalid config", `${namespaceOrName}:${nameOrValue}`.green);
+            return Logging.Error("Invalid config", `${namespaceOrName}:${nameOrValue}`.green);
 
         // Test the config against the validation schema
         const test = this._schema[namespaceOrName][nameOrValue].schema.validate(value, { presence: "required" });
         if (test.error)
-            return Console.Error("Invalid config value", test.error.message.red);
+            return Logging.Error("Invalid config value", test.error.message.red);
 
         // Asynchronously update or insert the configuration value
         r.table<ConfigModel>("config")

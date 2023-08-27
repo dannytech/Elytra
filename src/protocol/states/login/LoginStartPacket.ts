@@ -5,7 +5,7 @@ import { Player } from "../../../game/Player";
 import { LoginSuccessPacket } from "./LoginSuccessPacket";
 import { EncryptionRequestPacket } from "./EncryptionRequestPacket";
 import { Settings, MinecraftConfigs } from "../../../Configuration";
-import { Console } from "../../../game/Console";
+import { Logging } from "../../../game/Logging";
 import { UUID } from "../../../game/UUID";
 
 export class LoginStartPacket extends ServerboundPacket {
@@ -24,20 +24,20 @@ export class LoginStartPacket extends ServerboundPacket {
         const online: boolean = Settings.Get(MinecraftConfigs.Online);
         if (online) {
             // Begin the encryption/authentication process
-            Console.DebugPacket(this, "Beginning encryption/authentication process");
+            Logging.DebugPacket(this, "Beginning encryption/authentication process");
             this._Client.Queue(new EncryptionRequestPacket(this._Client));
         } else {
-            Console.Warn("Online mode is off, allowing alleged player", this._Client.Player.Metadata.username.green, "to connect");
+            Logging.Warn("Online mode is off, allowing alleged player", this._Client.Player.Metadata.username.green, "to connect");
 
             // Prepare the player to join
-            const debug: boolean = Settings.Get(MinecraftConfigs.Debug);
-            if (!debug)
+            const allowCompression: boolean = Settings.Get(MinecraftConfigs.AllowCompression);
+            if (allowCompression)
                 this._Client.Queue(new SetCompressionPacket(this._Client));
 
             // Generate a random UUID to utilize for this session
             this._Client.Player.Metadata.uuid = UUID.Generate();
 
-            Console.DebugPacket(this, "Bypassing login due to offline mode");
+            Logging.DebugPacket(this, "Bypassing login due to offline mode");
             this._Client.Queue(new LoginSuccessPacket(this._Client));
         }
     }

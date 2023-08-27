@@ -1,4 +1,4 @@
-import { Console } from "../../../game/Console";
+import { Logging } from "../../../game/Logging";
 import { Client } from "../../Client";
 import { ClientboundPacket } from "../../Packet";
 import { WritableBuffer } from "../../WritableBuffer";
@@ -20,7 +20,7 @@ export class PongPacket extends ClientboundPacket {
      */
     public async Write(buf: WritableBuffer) {
         // Echo back the contents of the ping
-        Console.DebugPacket(this, "Pong!".yellow);
+        Logging.DebugPacket(this, "Pong!".yellow);
         buf.WriteInt64(this._Payload);
     }
 }

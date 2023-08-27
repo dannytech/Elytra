@@ -1,4 +1,4 @@
-import { Console } from "../game/Console";
+import { Logging } from "../game/Logging";
 import { UUID } from "../game/UUID";
 import { WritableBuffer } from "./WritableBuffer";
 
@@ -37,7 +37,7 @@ export class ReadableBuffer {
 
         // Alert if there was a buffer overrun, this really shouldn't happen
         if (bytes + this._Cursor > this._Buffer.length)
-            Console.Debug("ReadableBuffer attempted to read past the end of the buffer. This could cause issues parsing packets correctly.".red.bold);
+            Logging.Debug("ReadableBuffer attempted to read past the end of the buffer. This could cause issues parsing packets correctly.".red.bold);
 
         return this._Buffer.slice(this._Cursor, this._Cursor += bytes);
     }

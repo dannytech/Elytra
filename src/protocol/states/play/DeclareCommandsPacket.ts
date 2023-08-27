@@ -1,4 +1,4 @@
-import { Console } from "../../../game/Console";
+import { Logging } from "../../../game/Logging";
 import { ClientboundPacket } from "../../Packet";
 import { WritableBuffer } from "../../WritableBuffer";
 
@@ -63,7 +63,7 @@ export class DeclareCommandsPacket extends ClientboundPacket {
      */
     public async Write(buf: WritableBuffer) {
         // TODO Add commands
-        Console.DebugPacket(this, "Sending dummy commands");
+        Logging.DebugPacket(this, "Sending dummy commands");
 
         // Command graph
         const nodes: CommandNode[] = [];

@@ -1,4 +1,4 @@
-import { Console } from "../../../game/Console";
+import { Logging } from "../../../game/Logging";
 import { ServerboundPacket } from "../../Packet";
 import { ReadableBuffer } from "../../ReadableBuffer";
 
@@ -40,6 +40,6 @@ export class ClientSettingsPacket extends ServerboundPacket {
         const chatColors: boolean = buf.ReadBool();
         const displayedSkinParts: number = buf.ReadByte();
         const mainHand: number = buf.ReadVarInt();
-        Console.DebugPacket(this, "Received client settings");
+        Logging.DebugPacket(this, "Received client settings");
     }
 }

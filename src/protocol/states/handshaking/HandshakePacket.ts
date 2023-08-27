@@ -1,7 +1,7 @@
 import { ServerboundPacket } from "../../Packet";
 import { ReadableBuffer } from "../../ReadableBuffer";
 import { ClientState } from "../../Client";
-import { Console } from "../../../game/Console";
+import { Logging } from "../../../game/Logging";
 
 export class HandshakePacket extends ServerboundPacket {
     /**
@@ -16,7 +16,7 @@ export class HandshakePacket extends ServerboundPacket {
     public async Parse(buf: ReadableBuffer) {
         // First, read the protocol version
         this._Client.Protocol.version = buf.ReadVarInt();
-        Console.DebugPacket(this, "Protocol version", this._Client.Protocol.version.toString().green);
+        Logging.DebugPacket(this, "Protocol version", this._Client.Protocol.version.toString().green);
 
         // Then, the hostname
         buf.ReadVarChar();
@@ -34,6 +34,6 @@ export class HandshakePacket extends ServerboundPacket {
                 this._Client.Protocol.state = ClientState.Login;
                 break;
         }
-        Console.DebugPacket(this, "Switching to state", this._Client.Protocol.state.green);
+        Logging.DebugPacket(this, "Switching to state", this._Client.Protocol.state.green);
     }
 }

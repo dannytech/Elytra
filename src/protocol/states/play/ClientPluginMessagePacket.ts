@@ -1,4 +1,4 @@
-import { Console } from "../../../game/Console";
+import { Logging } from "../../../game/Logging";
 import { ServerboundPacket } from "../../Packet";
 import { ReadableBuffer } from "../../ReadableBuffer";
 
@@ -9,7 +9,7 @@ export class ClientPluginMessagePacket extends ServerboundPacket {
      * @private
      */
     private _BrandMessage(message: ReadableBuffer) {
-        Console.DebugPacket(this, "Client brand is", message.ReadVarChar().green);
+        Logging.DebugPacket(this, "Client brand is", message.ReadVarChar().green);
     }
 
     /**
@@ -23,7 +23,7 @@ export class ClientPluginMessagePacket extends ServerboundPacket {
         // Read the plugin channel
         const channel: string = buf.ReadVarChar();
         const rawMessage: Buffer = buf.Read();
-        Console.DebugPacket(this, "Received plugin message on channel", channel.green, rawMessage.toString("hex").blue);
+        Logging.DebugPacket(this, "Received plugin message on channel", channel.green, rawMessage.toString("hex").blue);
 
         // Redirect the rest of the buffer to the correct handler
         const message: ReadableBuffer = new ReadableBuffer(rawMessage);

@@ -1,4 +1,4 @@
-import { Console } from "../../../game/Console";
+import { Logging } from "../../../game/Logging";
 import { ClientboundPacket } from "../../Packet";
 import { WritableBuffer } from "../../WritableBuffer";
 
@@ -14,7 +14,7 @@ export class TagsPacket extends ClientboundPacket {
      */
     public async Write(buf: WritableBuffer) {
         // TODO Add tags
-        Console.DebugPacket(this, "Sending dummy tags");
+        Logging.DebugPacket(this, "Sending dummy tags");
         buf.WriteVarInt(0); // Block tags
         buf.WriteVarInt(0); // Item tags
         buf.WriteVarInt(0); // Fluid tags

@@ -1,4 +1,4 @@
-import { Console } from "../../../game/Console";
+import { Logging } from "../../../game/Logging";
 import { Client } from "../../Client";
 import { ClientboundPacket } from "../../Packet";
 import { WritableBuffer } from "../../WritableBuffer";
@@ -21,7 +21,7 @@ export class HeldItemChangePacket extends ClientboundPacket {
      */
     public async Write(buf: WritableBuffer) {
         // Set the currently held slot
-        Console.DebugPacket(this, "Sending held item slot", this._Slot.toString().green);
+        Logging.DebugPacket(this, "Sending held item slot", this._Slot.toString().green);
         buf.WriteByte(this._Slot);
     }
 }

@@ -2,7 +2,7 @@ import { Settings, Constants, State, MinecraftConfigs } from "../../../Configura
 import { ClientboundPacket } from "../../Packet";
 import { WritableBuffer } from "../../WritableBuffer";
 import { ChatTextComponentFactory } from "../../../game/chat/ChatTextComponentFactory";
-import { Console } from "../../../game/Console";
+import { Logging } from "../../../game/Logging";
 import { checkVersion, VersionSpec } from "../../../Masking";
 import { Client, ClientState } from "../../Client";
 
@@ -30,7 +30,7 @@ export class ResponsePacket extends ClientboundPacket {
         }
 
         // Send back server information
-        Console.DebugPacket(this, "Sending server information");
+        Logging.DebugPacket(this, "Sending server information");
         buf.WriteJSON({
             version: {
                 name: Constants.ServerName,

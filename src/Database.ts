@@ -1,7 +1,7 @@
 import { readdir } from "fs/promises";
 import { URL } from "url";
 import { r } from "rethinkdb-ts";
-import { Console } from "./game/Console";
+import { Logging } from "./game/Logging";
 import * as path from "path";
 
 /**
@@ -50,7 +50,7 @@ export class Database {
             password: rethinkUri.password,
             db: db
         });
-        Console.Info("Connected to RethinkDB server", rethinkUri.href.green);
+        Logging.Info("Connected to RethinkDB server", rethinkUri.href.green);
 
         await this._Bind();
     }
@@ -73,7 +73,7 @@ export class Database {
 
             // Call the model binder function
             if ("ModelBinder" in model) {
-                Console.Debug(`Binding model ${path.parse(binder).name.green}`);
+                Logging.Debug(`Binding model ${path.parse(binder).name.green}`);
 
                 await model.ModelBinder();
             }

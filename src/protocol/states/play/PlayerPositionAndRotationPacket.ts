@@ -1,4 +1,4 @@
-import { Console } from "../../../game/Console";
+import { Logging } from "../../../game/Logging";
 import { ServerboundPacket } from "../../Packet";
 import { ReadableBuffer } from "../../ReadableBuffer";
 
@@ -21,7 +21,7 @@ export class PlayerPositionAndRotationPacket extends ServerboundPacket {
         this._Client.Player.State.position.z = buf.ReadDouble();
         this._Client.Player.State.position.yaw = buf.ReadSingle();
         this._Client.Player.State.position.pitch = buf.ReadSingle();
-        Console.DebugPacket(this, "Player location and rotation updated to", ...Object.values(this._Client.Player.State.position));
+        Logging.DebugPacket(this, "Player location and rotation updated to", ...Object.values(this._Client.Player.State.position));
 
         buf.ReadBool(); // onground
     }

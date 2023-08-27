@@ -2,7 +2,7 @@ import { Constants } from "../../../Configuration";
 import { ClientboundPacket } from "../../Packet";
 import { WritableBuffer } from "../../WritableBuffer";
 import { CompressionState } from "../../Client";
-import { Console } from "../../../game/Console";
+import { Logging } from "../../../game/Logging";
 
 export class SetCompressionPacket extends ClientboundPacket {
     /**
@@ -13,7 +13,7 @@ export class SetCompressionPacket extends ClientboundPacket {
      */
     public async Write(buf: WritableBuffer) {
         // Tell the socket to enable compression after this packet is sent
-        Console.DebugPacket(this, "Enabling compression");
+        Logging.DebugPacket(this, "Enabling compression");
         this._Client.Protocol.compression = CompressionState.Enabling;
 
         // Threshold to compress packets

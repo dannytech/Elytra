@@ -1,7 +1,7 @@
 import { ServerboundPacket } from "../../Packet";
 import { PongPacket } from "./PongPacket";
 import { ReadableBuffer } from "../../ReadableBuffer";
-import { Console } from "../../../game/Console";
+import { Logging } from "../../../game/Logging";
 
 export class PingPacket extends ServerboundPacket {
     /**
@@ -14,7 +14,7 @@ export class PingPacket extends ServerboundPacket {
         // Generate a packet echoing back the ping payload
         const payload: bigint = buf.ReadInt64();
 
-        Console.DebugPacket(this, "Ping!".yellow);
+        Logging.DebugPacket(this, "Ping!".yellow);
         this._Client.Queue(new PongPacket(this._Client, payload));
     }
 }

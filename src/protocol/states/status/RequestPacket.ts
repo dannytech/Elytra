@@ -1,6 +1,6 @@
 import { ServerboundPacket } from "../../Packet";
 import { ResponsePacket } from "./ResponsePacket";
-import { Console } from "../../../game/Console";
+import { Logging } from "../../../game/Logging";
 
 export class RequestPacket extends ServerboundPacket {
     /**
@@ -9,7 +9,7 @@ export class RequestPacket extends ServerboundPacket {
      */
     public async Parse() {
         // Generate a response containing server information
-        Console.DebugPacket(this, "Requesting server information");
+        Logging.DebugPacket(this, "Requesting server information");
         this._Client.Queue(new ResponsePacket(this._Client));
     }
 }

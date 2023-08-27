@@ -1,4 +1,4 @@
-import { Console } from "../../../game/Console";
+import { Logging } from "../../../game/Logging";
 import { EntityPosition } from "../../../game/Entity";
 import { ClientboundPacket } from "../../Packet";
 import { WritableBuffer } from "../../WritableBuffer";
@@ -18,6 +18,6 @@ export class UpdateViewPositionPacket extends ClientboundPacket {
         buf.WriteVarInt(Math.floor(position.x / 16));
         buf.WriteVarInt(Math.floor(position.y / 16));
 
-        Console.DebugPacket(this, "Sending chunk view position update");
+        Logging.DebugPacket(this, "Sending chunk view position update");
     }
 }
