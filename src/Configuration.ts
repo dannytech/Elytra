@@ -158,14 +158,28 @@ export class Settings {
             if (err)
                 return Logging.Error("Config sync error:", err.message);
 
-            const newVal = config.new_val;
+            // Determine whether the change was an insert/update or removal
+            const removed = config.new_val == null;
 
-            // Update the cache to the received value
-            Logging.Trace("Received config value", `${newVal.namespace}:${newVal.name}`.green, "from database");
-            if (newVal.namespace in this._schema && newVal.name in this._schema[newVal.namespace])
-                this._schema[newVal.namespace][newVal.name].cache = newVal.value;
-            else
-                Logging.Error("Rejected config sync due to invalid namespace or name", `${newVal.namespace}:${newVal.name}`.green);
+            // Normalize the config to check for
+            const val: ConfigModel = removed ? config.old_val : config.new_val;
+
+            // Check if the normalized config path exists
+            const valid = val.namespace in this._schema && val.name in this._schema[val.namespace];
+
+            // Update or delete the cache to the received value
+            if (valid) {
+                if (removed) {
+                    Logging.Trace("Unsetting config value", `${val.namespace}:${val.name}`.green, "from database");
+
+                    delete this._schema[val.namespace][val.name].cache;
+                } else {
+                    Logging.Trace("Received config value", `${val.namespace}:${val.name}`.green, "from database");
+
+                    this._schema[val.namespace][val.name].cache = val.value;
+                }
+            } else
+                Logging.Error("Rejected config sync due to invalid namespace or name", `${val.namespace}:${val.name}`.green);
         });
     }
 
