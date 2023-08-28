@@ -24,7 +24,7 @@ export enum PermissionLevel {
 export type PlayerProperty = {
     name: string;
     value: string;
-    signature: string;
+    signature?: string;
 }
 
 export type PlayerState = {
