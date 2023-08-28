@@ -1,10 +1,11 @@
-import { Settings, Constants, State, MinecraftConfigs } from "../../../Configuration";
+import { Settings, State, MinecraftConfigs } from "../../../Configuration";
 import { ClientboundPacket } from "../../Packet";
 import { WritableBuffer } from "../../WritableBuffer";
 import { ChatTextComponentFactory } from "../../../game/chat/ChatTextComponentFactory";
 import { Logging } from "../../../game/Logging";
 import { checkVersion, VersionSpec } from "../../../Masking";
 import { Client, ClientState } from "../../Client";
+import { Constants } from "../../../Constants";
 
 export class ResponsePacket extends ClientboundPacket {
     /**

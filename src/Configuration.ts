@@ -7,6 +7,7 @@ import { VersionSpec, versionSpec } from "./Masking";
 import * as joi from "joi";
 import { Logging } from "./game/Logging";
 import { r } from "rethinkdb-ts";
+import { Constants } from "./Constants";
 
 export enum Environment {
     PRODUCTION,
@@ -287,16 +288,4 @@ export class State {
                 return Environment.DEVELOPMENT;
         }
     }
-}
-
-export class Constants {
-    public static ServerName = "Elytra";
-    public static ConfigNamespace = "minecraft";
-    public static ProtocolVersion = 578;
-    public static CompressionThreshold = 64;
-    public static KeyLength = 1024;
-    public static VerificationTokenLength = 8;
-    public static MaximumPacketLength = 2 * 1024 * 1024;
-    public static KeepAliveInterval = 5000;
-    public static SupportedVersions = [versionSpec("578")];
 }

@@ -1,5 +1,5 @@
 import { Socket, Server as TCPServer } from "net";
-import { Constants } from "../Configuration";
+import { Constants } from "../Constants";
 import { Client, ClientState } from "./Client";
 import { ServerKeepAlivePacket } from "./states/play/ServerKeepAlivePacket";
 import { PlayerInfoActions, PlayerInfoPacket } from "./states/play/PlayerInfoPacket";

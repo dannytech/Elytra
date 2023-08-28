@@ -2,8 +2,9 @@ import { promisify } from "util";
 import * as crypto from "crypto";
 import { ClientboundPacket } from "../../Packet";
 import { WritableBuffer } from "../../WritableBuffer";
-import { State, Constants } from "../../../Configuration";
+import { State } from "../../../Configuration";
 import { Logging } from "../../../game/Logging";
+import { Constants } from "../../../Constants";
 
 const randomBytesAsync = promisify(crypto.randomBytes);
 

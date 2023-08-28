@@ -1,7 +1,7 @@
 import { promisify } from "util";
 import * as crypto from "crypto";
 import { generateKeyPair, privateDecrypt, KeyObject } from "crypto";
-import { Constants } from "../Configuration";
+import { Constants } from "../Constants";
 
 const generateKeyPairAsync = promisify(generateKeyPair);
 

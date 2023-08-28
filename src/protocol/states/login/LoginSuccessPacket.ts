@@ -3,7 +3,7 @@ import { WritableBuffer } from "../../WritableBuffer";
 import { ClientState } from "../../Client";
 import { Logging } from "../../../game/Logging";
 import { JoinGamePacket } from "../play/JoinGamePacket";
-import { Constants } from "../../../Configuration";
+import { Constants } from "../../../Constants";
 import { ServerPluginMessagePacket } from "../play/ServerPluginMessagePacket";
 import { HeldItemChangePacket } from "../play/HeldItemChangePacket";
 import { DeclareRecipesPacket } from "../play/DeclareRecipesPacket";

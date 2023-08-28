@@ -1,4 +1,4 @@
-import { Constants } from "../../../Configuration";
+import { Constants } from "../../../Constants";
 import { ClientboundPacket } from "../../Packet";
 import { WritableBuffer } from "../../WritableBuffer";
 import { CompressionState } from "../../Client";

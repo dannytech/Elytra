@@ -2,7 +2,7 @@ import { Socket } from "net";
 import * as crypto from "crypto";
 import { Decipher, Cipher } from "crypto";
 import { EventEmitter } from "events";
-import { Constants, State } from "../Configuration";
+import { State } from "../Configuration";
 import { ClientboundPacket } from "./Packet";
 import { ReadableBuffer } from "./ReadableBuffer";
 import { WritableBuffer } from "./WritableBuffer";
@@ -14,6 +14,7 @@ import { PlayerInfoActions, PlayerInfoPacket } from "./states/play/PlayerInfoPac
 import { PacketDirection, PacketFactory } from "./PacketFactory";
 import { r } from "rethinkdb-ts";
 import { PlayerModel } from "../database/models/PlayerModel";
+import { Constants } from "../Constants";
 
 export enum ClientState {
     Handshaking = "handshaking",
