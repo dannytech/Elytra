@@ -69,7 +69,7 @@ export class EncryptionResponsePacket extends ServerboundPacket {
             delete this._Client.Protocol.encryption.verificationToken;
 
             // Log the session key at trace level
-            Logging.Trace(`(${this._Client.Protocol.clientId})`.magenta, "Encrypting packets with key", this._Client.Protocol.encryption.sharedSecret.toString("hex").green);
+            Logging.TracePacket(this, "Encrypting packets with key", this._Client.Protocol.encryption.sharedSecret.toString("hex").green);
 
             // Generate the server hash for authentication
             const serverHash: string = digest(Buffer.concat([

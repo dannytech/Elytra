@@ -137,9 +137,6 @@ export class Client extends EventEmitter {
                 }
             }
 
-            // If tracing is enabled, log the packet contents
-            Logging.Trace(`(${this.Protocol.clientId})`.magenta, "[C → S]".blue, "Packet:", packet.Buffer.toString("hex").green);
-
             // Process the packet
             PacketFactory.Parse(packet, this);
         }
@@ -187,7 +184,7 @@ export class Client extends EventEmitter {
             payload.Prepend().WriteVarInt(packetId);
 
             // If tracing is enabled, log the packet contents
-            Logging.Trace(`(${this.Protocol.clientId})`.magenta, "[S → C]".blue, "Packet:", payload.Buffer.toString("hex").green);
+            Logging.TracePacket(packet, "Packet:", payload.Buffer.toString("hex").green);
 
             // Compress the packet
             if (this.Protocol.compression === CompressionState.Enabled) {

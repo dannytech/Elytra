@@ -28,6 +28,14 @@ export class Logging {
         }
     }
 
+    private static _Direction(packet: ClientboundPacket|ServerboundPacket) {
+        // Determine the packet direction
+        const direction: string[] = ["S", "C"];
+        if ("Parse" in packet) direction.reverse();
+
+        return direction.join(" → ");
+    }
+
     /**
      * Log to the console
      * @param {...any} message The message to write to the console
@@ -60,18 +68,14 @@ export class Logging {
     }
 
     /**
-     * Print a message to the console in the context of a particular client and packet
+     * Print a debug message to the console in the context of a particular client and packet
      * @param {ClientboundPacket|ServerboundPacket} packet The packet which the message is related to
      * @param {...any} message The message to write to the console
      */
     public static DebugPacket(packet: ClientboundPacket | ServerboundPacket, ...message: any[]) {
-        // Determine the packet direction
-        const direction: string[] = ["S", "C"];
-        if ("Parse" in packet) direction.reverse();
-
         // Print details about the client and packet, in addition to the message
         const client: Client = packet.Client;
-        this.Debug(`(${client.Protocol.clientId})`.magenta, `[${direction[0]} → ${direction[1]}]`.blue, `[${packet.constructor.name}]`.cyan, ...message);
+        this.Debug(`(${client.Protocol.clientId})`.magenta, `[${this._Direction(packet)}]`.blue, `[${packet.constructor.name}]`.cyan, ...message);
     }
 
     /**
@@ -81,5 +85,16 @@ export class Logging {
     public static Trace(...message: any[]) {
         if (this._Level() >= LoggingLevel.TRACE)
             this.Log("[TRACE]".white.bgBlack, ...message);
+    }
+
+    /**
+     * Print a trace message to the console in the context of a particular client and packet
+     * @param {ClientboundPacket|ServerboundPacket} packet The packet which the message is related to
+     * @param {...any} message The message to write to the console
+     */
+    public static TracePacket(packet: ClientboundPacket|ServerboundPacket, ...message: any[]) {
+        // Print details about the client and packet, in addition to the message
+        const client: Client = packet.Client;
+        this.Trace(`(${client.Protocol.clientId})`.magenta, `[${this._Direction(packet)}]`.blue, `[${packet.constructor.name}]`.cyan, ...message);
     }
 }
