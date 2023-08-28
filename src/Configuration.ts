@@ -213,10 +213,15 @@ export class Settings {
         const config = this._schema[namespaceOrName][name].cache;
 
         // Return the loaded value or the default
-        if (config)
+        if (config != null) {
+            Logging.Trace("Cache hit for", `${namespaceOrName}:${name}`.green);
+
             return config;
-        else
+        } else {
+            Logging.Trace("Cache miss for", `${namespaceOrName}:${name}`.green);
+
             return this._schema[namespaceOrName][name].default;
+        }
     }
 
     /**
