@@ -25,7 +25,7 @@ export class DisconnectPacket extends ClientboundPacket {
         Logging.DebugPacket(this, "Disconnecting client for", reason.green);
 
         // Chat component containing reason for disconnect
-        buf.WriteJSON(this._Reason);
+        buf.WriteChat(this._Reason, "Reason");
     }
 
     /**

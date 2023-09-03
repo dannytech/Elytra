@@ -21,22 +21,20 @@ export class EncryptionRequestPacket extends ClientboundPacket {
      */
     public async Write(buf: WritableBuffer) {
         // Writes an empty server ID (post-1.7, no server ID is needed)
-        buf.WriteVarChar("");
+        buf.WriteVarChar("", "Server ID");
 
         // Export the public key
         const publicKey: Buffer = State.Keypair.PublicKey.export({ format: "der", type: "spki" });
 
         // Write the public key
         Logging.DebugPacket(this, "Requesting to enable encryption");
-        buf.WriteVarInt(publicKey.length);
-        buf.Write(publicKey);
+        buf.WriteBuffer(publicKey, "Public Key");
 
         // Generate a verification token
         const verificationToken: Buffer = await randomBytesAsync(Constants.VerificationTokenLength);
 
         // Write the verification token
-        buf.WriteVarInt(verificationToken.length);
-        buf.Write(verificationToken);
+        buf.WriteBuffer(verificationToken, "Verification Token");
 
         // Store the token in the client state
         this._Client.Protocol.encryption.verificationToken = verificationToken;

@@ -32,53 +32,53 @@ export class PlayerInfoPacket extends ClientboundPacket {
      */
     public async Write(buf: WritableBuffer) {
         // Player action
-        buf.WriteVarInt(this._Action);
+        buf.WriteVarInt(this._Action, "Action");
 
         // List of players
         Logging.DebugPacket(this, "Sending", PlayerInfoActions[this._Action].green, "player information for", this._Clients.length.toString().blue, "player(s)");
-        buf.WriteVarInt(this._Clients.length);
-        this._Clients.forEach((client: Client) => {
+        buf.WriteVarInt(this._Clients.length, "Number of Players");
+        this._Clients.forEach((client: Client, clientIndex: number) => {
             // Write each player UUID
-            buf.WriteUUID(client.Player.Metadata.uuid);
+            buf.WriteUUID(client.Player.Metadata.uuid, `Player ${clientIndex} UUID`);
 
             switch(this._Action) {
                 case PlayerInfoActions.AddPlayer:
-                    buf.WriteVarChar(client.Player.Metadata.username);
+                    buf.WriteVarChar(client.Player.Metadata.username, `Player ${clientIndex} Username`);
 
                     // Write player properties such as skin and cape
-                    buf.WriteVarInt(client.Player.Metadata.properties.length);
-                    client.Player.Metadata.properties.forEach((property: PlayerProperty) => {
-                        buf.WriteVarChar(property.name);
-                        buf.WriteVarChar(property.value);
+                    buf.WriteVarInt(client.Player.Metadata.properties.length, `Number of Player ${clientIndex} Properties`);
+                    client.Player.Metadata.properties.forEach((property: PlayerProperty, propertyIndex: number) => {
+                        buf.WriteVarChar(property.name, `Player ${clientIndex} Property ${propertyIndex} Name`);
+                        buf.WriteVarChar(property.value, `Player ${clientIndex} Property ${propertyIndex} Value`);
 
                         // Optional Mojang signature, for example for capes
-                        if (property.signature) {
-                            buf.WriteBool(true);
-                            buf.WriteVarChar(property.signature);
-                        } else buf.WriteBool(false);
+                        const signature = property.signature != null;
+                        buf.WriteBool(signature, `Player ${clientIndex} Property ${propertyIndex} Signature Flag`);
+                        if (signature)
+                            buf.WriteVarChar(property.signature, `Player ${clientIndex} Property ${propertyIndex} Signature`);
                     });
 
                     // Write the gamemode
-                    buf.WriteVarInt(client.Player.State.gamemode);
+                    buf.WriteVarInt(client.Player.State.gamemode, `Player ${clientIndex} Gamemode`);
 
                     // Write the current player latency
-                    buf.WriteVarInt(client.Protocol.latency);
+                    buf.WriteVarInt(client.Protocol.latency, `Player ${clientIndex} Latency`);
 
                     // Indicates whether the player has a custom nickname
-                    buf.WriteBool(false);
+                    buf.WriteBool(false, `Player ${clientIndex} Nickname Flag`);
                     // TODO Add nickname support (using chat components)
 
                     break;
                 case PlayerInfoActions.UpdateGamemode:
                     // Send a gamemode update for a player
-                    buf.WriteVarInt(client.Player.State.gamemode);
+                    buf.WriteVarInt(client.Player.State.gamemode, `Player ${clientIndex} Gamemode`);
                     break;
                 case PlayerInfoActions.UpdateLatency:
                     // Send a latency update for a player
-                    buf.WriteVarInt(client.Protocol.latency);
+                    buf.WriteVarInt(client.Protocol.latency, `Player ${clientIndex} Latency`);
                     break;
                 case PlayerInfoActions.UpdateDisplayName:
-                    buf.WriteBool(false);
+                    buf.WriteBool(false, `Player ${clientIndex} Nickname Flag`);
                     // TODO Add display name support (using chat components)
                     break;
             }

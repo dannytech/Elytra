@@ -12,6 +12,6 @@ export class DeclareRecipesPacket extends ClientboundPacket {
     public async Write(buf: WritableBuffer) {
         // TODO Add recipes
         Logging.DebugPacket(this, "Sending dummy recipes");
-        buf.WriteVarInt(0);
+        buf.WriteVarInt(0, "Number of Recipes (dummy)");
     }
 }

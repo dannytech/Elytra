@@ -25,10 +25,10 @@ export class LoginSuccessPacket extends ClientboundPacket {
         // Write the player UUID
         const uuid: string = this._Client.Player.Metadata.uuid.Format(true);
         Logging.DebugPacket(this, "Sending player UUID", uuid.green);
-        buf.WriteVarChar(uuid);
+        buf.WriteVarChar(uuid, "Player UUID");
 
         // Write the username
-        buf.WriteVarChar(this._Client.Player.Metadata.username);
+        buf.WriteVarChar(this._Client.Player.Metadata.username, "Player Username");
     }
 
     /**

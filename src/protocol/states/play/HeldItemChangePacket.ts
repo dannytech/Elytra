@@ -22,6 +22,6 @@ export class HeldItemChangePacket extends ClientboundPacket {
     public async Write(buf: WritableBuffer) {
         // Set the currently held slot
         Logging.DebugPacket(this, "Sending held item slot", this._Slot.toString().green);
-        buf.WriteByte(this._Slot);
+        buf.WriteByte(this._Slot, "Slot Number");
     }
 }

@@ -21,6 +21,6 @@ export class PongPacket extends ClientboundPacket {
     public async Write(buf: WritableBuffer) {
         // Echo back the contents of the ping
         Logging.DebugPacket(this, "Pong!".yellow);
-        buf.WriteInt64(this._Payload);
+        buf.WriteInt64(this._Payload, "Payload");
     }
 }

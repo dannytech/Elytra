@@ -38,17 +38,17 @@ export class PlayerPositionAndLookPacket extends ClientboundPacket {
      */
     public async Write(buf: WritableBuffer) {
         // Writes the player position and look
-        buf.WriteDouble(this._PositionAndLook.x);
-        buf.WriteDouble(this._PositionAndLook.y);
-        buf.WriteDouble(this._PositionAndLook.z);
-        buf.WriteSingle(this._PositionAndLook.yaw);
-        buf.WriteSingle(this._PositionAndLook.pitch);
+        buf.WriteDouble(this._PositionAndLook.x, "X");
+        buf.WriteDouble(this._PositionAndLook.y, "Y");
+        buf.WriteDouble(this._PositionAndLook.z, "Z");
+        buf.WriteSingle(this._PositionAndLook.yaw, "Yaw");
+        buf.WriteSingle(this._PositionAndLook.pitch, "Pitch");
 
         // Which values should be treated as relative
-        buf.WriteByte(this._Flags);
+        buf.WriteByte(this._Flags, "Relative Flags");
 
         // Teleport ID (dummy value)
-        Logging.DebugPacket(this, "Sending position/look and teleport request", ...Object.values(this._PositionAndLook));
-        buf.WriteVarInt(0);
+        Logging.DebugPacket(this, "Sending position/look and teleport request");
+        buf.WriteVarInt(0, "Teleport ID (dummy)");
     }
 }

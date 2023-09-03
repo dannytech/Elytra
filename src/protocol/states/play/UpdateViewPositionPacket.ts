@@ -15,8 +15,8 @@ export class UpdateViewPositionPacket extends ClientboundPacket {
         const position: EntityPosition = this._Client.Player.State.position;
 
         // Write the chunk coordinates
-        buf.WriteVarInt(Math.floor(position.x / 16));
-        buf.WriteVarInt(Math.floor(position.y / 16));
+        buf.WriteVarInt(Math.floor(position.x / 16), "Chunk X");
+        buf.WriteVarInt(Math.floor(position.y / 16), "Chunk Y");
 
         Logging.DebugPacket(this, "Sending chunk view position update");
     }

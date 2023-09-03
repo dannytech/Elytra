@@ -15,9 +15,9 @@ export class TagsPacket extends ClientboundPacket {
     public async Write(buf: WritableBuffer) {
         // TODO Add tags
         Logging.DebugPacket(this, "Sending dummy tags");
-        buf.WriteVarInt(0); // Block tags
-        buf.WriteVarInt(0); // Item tags
-        buf.WriteVarInt(0); // Fluid tags
-        buf.WriteVarInt(0); // Entity tags
+        buf.WriteVarInt(0, "Block Tags (dummy)");
+        buf.WriteVarInt(0, "Item Tags (dummy)");
+        buf.WriteVarInt(0, "Fluid Tags (dummy)");
+        buf.WriteVarInt(0, "Entity Tags (dummy)");
     }
 }

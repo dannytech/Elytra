@@ -25,9 +25,9 @@ export class ServerPluginMessagePacket extends ClientboundPacket {
     public async Write(buf: WritableBuffer) {
         // Write the plugin channel
         Logging.DebugPacket(this, "Sending plugin message on channel", this._Channel.green, this._Message.toString("hex").blue);
-        buf.WriteVarChar(this._Channel);
+        buf.WriteVarChar(this._Channel, "Channel");
 
         // Write the arbitrary data for the plugin
-        buf.Write(this._Message);
+        buf.Write(this._Message, "Message");
     }
 }

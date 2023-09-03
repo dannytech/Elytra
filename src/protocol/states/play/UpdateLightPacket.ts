@@ -64,30 +64,29 @@ export class UpdateLightPacket extends ClientboundPacket {
         }
 
         // X and Y coordinates of this vertical chunk
-        buf.WriteVarInt(Math.floor(this._Position.x / 16));
-        buf.WriteVarInt(Math.floor(this._Position.y / 16));
+        buf.WriteVarInt(Math.floor(this._Position.x / 16), "Chunk X");
+        buf.WriteVarInt(Math.floor(this._Position.y / 16), "Chunk Y");
 
         // 18-bit sky light mask (highest bit for > 256, lowest bit for < 0)
         const skyLightMask = 0b111111111111111111;
-        buf.WriteVarInt(skyLightMask);
+        buf.WriteVarInt(skyLightMask, "Sky Light Mask");
 
         // 18-bit block light mask (highest bit for > 256, lowest bit for < 0)
         const blockLightMask = nonEmptyMask;
-        buf.WriteVarInt(blockLightMask);
+        buf.WriteVarInt(blockLightMask, "Block Light Mask");
 
         // 18-bit empty sky light mask (for all chunks which are visible to the sky)
-        buf.WriteVarInt(~skyLightMask & (Math.pow(2, 18) - 1));
+        buf.WriteVarInt(~skyLightMask & (Math.pow(2, 18) - 1), "Empty Sky Light Mask");
 
         // 18-bit empty block light mask (for all chunks which have no light on the blocks
-        buf.WriteVarInt(~blockLightMask & (Math.pow(2, 18) - 1));
+        buf.WriteVarInt(~blockLightMask & (Math.pow(2, 18) - 1), "Empty Block Light Mask");
 
         for (let i = 0; i < 18; i++) {
             if ((skyLightMask >> i) & 0b1) {
                 // Sky light values for each vertical chunklet in the mask (from under the world to above the world)
                 const lighting: Buffer = this._Light(skyLightMask, i);
 
-                buf.WriteVarInt(lighting.length);
-                buf.Write(lighting);
+                buf.WriteBuffer(lighting, "Sky Light Data");
             }
         }
 
@@ -96,8 +95,8 @@ export class UpdateLightPacket extends ClientboundPacket {
                 // Sky light values for each vertical chunklet in the mask (from under the world to above the world)
                 const lighting: Buffer = this._Light(blockLightMask, i);
 
-                buf.WriteVarInt(lighting.length); // Fixed length of the array for that chunklet (4 bits per block, 4096 values total)
-                buf.Write(lighting);
+                // Fixed length of the array for that chunklet (4 bits per block, 4096 values total)
+                buf.WriteBuffer(lighting, "Block Light Data");
             }
         }
     }

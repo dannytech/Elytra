@@ -17,7 +17,7 @@ export class SetCompressionPacket extends ClientboundPacket {
         this._Client.Protocol.compression = CompressionState.Enabling;
 
         // Threshold to compress packets
-        buf.WriteVarInt(Constants.CompressionThreshold);
+        buf.WriteVarInt(Constants.CompressionThreshold, "Compression Threshold");
     }
 
     /**
@@ -25,6 +25,8 @@ export class SetCompressionPacket extends ClientboundPacket {
      * @async
      */
     public async AfterSend() {
+        Logging.TracePacket(this, "Finished enabling compression");
+
         this._Client.Protocol.compression = CompressionState.Enabled;
     }
 }

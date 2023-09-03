@@ -48,6 +48,6 @@ export class ResponsePacket extends ClientboundPacket {
                 })
             },
             description: ChatTextComponentFactory.FromFormattedString(motd)
-        });
+        }, "Server Information");
     }
 }

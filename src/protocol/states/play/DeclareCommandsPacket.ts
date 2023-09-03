@@ -75,22 +75,22 @@ export class DeclareCommandsPacket extends ClientboundPacket {
         });
 
         // Write the number of total nodes
-        buf.WriteVarInt(nodes.length);
+        buf.WriteVarInt(nodes.length, "Number of Nodes");
 
-        nodes.forEach((node: CommandNode) => {
+        nodes.forEach((node: CommandNode, nodeIndex: number) => {
             // Write the flags
-            buf.WriteByte(node.flags);
+            buf.WriteByte(node.flags, `Node ${nodeIndex} Flags`);
 
             // Write the children indices
-            buf.WriteVarInt(node.children.length);
-            node.children.forEach((child: number) => {
-                buf.WriteVarInt(child);
+            buf.WriteVarInt(node.children.length, `Number of Node ${nodeIndex} Children`);
+            node.children.forEach((child: number, childIndex: number) => {
+                buf.WriteVarInt(child, `Node ${nodeIndex} Child ${childIndex}`);
             });
 
             // TODO Add other node properties
         });
 
         // Index of the root node
-        buf.WriteVarInt(0);
+        buf.WriteVarInt(0, "Root Node Index");
     }
 }

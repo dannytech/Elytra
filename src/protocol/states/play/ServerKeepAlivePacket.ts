@@ -29,7 +29,7 @@ export class ServerKeepAlivePacket extends ClientboundPacket {
      */
     public async Write(buf: WritableBuffer) {
         // Write a unique ID which must be echoed back
-        buf.WriteInt64(this._KeepAliveId);
+        buf.WriteInt64(this._KeepAliveId, "Keepalive ID");
     }
 
     /**

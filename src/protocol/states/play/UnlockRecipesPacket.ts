@@ -34,31 +34,31 @@ export class UnlockRecipesPacket extends ClientboundPacket {
      */
     public async Write(buf: WritableBuffer) {
         // Whether to init, add, or remove recipes
-        buf.WriteVarInt(this._State);
+        buf.WriteVarInt(this._Action, "Action");
 
         // Whether the recipe book should be open in crafting tables, and whether filtering should be enabled
-        buf.WriteBool(true);
-        buf.WriteBool(true);
+        buf.WriteBool(true, "Crafting Flag");
+        buf.WriteBool(true, "Crafting Filtering Flag");
 
         // Whether the recipe book should be open in a furnace, and whether filtering should be enabled
-        buf.WriteBool(true);
-        buf.WriteBool(true);
+        buf.WriteBool(true, "Furnace Flag");
+        buf.WriteBool(true, "Furnace Filtering Flag");
 
         // Write the recipes to display/remove
         Logging.DebugPacket(this, "Sending", this._Displayed.length.toString().green, "recipes to display");
-        buf.WriteVarInt(this._Displayed.length);
-        this._Displayed.forEach((recipe: string) => {
-            buf.WriteVarChar(recipe);
+        buf.WriteVarInt(this._Displayed.length, "Number of Displayed Recipes (dummy)");
+        this._Displayed.forEach((recipe: string, recipeIndex: number) => {
+            buf.WriteVarChar(recipe, `Displayed Recipe ${recipeIndex} Identifier (dummy)`);
         });
 
         // Add declared recipes to the client's recipe book
-        if (this._State === UnlockRecipesAction.Init) {
+        if (this._Action === UnlockRecipesAction.Init) {
             const recipes: string[] = [];
-            buf.WriteVarInt(recipes.length);
+            buf.WriteVarInt(recipes.length, "Number of Declared Recipes (dummy)");
 
             // Write all recipe identifiers known by the server
-            recipes.forEach((recipe: string) => {
-                buf.WriteVarChar(recipe);
+            recipes.forEach((recipe: string, recipeIndex: number) => {
+                buf.WriteVarChar(recipe, `Declared Recipe ${recipeIndex} Identifier (dummy)`);
             });
         }
     }

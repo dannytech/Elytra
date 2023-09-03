@@ -21,34 +21,34 @@ export class JoinGamePacket extends ClientboundPacket {
     public async Write(buf: WritableBuffer) {
         // Player entity ID
         Logging.DebugPacket(this, "Requesting player entity", this._Client.Player.EntityID.toString().green, "to join");
-        buf.WriteInt32(this._Client.Player.EntityID);
+        buf.WriteInt32(this._Client.Player.EntityID, "Entity ID");
 
         // Gamemode
-        buf.WriteByte(this._Client.Player.State.gamemode);
+        buf.WriteByte(this._Client.Player.State.gamemode, "Gamemode");
 
         // Dimension
-        buf.WriteInt32(0); // TODO Determine the actual dimension ID and send it back
+        buf.WriteInt32(0, "Dimension"); // TODO Determine the actual dimension ID and send it back
 
         // Send a fake seed hash to prevent any possibility of reversing
         const seedHash = BigInt(0);
-        buf.WriteInt64(seedHash);
+        buf.WriteInt64(seedHash, "Seed Hash (dummy)");
 
         // Write the maximum number of players (this is ignored)
-        buf.WriteByte(0);
+        buf.WriteByte(0, "Maximum Players (ignored)");
 
         // Level type
-        buf.WriteVarChar(State.Worlds.get(this._Client.Player.State.position.world).Metadata.generator);
+        buf.WriteVarChar(State.Worlds.get(this._Client.Player.State.position.world).Metadata.generator, "Level Type");
 
         // View distance
         const renderDistance: number = Settings.Get(MinecraftConfigs.RenderDistance);
-        buf.WriteVarInt(renderDistance);
+        buf.WriteVarInt(renderDistance, "Render Distance");
 
         // Reduced debug info
         const reducedDebug: boolean = Settings.Get(MinecraftConfigs.ReducedDebug);
-        buf.WriteBool(reducedDebug);
+        buf.WriteBool(reducedDebug, "Reduced Debug Flag");
 
         // Enable respawn screen
         const respawnScreen: boolean = Settings.Get(MinecraftConfigs.RespawnScreen);
-        buf.WriteBool(respawnScreen);
+        buf.WriteBool(respawnScreen, "Respawn Screen Flag");
     }
 }
