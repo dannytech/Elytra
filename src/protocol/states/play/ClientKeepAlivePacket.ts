@@ -12,7 +12,7 @@ export class ClientKeepAlivePacket extends ServerboundPacket {
      * @async
      */
     public async Parse(buf: ReadableBuffer) {
-        const keepAliveId: bigint = buf.ReadInt64();
+        const keepAliveId: bigint = buf.ReadInt64("Keepalive ID");
 
         // If the keepalives don't match, disconnect
         if (keepAliveId !== this._Client.KeepAlive.id) {

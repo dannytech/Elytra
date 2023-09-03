@@ -12,7 +12,7 @@ export class PingPacket extends ServerboundPacket {
      */
     public async Parse(buf: ReadableBuffer) {
         // Generate a packet echoing back the ping payload
-        const payload: bigint = buf.ReadInt64();
+        const payload: bigint = buf.ReadInt64("Payload");
 
         Logging.DebugPacket(this, "Ping!".yellow);
         this._Client.Queue(new PongPacket(this._Client, payload));

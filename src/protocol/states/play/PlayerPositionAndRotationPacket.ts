@@ -16,13 +16,13 @@ export class PlayerPositionAndRotationPacket extends ServerboundPacket {
      */
     public async Parse(buf: ReadableBuffer) {
         // Read the full player position
-        this._Client.Player.State.position.x = buf.ReadDouble();
-        this._Client.Player.State.position.y = buf.ReadDouble();
-        this._Client.Player.State.position.z = buf.ReadDouble();
-        this._Client.Player.State.position.yaw = buf.ReadSingle();
-        this._Client.Player.State.position.pitch = buf.ReadSingle();
+        this._Client.Player.State.position.x = buf.ReadDouble("X");
+        this._Client.Player.State.position.y = buf.ReadDouble("Y");
+        this._Client.Player.State.position.z = buf.ReadDouble("Z");
+        this._Client.Player.State.position.yaw = buf.ReadSingle("Yaw");
+        this._Client.Player.State.position.pitch = buf.ReadSingle("Pitch");
         Logging.DebugPacket(this, "Player location and rotation updated");
 
-        buf.ReadBool(); // onground
+        buf.ReadBool("On Ground Flag (dummy)");
     }
 }

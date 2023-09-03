@@ -49,15 +49,13 @@ export class EncryptionResponsePacket extends ServerboundPacket {
      */
     public async Parse(buf: ReadableBuffer) {
         // Read the client-generated shared secret
-        const sharedSecretLength: number = buf.ReadVarInt();
-        const sharedSecret: Buffer = buf.Read(sharedSecretLength);
+        const sharedSecret: Buffer = buf.ReadBuffer("Shared Secret");
 
         // Decrypt the shared secret using the server's private key
         const decryptedSecret: Buffer = State.Keypair.Decrypt(sharedSecret);
 
         // Read the encrypted verification token
-        const verifyTokenLength: number = buf.ReadVarInt();
-        const verifyToken: Buffer = buf.Read(verifyTokenLength);
+        const verifyToken: Buffer = buf.ReadBuffer("Verification Token");
 
         // Verify the token can be decrypted successfully
         Logging.DebugPacket(this, "Verifying nonce");

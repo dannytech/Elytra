@@ -16,7 +16,7 @@ export class LoginStartPacket extends ServerboundPacket {
      * @async
      */
     public async Parse(buf: ReadableBuffer) {
-        const username: string = buf.ReadVarChar();
+        const username: string = buf.ReadVarChar("Username");
 
         // Create an unauthenticated player object (which will remain if offline mode is enabled)
         this._Client.Player = new Player(username);

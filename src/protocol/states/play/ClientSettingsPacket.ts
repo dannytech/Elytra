@@ -32,14 +32,14 @@ export class ClientSettingsPacket extends ServerboundPacket {
      */
     public async Parse(buf: ReadableBuffer) {
         // Set the locale for manual translation, if needed (e.g. en_GB)
-        const locale: string = buf.ReadVarChar();
+        const locale: string = buf.ReadVarChar("Locale");
         this.Client.Locale = locale;
 
-        const viewDistance: number = buf.ReadVarInt();
-        const chatMode: ChatMode = buf.ReadVarInt();
-        const chatColors: boolean = buf.ReadBool();
-        const displayedSkinParts: number = buf.ReadByte();
-        const mainHand: number = buf.ReadVarInt();
+        buf.ReadVarInt("View Distance (dummy)");
+        buf.ReadVarInt("Chat Mode (dummy)");
+        buf.ReadBool("Chat Colors Flag (dummy)");
+        buf.ReadByte("Displayed Skin Flags (dummy)");
+        buf.ReadVarInt("Main Hand (dummy)");
         Logging.DebugPacket(this, "Received client settings");
     }
 }

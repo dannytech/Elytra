@@ -231,7 +231,7 @@ export class PacketFactory {
      * @async
      */
     public static async Parse(buf: ReadableBuffer, client: Client) {
-        const packetId: number = buf.ReadVarInt();
+        const packetId: number = buf.ReadVarInt("Packet ID");
 
         // Load the mappings for the current state
         const statePackets = this._PacketSpec.find(spec => spec.direction == PacketDirection.Serverbound && spec.state == client.Protocol.state);

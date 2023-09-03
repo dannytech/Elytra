@@ -21,8 +21,8 @@ export class ClientPluginMessagePacket extends ServerboundPacket {
      */
     public async Parse(buf: ReadableBuffer) {
         // Read the plugin channel
-        const channel: string = buf.ReadVarChar();
-        const rawMessage: Buffer = buf.Read();
+        const channel: string = buf.ReadVarChar("Channel");
+        const rawMessage: Buffer = buf.Read("Message");
         Logging.DebugPacket(this, "Received plugin message on channel", channel.green, rawMessage.toString("hex").blue);
 
         // Redirect the rest of the buffer to the correct handler

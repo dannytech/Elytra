@@ -23,7 +23,7 @@ export class TeleportConfirmPacket extends ServerboundPacket {
      * @async
      */
     public async Parse(buf: ReadableBuffer) {
-        this._TeleportId = buf.ReadVarInt();
+        this._TeleportId = buf.ReadVarInt("Teleport ID");
         Logging.DebugPacket(this, "Teleport confirmed with ID", this._TeleportId.toString().green);
     }
 
