@@ -1,5 +1,6 @@
 import { Logging } from "../game/Logging";
 import { UUID } from "../game/UUID";
+import { ChatComponent } from "../game/chat/ChatComponent";
 import { WritableBuffer } from "./WritableBuffer";
 
 export class ReadableBuffer {
@@ -40,6 +41,16 @@ export class ReadableBuffer {
             Logging.Debug("ReadableBuffer attempted to read past the end of the buffer. This could cause issues parsing packets correctly.".red.bold);
 
         return this._Buffer.slice(this._Cursor, this._Cursor += bytes);
+    }
+
+    /**
+     * Reads a buffer length and then the bytes from the buffer
+     * @returns {Buffer} The buffer, as specified by the length header
+     */
+    public ReadBuffer(): Buffer {
+        const bytes: number = this.ReadVarInt();
+
+        return this.Read(bytes);
     }
 
     /**
@@ -165,6 +176,14 @@ export class ReadableBuffer {
      */
     public ReadJSON(): object {
         return JSON.parse(this.ReadVarChar());
+    }
+
+    /**
+     * Reads a Chat component from the buffer using ReadJSON
+     * @returns {ChatComponent} The parsed ChatComponent
+     */
+    public ReadChat(): ChatComponent {
+        return this.ReadJSON() as ChatComponent;
     }
 
     /**
