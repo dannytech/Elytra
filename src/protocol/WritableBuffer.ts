@@ -76,6 +76,17 @@ export class WritableBuffer {
                 this._Ranges.push([ value.length, annotation ]);
 
             this._Buffer = Buffer.concat([ this._Buffer, value ]);
+        }
+    }
+
+    /**
+     * Writes a length-prefixed buffer to the buffer
+     * @param {Buffer} value The buffer to write
+     * @param {string} [annotation] The name of the region to be written
+     */
+    public WriteBuffer(value: Buffer, annotation?: string) {
+        this.WriteVarInt(value.length, annotation ? annotation + " Length" : undefined);
+        this.Write(value, annotation);
     }
 
     /**
@@ -289,6 +300,15 @@ export class WritableBuffer {
      */
     public WriteJSON(value: object, annotation?: string) {
         this.WriteVarChar(JSON.stringify(value), annotation + " JSON");
+    }
+
+    /**
+     * Converts and writes a Chat message to the buffer using WriteJSON
+     * @param {ChatComponent} value The Chat message to convert and write
+     * @param {string} [annotation] The name of the region to be written
+     */
+    public WriteChat(value: ChatComponent, annotation?: string) {
+        this.WriteJSON(value, annotation + " Chat");
     }
 
     /**
