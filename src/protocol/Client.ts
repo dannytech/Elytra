@@ -135,7 +135,7 @@ export class Client extends EventEmitter {
                     const compressed: Buffer = packet.Read(compressedLength);
 
                     packet = await Zlib.Inflate(new ReadableBuffer(compressed));
-                }
+                } else packet = new ReadableBuffer(packet.Read()); // Discard the compressed length field
             }
 
             // Process the packet
@@ -186,9 +186,9 @@ export class Client extends EventEmitter {
 
             // If tracing is enabled, log the packet contents
             Logging.TracePacket(packet, "Packet:", ...payload.Ranges.map(range => {
-                const [buf, annotation] = range;
+                const [buffer, annotation] = range;
 
-                return `\n\t${annotation || "Fragment"}: ${buf.toString("hex").green}`;
+                return `\n\t${annotation || "Fragment"}: ${buffer.toString("hex").green}`;
             }));
 
             // Compress the packet

@@ -244,10 +244,14 @@ export class PacketFactory {
             // Assemble a new object reflectively
             const packet: ServerboundPacket = Reflect.construct(packetClass, [client]);
 
-            // If tracing is enabled, log the packet contents
-            Logging.TracePacket(packet, "Packet:", buf.Buffer.toString("hex").green);
-
             await packet.Parse(buf);
+
+            // If tracing is enabled, log the annotated packet contents
+            Logging.TracePacket(packet, "Packet:", buf.Buffer.toString("hex"), ...buf.Ranges.map(range => {
+                const [buffer, annotation] = range;
+
+                return `\n\t${annotation || "Fragment"}: ${buffer.toString("hex").green}`;
+            }));
 
             // Activate post-receive hooks
             if (packet.AfterReceive)

@@ -65,7 +65,7 @@ export class WritableBuffer {
         const trace = Logging.Level() === LoggingLevel.TRACE;
 
         if (this._Prepend) {
-            // Add range annotations
+            // Add range annotations to beginning
             if (trace)
                 this._Ranges.unshift([ value.length, annotation ]);
 
