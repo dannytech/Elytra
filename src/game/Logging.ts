@@ -5,7 +5,7 @@ import "colors";
 
 /*eslint @typescript-eslint/no-explicit-any: ["error", { "ignoreRestArgs": true }]*/
 
-enum LoggingLevel {
+export enum LoggingLevel {
     DEFAULT = 0,
     DEBUG = 1,
     TRACE = 2
@@ -16,7 +16,7 @@ export class Logging {
      * Converts the current logging settings to a logging level
      * @returns {LoggingLevel} The currently set logging level
      */
-    private static _Level(): LoggingLevel {
+    public static Level(): LoggingLevel {
         switch(process.env.LOGGING) {
             case "trace":
                 return LoggingLevel.TRACE;
@@ -63,7 +63,7 @@ export class Logging {
      * @param {...any} message The message to write to the console
      */
     public static Debug(...message: any[]) {
-        if (this._Level() >= LoggingLevel.DEBUG)
+        if (this.Level() >= LoggingLevel.DEBUG)
             this.Log("[DEBUG]".black.bgGreen, ...message);
     }
 
@@ -83,7 +83,7 @@ export class Logging {
      * @param {...any} message The detailed message to write to the console
      */
     public static Trace(...message: any[]) {
-        if (this._Level() >= LoggingLevel.TRACE)
+        if (this.Level() >= LoggingLevel.TRACE)
             this.Log("[TRACE]".white.bgBlack, ...message);
     }
 

@@ -1,9 +1,11 @@
+import { Logging, LoggingLevel } from "../game/Logging";
 import { UUID } from "../game/UUID";
 import { ReadableBuffer } from "./ReadableBuffer";
 
 export class WritableBuffer {
     private _Prepend: boolean;
     private _Buffer: Buffer;
+    private _Ranges: Array<[number, string]>;
 
     /**
      * Returns the current buffer
@@ -11,6 +13,22 @@ export class WritableBuffer {
      */
     public get Buffer(): Buffer {
         return this._Buffer;
+    }
+
+    /**
+     * Returns an array of annotated ranges for tracing
+     * @returns {Array<[Buffer, string]>}
+     */
+    public get Ranges(): Array<[Buffer, string]> {
+        const buf = new ReadableBuffer(this._Buffer);
+
+        // Convert the ranges into a list of annotated buffers
+        return this._Ranges.map((range: [number, string]) => {
+            const [size, annotation] = range;
+
+            // Safely read the described ranges
+            return [buf.Read(size), annotation];
+        });
     }
 
     /**
@@ -24,6 +42,7 @@ export class WritableBuffer {
     constructor(buf?: Buffer) {
         this._Prepend = false;
         this._Buffer = buf || Buffer.alloc(0);
+        this._Ranges = [];
     }
 
     /**
@@ -39,52 +58,67 @@ export class WritableBuffer {
     /**
      * Writes multiple bytes to the buffer
      * @param {Buffer} value The buffer to write
+     * @param {string} [annotation] The name of the region to be written
      */
-    public Write(value: Buffer) {
+    public Write(value: Buffer, annotation?: string) {
+        const trace = Logging.Level() === LoggingLevel.TRACE;
+
         if (this._Prepend) {
+            // Add range annotations
+            if (trace)
+                this._Ranges.unshift([ value.length, annotation ]);
+
             this._Buffer = Buffer.concat([ value, this._Buffer ]);
             this._Prepend = false;
-        } else
+        } else {
+            // Add range annotations
+            if (trace)
+                this._Ranges.push([ value.length, annotation ]);
+
             this._Buffer = Buffer.concat([ this._Buffer, value ]);
     }
 
     /**
      * Writes a single byte to the buffer
      * @param {number} value The byte to write, in numerical form
+     * @param {string} [annotation] The name of the region to be written
      */
-    public WriteByte(value: number) {
+    public WriteByte(value: number, annotation?: string) {
         // Ensure only a single byte is written
         const buf = Buffer.alloc(1);
         buf.writeUInt8(value);
 
-        this.Write(buf);
+        this.Write(buf, annotation);
     }
 
     /**
      * Writes a signed byte to the buffer
      * @param {number} value The byte to write, in numerical form
+     * @param {string} [annotation] The name of the region to be written
      */
-    public WriteSignedByte(value: number) {
+    public WriteSignedByte(value: number, annotation?: string) {
         // Ensure only a single byte is written
         const buf = Buffer.alloc(1);
         buf.writeInt8(value);
 
-        this.Write(buf);
+        this.Write(buf, annotation);
     }
 
     /**
      * Writes a single-byte bool to the buffer
      * @param {boolean} value The boolean to write
+     * @param {string} [annotation] The name of the region to be written
      */
-    public WriteBool(value: boolean) {
-        this.WriteByte(value ? 0x1 : 0x0);
+    public WriteBool(value: boolean, annotation?: string) {
+        this.WriteByte(value ? 0x1 : 0x0, annotation);
     }
 
     /**
      * Writes a variable-length Minecraft VarInt to the buffer. (little-endian)
      * @param {number} value The number to convert and write
+     * @param {string} [annotation] The name of the region to be written
      */
-    public WriteVarInt(value: number) {
+    public WriteVarInt(value: number, annotation?: string) {
         const temp: WritableBuffer = new WritableBuffer();
 
         do {
@@ -101,14 +135,15 @@ export class WritableBuffer {
             temp.WriteByte(digit);
         } while (value != 0);
 
-        this.Write(temp.Buffer);
+        this.Write(temp.Buffer, annotation);
     }
 
     /**
      * Writes a variable-length Minecraft VarLong to the buffer (little-endian)
      * @param {bigint} value The bigint to convert and write
+     * @param {string} [annotation] The name of the region to be written
      */
-    public WriteVarLong(value: bigint) {
+    public WriteVarLong(value: bigint, annotation?: string) {
         const temp: WritableBuffer = new WritableBuffer();
 
         // Calculate the two's complement for negative bigints (since the sign will not be shifted below)
@@ -129,137 +164,150 @@ export class WritableBuffer {
             temp.WriteByte(digit);
         } while (value != BigInt(0));
 
-        this.Write(temp._Buffer);
+        this.Write(temp._Buffer, annotation);
     }
 
     /**
      * Writes a single-byte character to the buffer
      * @param {string} value The character to write
+     * @param {string} [annotation] The name of the region to be written
      */
-    public WriteChar(value: string) {
-        this.WriteByte(value.charCodeAt(0));
+    public WriteChar(value: string, annotation?: string) {
+        this.WriteByte(value.charCodeAt(0), annotation);
     }
 
     /**
      * Writes a length-prefixed string to the buffer
      * @param {string} value The string to write
+     * @param {string} [annotation] The name of the region to be written
      */
-    public WriteVarChar(value: string) {
-        const temp: WritableBuffer = new WritableBuffer();
-        temp.WriteVarInt(value.length);
-        temp.Write(Buffer.from(value));
-
-        this.Write(temp._Buffer);
+    public WriteVarChar(value: string, annotation?: string) {
+        this.WriteVarInt(value.length, annotation ? annotation + " Length" : undefined);
+        this.Write(Buffer.from(value), annotation);
     }
 
     /**
      * Writes a two-byte positive integer to the buffer
      * @param {number} value The integer to write
+     * @param {string} [annotation] The name of the region to be written
      */
-    public WriteUint16(value: number) {
+    public WriteUint16(value: number, annotation?: string) {
         const buf: Buffer = Buffer.alloc(2);
         buf.writeUInt16BE(value);
 
-        this.Write(buf);
+        this.Write(buf, annotation);
     }
 
     /**
      * Writes a four-byte positive integer to the buffer
      * @param {number} value The integer to write
+     * @param {string} [annotation] The name of the region to be written
      */
-    public WriteUint32(value: number) {
+    public WriteUint32(value: number, annotation?: string) {
         const buf: Buffer = Buffer.alloc(4);
         buf.writeUInt32BE(value);
 
-        this.Write(buf);
+        this.Write(buf, annotation);
     }
 
     /**
      * Writes an eight-byte positive long integer to the buffer
      * @param {number} value The long integer to write
+     * @param {string} [annotation] The name of the region to be written
      */
-    public WriteUint64(value: bigint) {
+    public WriteUint64(value: bigint, annotation?: string) {
         const buf: Buffer = Buffer.alloc(8);
         buf.writeBigUInt64BE(value);
 
-        this.Write(buf);
+        this.Write(buf, annotation);
     }
 
     /**
      * Writes a two-byte positive or negative integer to the buffer
      * @param {number} value The integer to write
+     * @param {string} [annotation] The name of the region to be written
      */
-    public WriteInt16(value: number) {
+    public WriteInt16(value: number, annotation?: string) {
         const buf: Buffer = Buffer.alloc(2);
         buf.writeInt16BE(value);
 
-        this.Write(buf);
+        this.Write(buf, annotation);
     }
 
     /**
      * Writes a four-byte positive or negative integer to the buffer
      * @param {number} value The integer to write
+     * @param {string} [annotation] The name of the region to be written
      */
-    public WriteInt32(value: number) {
+    public WriteInt32(value: number, annotation?: string) {
         const buf: Buffer = Buffer.alloc(4);
         buf.writeInt32BE(value);
 
-        this.Write(buf);
+        this.Write(buf, annotation);
     }
 
     /**
      * Writes an eight-byte positive or negative long integer to the buffer
      * @param {number} value The long integer to write
+     * @param {string} [annotation] The name of the region to be written
      */
-    public WriteInt64(value: bigint) {
+    public WriteInt64(value: bigint, annotation?: string) {
         const buf: Buffer = Buffer.alloc(8);
         buf.writeBigInt64BE(value);
 
-        this.Write(buf);
+        this.Write(buf, annotation);
     }
 
     /**
      * Writes a four-byte float to the buffer
      * @param {number} value The float to write
+     * @param {string} [annotation] The name of the region to be written
      */
-    public WriteSingle(value: number) {
+    public WriteSingle(value: number, annotation?: string) {
         const buf: Buffer = Buffer.alloc(4);
         buf.writeFloatBE(value);
 
-        this.Write(buf);
+        this.Write(buf, annotation);
     }
 
     /**
      * Writes an eight-byte double to the buffer
      * @param {number} value The double to write
+     * @param {string} [annotation] The name of the region to be written
      */
-    public WriteDouble(value: number) {
+    public WriteDouble(value: number, annotation?: string) {
         const buf: Buffer = Buffer.alloc(8);
         buf.writeDoubleBE(value);
 
-        this.Write(buf);
+        this.Write(buf, annotation);
     }
 
     /**
      * Writes a stringified JSON object to the buffer as a VarChar
      * @param {object} value The JavaScript object to stringify and write
+     * @param {string} [annotation] The name of the region to be written
      */
-    public WriteJSON(value: object) {
-        this.WriteVarChar(JSON.stringify(value));
+    public WriteJSON(value: object, annotation?: string) {
+        this.WriteVarChar(JSON.stringify(value), annotation + " JSON");
     }
 
     /**
      * Writes a Minecraft UUID to the buffer
      * @param {UUID} value The UUID to write
+     * @param {string} [annotation] The name of the region to be written
      */
-    public WriteUUID(value: UUID) {
+    public WriteUUID(value: UUID, annotation?: string) {
+        const buf: WritableBuffer = new WritableBuffer();
+
         // Split the UUID into two bigints
         const uuid: string = value.Format();
         const msb = BigInt("0x" + uuid.substring(0, uuid.length / 2));
         const lsb = BigInt("0x" + uuid.substring(uuid.length / 2));
 
         // Write the 128-bit UUID
-        this.WriteUint64(msb);
-        this.WriteUint64(lsb);
+        buf.WriteUint64(msb);
+        buf.WriteUint64(lsb);
+
+        this.Write(buf.Buffer, annotation);
     }
 }

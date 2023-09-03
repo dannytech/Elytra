@@ -182,10 +182,14 @@ export class Client extends EventEmitter {
             }
 
             // Prepend the packet ID
-            payload.Prepend().WriteVarInt(packetId);
+            payload.Prepend().WriteVarInt(packetId, "Packet ID");
 
             // If tracing is enabled, log the packet contents
-            Logging.TracePacket(packet, "Packet:", payload.Buffer.toString("hex").green);
+            Logging.TracePacket(packet, "Packet:", ...payload.Ranges.map(range => {
+                const [buf, annotation] = range;
+
+                return `\n\t${annotation || "Fragment"}: ${buf.toString("hex").green}`;
+            }));
 
             // Compress the packet
             if (this.Protocol.compression === CompressionState.Enabled) {
