@@ -10,13 +10,13 @@ export enum UnlockRecipesAction {
 }
 
 export class UnlockRecipesPacket extends ClientboundPacket {
-    private _State: UnlockRecipesAction;
+    private _Action: UnlockRecipesAction;
     private _Displayed: string[] = [];
 
     constructor(client: Client, action: UnlockRecipesAction, displayed: string[] = []) {
         super(client);
 
-        this._State = action;
+        this._Action = action;
         this._Displayed = displayed;
     }
 

@@ -1,5 +1,6 @@
 import { Logging, LoggingLevel } from "../game/Logging";
 import { UUID } from "../game/UUID";
+import { ChatComponent } from "../game/chat/ChatComponent";
 import { ReadableBuffer } from "./ReadableBuffer";
 
 export class WritableBuffer {
