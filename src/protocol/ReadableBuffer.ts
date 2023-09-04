@@ -231,8 +231,8 @@ export class ReadableBuffer {
      * @param {string} [annotation] The name of the region to be read
      * @returns {object} The parsed object
      */
-    public ReadJSON(annotation?: string): object {
-        return JSON.parse(this.ReadVarChar(annotation + " JSON"));
+    public ReadJSON<T extends object>(annotation?: string): T {
+        return JSON.parse(this.ReadVarChar(annotation + " JSON")) as T;
     }
 
     /**
@@ -241,7 +241,7 @@ export class ReadableBuffer {
      * @returns {ChatComponent} The parsed ChatComponent
      */
     public ReadChat(annotation?: string): ChatComponent {
-        return this.ReadJSON(annotation + " Chat") as ChatComponent;
+        return this.ReadJSON(annotation + " Chat");
     }
 
     /**

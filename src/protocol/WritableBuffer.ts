@@ -300,7 +300,7 @@ export class WritableBuffer {
      * @param {object} value The JavaScript object to stringify and write
      * @param {string} [annotation] The name of the region to be written
      */
-    public WriteJSON(value: object, annotation?: string) {
+    public WriteJSON<T extends object>(value: T, annotation?: string) {
         this.WriteVarChar(JSON.stringify(value), annotation + " JSON");
     }
 
