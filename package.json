@@ -13,6 +13,7 @@
     "build:ci": "tsc --sourceMap false",
     "test": "ava",
     "test:ci": "c8 ava --tap | tap-xunit",
+    "coverage:ci": "c8 report --check-coverage",
     "lint": "eslint .",
     "lint:ci": "eslint --format junit $(circleci tests glob \"src/**/*.ts\" | circleci tests split)"
   },
