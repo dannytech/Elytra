@@ -2,6 +2,7 @@ version: 2.1
 
 orbs:
   node: circleci/node@5.1.0
+  codecov: codecov/codecov@3.2.5
 
 jobs:
   # run linting and automated tests
@@ -34,6 +35,8 @@ jobs:
           path: reports/
       - store_test_results:
           path: reports/
+      - codecov/upload:
+          file: coverage/
 
   # build a production bundle for deployment
   build:
