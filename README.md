@@ -1,5 +1,8 @@
 # Elytra
 
+[![CircleCI](https://dl.circleci.com/status-badge/img/gh/dannytech/Elytra/tree/dev.svg?style=shield)](https://dl.circleci.com/status-badge/redirect/gh/dannytech/Elytra/tree/dev)
+[![codecov](https://codecov.io/gh/dannytech/Elytra/graph/badge.svg?token=929S4Y4LAN)](https://codecov.io/gh/dannytech/Elytra)
+
 Elytra is a lightweight Minecraft server written in TypeScript. Although the project is quite young, it is intended to be quite flexible, including distributed servers, a robust plugin API, and concurrent support for multiple versions of Minecraft clients.
 
 **Supported client versions: 1.15.2 (protocol version 578)**.
