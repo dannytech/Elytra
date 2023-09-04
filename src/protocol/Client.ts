@@ -128,11 +128,11 @@ export class Client extends EventEmitter {
             // Decompress the packet
             if (this.Protocol.compression === CompressionState.Enabled) {
                 // Check that the packet met the compression threshold
-                const compressedLength: number = packet.ReadVarInt();
+                const compressedLength: number = packet.ReadVarInt("Compressed Length");
 
                 // If the threshold is met, then decompress the packet, otherwise assume the rest is uncompressed
                 if (compressedLength > 0) {
-                    const compressed: Buffer = packet.Read(compressedLength);
+                    const compressed: Buffer = packet.Read(compressedLength, "Compressed Data");
 
                     packet = await Zlib.Inflate(new ReadableBuffer(compressed));
                 } else packet = new ReadableBuffer(packet.Read()); // Discard the compressed length field
@@ -202,11 +202,19 @@ export class Client extends EventEmitter {
                 } else uncompressedLength = 0;
 
                 // Prepend the uncompressed length
-                payload.Prepend().WriteVarInt(uncompressedLength);
+                payload.Prepend().WriteVarInt(uncompressedLength, "Compressed Length");
+
+                // Log the packet in its compressed state
+                if (uncompressedLength > Constants.CompressionThreshold)
+                    Logging.TracePacket(packet, "Compressed Packet:", ...payload.Ranges.map(range => {
+                        const [buffer, annotation] = range;
+
+                        return `\n\t${annotation || "Fragment"}: ${buffer.toString("hex").green}`;
+                    }));
             }
 
             // Prepend the length
-            payload.Prepend().WriteVarInt(payload.Buffer.length);
+            payload.Prepend().WriteVarInt(payload.Buffer.length, "Packet Length");
 
             // Encrypt the packet
             if (this.Protocol.encryption.enabled) {
