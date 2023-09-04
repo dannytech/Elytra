@@ -71,7 +71,7 @@ export class PacketFactory {
                 const def: SourcePacketMapping = mappings[direction][state as ClientState];
 
                 Logging.Debug(`Loading ${direction.green} packets for ${state.blue} state`);
-                await this._LoadPacketSpec(direction as PacketDirection, state as ClientState, def);
+                await PacketFactory._LoadPacketSpec(direction as PacketDirection, state as ClientState, def);
             }
     }
 
