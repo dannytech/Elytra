@@ -1,5 +1,5 @@
 import { Duplex } from "stream";
-import anyTest, {TestFn} from "ava";
+import anyTest, { TestFn } from "ava";
 import { ProtocolStub } from "./ProtocolStub";
 import { WritableBuffer } from "./WritableBuffer";
 

@@ -1,4 +1,4 @@
-import anyTest, {TestFn} from "ava";
+import anyTest, { TestFn } from "ava";
 import { ReadableBuffer } from "./ReadableBuffer";
 import { UUID } from "../game/UUID";
 
