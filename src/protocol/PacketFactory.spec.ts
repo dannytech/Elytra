@@ -7,7 +7,8 @@ const test = anyTest as TestFn<Client>;
 
 test.before(t => {
     // Dummy login-state client
-    t.context = new Client(new Socket(), 0);
+    t.context = new Client(new Socket(), 1);
+    t.context.Protocol.version = 578;
     t.context.Protocol.state = ClientState.Status;
 });
 
