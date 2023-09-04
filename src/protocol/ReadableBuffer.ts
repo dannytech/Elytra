@@ -61,7 +61,9 @@ export class ReadableBuffer {
 
         const trace = Logging.Level() == LoggingLevel.TRACE;
 
-        bytesOrAnnotation = bytesOrAnnotation as number || this._Buffer.length - this._Cursor;
+        if (bytesOrAnnotation == null)
+            bytesOrAnnotation = this._Buffer.length - this._Cursor;
+        else bytesOrAnnotation = bytesOrAnnotation as number;
 
         // Alert if there was a buffer overrun, this really shouldn't happen
         if (bytesOrAnnotation + this._Cursor > this._Buffer.length)
