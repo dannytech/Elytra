@@ -11,7 +11,7 @@
     "dev": "tsc-watch --incremental --noClear --onSuccess 'node dist/index.js'",
     "build": "tsc",
     "build:ci": "tsc --sourceMap false",
-    "test": "ava",
+    "test": "c8 ava",
     "test:ci": "c8 --reporter lcov ava --tap | tap-xunit",
     "lint": "eslint .",
     "lint:ci": "eslint --format junit $(circleci tests glob \"src/**/*.ts\" | circleci tests split)"
