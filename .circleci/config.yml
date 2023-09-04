@@ -29,9 +29,6 @@ jobs:
       - run:
           name: Run tests
           command: npm run test:ci > reports/ava.xml
-      - run:
-          name: Report coverage
-          command: npm run coverage:ci
       - store_artifacts:
           path: coverage/
       - store_artifacts:
