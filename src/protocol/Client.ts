@@ -128,13 +128,15 @@ export class Client extends EventEmitter {
             // Decompress the packet
             if (this.Protocol.compression === CompressionState.Enabled) {
                 // Check that the packet met the compression threshold
-                const compressedLength: number = packet.ReadVarInt("Compressed Length");
+                const compressedLength: number = packet.ReadVarInt();
 
                 // If the threshold is met, then decompress the packet, otherwise assume the rest is uncompressed
                 if (compressedLength > 0) {
-                    const compressed: Buffer = packet.Read(compressedLength, "Compressed Data");
+                    const compressed: Buffer = packet.Read(compressedLength);
 
-                    packet = await Zlib.Inflate(new ReadableBuffer(compressed));
+                    // Decompress the data and create a new packet buffer
+                    const decompressed: Buffer = await Zlib.Inflate(compressed);
+                    packet = new ReadableBuffer(decompressed);
                 } else packet = new ReadableBuffer(packet.Read()); // Discard the compressed length field
             }
 
@@ -197,24 +199,18 @@ export class Client extends EventEmitter {
 
                 // Only compress over the threshold
                 if (uncompressedLength > Constants.CompressionThreshold) {
-                    const compressed: ReadableBuffer = await Zlib.Deflate(payload.ReadableBuffer);
-                    payload = compressed.WritableBuffer;
+                    const compressed: Buffer = await Zlib.Deflate(payload.Buffer);
+
+                    // Write the compressed data to a new buffer
+                    payload = new WritableBuffer(compressed);
                 } else uncompressedLength = 0;
 
                 // Prepend the uncompressed length
-                payload.Prepend().WriteVarInt(uncompressedLength, "Compressed Length");
-
-                // Log the packet in its compressed state
-                if (uncompressedLength > Constants.CompressionThreshold)
-                    Logging.TracePacket(packet, "Compressed Packet:", ...payload.Ranges.map(range => {
-                        const [buffer, annotation] = range;
-
-                        return `\n\t${annotation || "Fragment"}: ${buffer.toString("hex").green}`;
-                    }));
+                payload.Prepend().WriteVarInt(uncompressedLength);
             }
 
             // Prepend the length
-            payload.Prepend().WriteVarInt(payload.Buffer.length, "Packet Length");
+            payload.Prepend().WriteVarInt(payload.Buffer.length);
 
             // Encrypt the packet
             if (this.Protocol.encryption.enabled) {
