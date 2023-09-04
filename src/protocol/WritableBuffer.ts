@@ -37,13 +37,14 @@ export class WritableBuffer {
      * @returns {ReadableBuffer} A readable version of the underlying buffer
      */
     public get ReadableBuffer(): ReadableBuffer {
-        return new ReadableBuffer(this._Buffer);
+        // Preserve range definitions
+        return new ReadableBuffer(this._Buffer, this._Ranges);
     }
 
-    constructor(buf?: Buffer) {
+    constructor(buf?: Buffer, ranges?: Array<[number, string]>) {
         this._Prepend = false;
         this._Buffer = buf || Buffer.alloc(0);
-        this._Ranges = [];
+        this._Ranges = ranges || [];
     }
 
     /**
