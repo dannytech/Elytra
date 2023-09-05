@@ -1,5 +1,5 @@
 import { r } from "rethinkdb-ts";
-import { ModelMapper } from "../../Database";
+import { ModelMapper } from "../Database";
 import { Player } from "../../game/Player";
 import { UUID } from "../../game/UUID";
 import { PlayerModel } from "../models/PlayerModel";

@@ -2,7 +2,7 @@ import { Server as TCPServer } from "net";
 import * as crypto from "crypto";
 
 import { Settings, State, MinecraftConfigs } from "./src/Configuration";
-import { Database } from "./src/Database";
+import { Database } from "./src/database/Database";
 import { Server } from "./src/protocol/Server";
 import { Keypair } from "./src/protocol/Encryption";
 import { World } from "./src/game/World";

@@ -1,5 +1,5 @@
 import { r } from "rethinkdb-ts";
-import { ModelMapper } from "../../Database";
+import { ModelMapper } from "../Database";
 import { Chunklet, ChunkletPosition } from "../../game/Chunklet";
 import { ChunkletModel } from "../models/ChunkletModel";
 

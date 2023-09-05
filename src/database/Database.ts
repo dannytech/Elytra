@@ -1,7 +1,7 @@
 import { readdir } from "fs/promises";
 import { URL } from "url";
 import { r } from "rethinkdb-ts";
-import { Logging } from "./game/Logging";
+import { Logging } from "../game/Logging";
 import * as path from "path";
 
 /**
@@ -63,13 +63,13 @@ export class Database {
      */
     private static async _Bind() {
         // Dynamically load model binders
-        const binders: string[] = await readdir(path.join(__dirname, "./database/models"));
+        const binders: string[] = await readdir(path.join(__dirname, "./models"));
         for (const binder of binders) {
             if (!binder.endsWith(".js"))
                 continue;
 
             // Load the class file
-            const model = await import(`./database/models/${binder}`);
+            const model = await import(`./models/${binder}`);
 
             // Call the model binder function
             if ("ModelBinder" in model) {
