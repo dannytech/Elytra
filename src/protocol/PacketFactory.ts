@@ -186,34 +186,35 @@ export class PacketFactory {
      * @param {string|number} packetNameOrId The name of the packet to convert
      * @returns {string|number} The packet ID
      */
-    public static Lookup(direction: PacketDirection, client: Client, packetNameOrId: string | number): string | number {
+    public static Lookup<T extends string | number, R = T extends string ? number : string>(direction: PacketDirection, client: Client, packetNameOrId: T): R {
         // Load the mappings for the current state
         const statePackets = this._PacketSpec.find(spec => spec.direction == direction && spec.state == client.Protocol.state);
 
         if (statePackets) {
             // Get the packet ID or index to search for
             let search: number;
-            if (direction == PacketDirection.Serverbound)
-                search = packetNameOrId as number;
+            if (typeof packetNameOrId === "number")
+                search = packetNameOrId;
             else
                 search = statePackets.names.indexOf(packetNameOrId as string);
 
             // Get the result of the search
-            const result = statePackets.mappings[search];
+            const packet = statePackets.mappings[search];
 
             // Find a matching version specification
-            if (result) {
-                for (const mapping of result) {
+            if (packet) {
+                for (const mapping of packet) {
                     if (checkVersion(client.Protocol.version || 0, [mapping.version])) {
-                        if (direction == PacketDirection.Serverbound)
-                            return statePackets.names[mapping.id];
+                        if (typeof packetNameOrId === "number")
+                            return statePackets.names[mapping.id] as unknown as R;
                         else
-                            return mapping.id;
+                            return mapping.id as unknown as R;
                     }
                 }
             }
         }
 
+        // Log error when the packet fails to resolve
         let diagnosticName: string;
         if (direction == PacketDirection.Serverbound) {
             const packetId = packetNameOrId as number;
@@ -237,7 +238,7 @@ export class PacketFactory {
         const statePackets = this._PacketSpec.find(spec => spec.direction == PacketDirection.Serverbound && spec.state == client.Protocol.state);
 
         // Determine the incoming packet identity based on current state and the packet ID
-        const packetName: string = this.Lookup(PacketDirection.Serverbound, client, packetId) as string;
+        const packetName: string = this.Lookup(PacketDirection.Serverbound, client, packetId);
         const packetClass: IServerboundConstructor = statePackets.classes.get(packetName);
 
         if (packetClass) {

@@ -18,12 +18,29 @@ test.serial("Load packet mappings", async t => {
 
 test.serial("Serverbound lookup", t => {
     // Convert packet ID to class name
-    const packetName: string = PacketFactory.Lookup(PacketDirection.Serverbound, t.context, 0x00) as string;
-    t.is("RequestPacket", packetName);
+    const packetName: string = PacketFactory.Lookup(PacketDirection.Serverbound, t.context, 0x00);
+    t.is(packetName, "RequestPacket");
 });
 
-test.serial("Clientbound Lookup", t => {
+test.serial("Serverbound reverse lookup", t => {
+    // Convert packet ID to class name
+    const packetName: number = PacketFactory.Lookup(PacketDirection.Serverbound, t.context, "RequestPacket");
+    t.is(packetName, 0x00);
+});
+
+test.serial("Clientbound lookup", t => {
     // Convert class name to packet ID
-    const packetId: number = PacketFactory.Lookup(PacketDirection.Clientbound, t.context, "ResponsePacket") as number;
-    t.is(0x00, packetId);
+    const packetId: number = PacketFactory.Lookup(PacketDirection.Clientbound, t.context, "ResponsePacket");
+    t.is(packetId, 0x00);
+});
+
+test.serial("Clientbound reverse lookup", t => {
+    // Convert class name to packet ID
+    const packetName: string = PacketFactory.Lookup(PacketDirection.Clientbound, t.context, 0x00);
+    t.is(packetName, "ResponsePacket");
+});
+
+test.serial("Failed lookup", t => {
+    const packetName: string | undefined = PacketFactory.Lookup(PacketDirection.Clientbound, t.context, 0xFF);
+    t.is(packetName, undefined);
 });
