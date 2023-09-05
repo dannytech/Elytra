@@ -40,7 +40,12 @@ test.serial("Clientbound reverse lookup", t => {
     t.is(packetName, "ResponsePacket");
 });
 
-test.serial("Failed lookup", t => {
-    const packetName: string | undefined = PacketFactory.Lookup(PacketDirection.Clientbound, t.context, 0xFF);
+test.serial("Failed serverbound lookup", t => {
+    const packetName: string | undefined = PacketFactory.Lookup(PacketDirection.Serverbound, t.context, 0xFF);
+    t.is(packetName, undefined);
+});
+
+test.serial("Failed clientbound lookup", t => {
+    const packetName: number | undefined = PacketFactory.Lookup(PacketDirection.Serverbound, t.context, "BadPacket");
     t.is(packetName, undefined);
 });

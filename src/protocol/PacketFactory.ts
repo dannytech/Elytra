@@ -216,8 +216,8 @@ export class PacketFactory {
 
         // Log error when the packet fails to resolve
         let diagnosticName: string;
-        if (direction == PacketDirection.Serverbound) {
-            const packetId = packetNameOrId as number;
+        if (typeof packetNameOrId === "number") {
+            const packetId: number = packetNameOrId as number;
             diagnosticName = `0x${packetId.toString(16).padStart(2, "0")}`;
         } else
             diagnosticName = packetNameOrId as string;
