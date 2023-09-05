@@ -1,5 +1,6 @@
 import axios, { AxiosResponse } from "axios";
-import { State, Settings, MinecraftConfigs } from "../../../Configuration";
+import { Settings, MinecraftConfigs } from "../../../Configuration";
+import { State } from "../../../State";
 import { ServerboundPacket } from "../../Packet";
 import { ReadableBuffer } from "../../ReadableBuffer";
 import { SetCompressionPacket } from "./SetCompressionPacket";

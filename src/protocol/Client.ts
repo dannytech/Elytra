@@ -2,7 +2,7 @@ import { Socket } from "net";
 import * as crypto from "crypto";
 import { Decipher, Cipher } from "crypto";
 import { EventEmitter } from "events";
-import { State } from "../Configuration";
+import { State } from "../State";
 import { ClientboundPacket } from "./Packet";
 import { ReadableBuffer } from "./ReadableBuffer";
 import { WritableBuffer } from "./WritableBuffer";

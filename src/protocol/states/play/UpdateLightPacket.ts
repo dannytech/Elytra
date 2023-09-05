@@ -1,4 +1,4 @@
-import { State } from "../../../Configuration";
+import { State } from "../../../State";
 import { Chunklet, ChunkPosition } from "../../../game/Chunklet";
 import { Client } from "../../Client";
 import { ClientboundPacket } from "../../Packet";

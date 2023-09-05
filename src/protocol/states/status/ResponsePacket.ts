@@ -1,4 +1,5 @@
-import { Settings, State, MinecraftConfigs } from "../../../Configuration";
+import { Settings, MinecraftConfigs } from "../../../Configuration";
+import { State } from "../../../State";
 import { ClientboundPacket } from "../../Packet";
 import { WritableBuffer } from "../../WritableBuffer";
 import { ChatTextComponentFactory } from "../../../game/chat/ChatTextComponentFactory";

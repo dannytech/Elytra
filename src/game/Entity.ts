@@ -1,4 +1,4 @@
-import { State } from "../Configuration";
+import { State } from "../State";
 
 export type EntityPosition = {
     x: number;

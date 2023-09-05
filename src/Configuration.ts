@@ -1,19 +1,10 @@
 import * as dotenv from "dotenv-extended";
 import { ConfigModel } from "./database/models/ConfigModel";
-import { Keypair } from "./protocol/Encryption";
-import { Server } from "./protocol/Server";
-import { World } from "./game/World";
 import { VersionSpec, versionSpec } from "./Masking";
 import * as joi from "joi";
 import { Logging } from "./game/Logging";
 import { r } from "rethinkdb-ts";
 import { Constants } from "./Constants";
-
-export enum Environment {
-    PRODUCTION,
-    DEVELOPMENT,
-    TEST
-}
 
 export enum MinecraftConfigs {
     ServerIP = "serverIp",
@@ -265,27 +256,5 @@ export class Settings {
                 conflict: "update"
             })
             .run();
-    }
-}
-
-export class State {
-    public static Keypair: Keypair;
-    public static Server: Server;
-    public static Worlds: Map<string, World>;
-
-    /**
-     * Get the current Node environment
-     * @returns {Environment} The current Node environment
-     * @static
-     */
-    public static get Environment(): Environment {
-        switch (process.env.NODE_ENV) {
-            case "test":
-                return Environment.TEST;
-            case "production":
-                return Environment.PRODUCTION;
-            default:
-                return Environment.DEVELOPMENT;
-        }
     }
 }

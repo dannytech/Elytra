@@ -1,4 +1,4 @@
-import { State } from "../../../Configuration";
+import { State } from "../../../State";
 import { Logging } from "../../../game/Logging";
 import { Client, ClientState } from "../../Client";
 import { ServerboundPacket } from "../../Packet";

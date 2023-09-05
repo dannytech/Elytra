@@ -1,7 +1,8 @@
 import { Server as TCPServer } from "net";
 import * as crypto from "crypto";
 
-import { Settings, State, MinecraftConfigs } from "./src/Configuration";
+import { Settings, MinecraftConfigs } from "./src/Configuration";
+import { State } from "./src/State";
 import { Database } from "./src/database/Database";
 import { Server } from "./src/protocol/Server";
 import { Keypair } from "./src/protocol/Encryption";

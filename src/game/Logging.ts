@@ -1,4 +1,4 @@
-import { State, Environment } from "../Configuration";
+import { State, Environment } from "../State";
 import { Client } from "../protocol/Client";
 import { ClientboundPacket, ServerboundPacket } from "../protocol/Packet";
 import "colors";

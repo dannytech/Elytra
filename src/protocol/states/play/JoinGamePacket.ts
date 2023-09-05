@@ -1,6 +1,7 @@
 import { ClientboundPacket } from "../../Packet";
 import { WritableBuffer } from "../../WritableBuffer";
-import { State, Settings, MinecraftConfigs } from "../../../Configuration";
+import { Settings, MinecraftConfigs } from "../../../Configuration";
+import { State } from "../../../State";
 import { Logging } from "../../../game/Logging";
 
 export class JoinGamePacket extends ClientboundPacket {

@@ -1,4 +1,4 @@
-import { State } from "../Configuration";
+import { State } from "../State";
 import { PlayerModelMapper } from "../database/mappers/PlayerModelMapper";
 import { ChunkPosition } from "./Chunklet";
 import { Entity, EntityPositionAndLook } from "./Entity";
