@@ -27,12 +27,17 @@ export abstract class ModelMapper<T extends MappableModel, K> {
 }
 
 export class Database {
+    public static Connected = false;
+
     /**
      * Connect the RethinkDB client to a cluster
      * @static
      * @async
      */
     public static async Connect() {
+        if (Database.Connected)
+            return;
+
         const rethinkUri = new URL(process.env.RDB_URI);
 
         // The URI scheme should be rethinkdb://
@@ -78,5 +83,8 @@ export class Database {
                 await model.ModelBinder();
             }
         }
+
+        // Only mark as connected once models have bound
+        Database.Connected = true;
     }
 }
