@@ -177,7 +177,7 @@ export class Client extends EventEmitter {
             await packet.Write(payload);
 
             // Resolve the packet ID
-            const packetId: number = PacketFactory.Lookup(PacketDirection.Clientbound, this, packet.constructor.name) as number;
+            const packetId: number = PacketFactory.Lookup(PacketDirection.Clientbound, this, packet.constructor.name);
             if (packetId == null) {
                 Logging.DebugPacket(packet, "Not sending due to missing packet ID");
                 continue;
