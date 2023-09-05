@@ -3,8 +3,9 @@ import { ConfigModel } from "./database/models/ConfigModel";
 import { VersionSpec, versionSpec } from "./Masking";
 import * as joi from "joi";
 import { Logging } from "./game/Logging";
-import { r } from "rethinkdb-ts";
+import { RDatum, RValue, WriteResult, r } from "rethinkdb-ts";
 import { Constants } from "./Constants";
+import { Environment, State } from "./State";
 
 export enum MinecraftConfigs {
     ServerIP = "serverIp",
@@ -21,6 +22,7 @@ export enum MinecraftConfigs {
     EULA = "eula",
     Filter = "filter"
 }
+export const DummyMinecraftConfig = "dummy";
 
 export enum ElytraConfigs {
     ApiIP = "apiIp",
@@ -40,6 +42,10 @@ type SettingsSchema = {
 export class Settings {
     private static _schema: SettingsSchema = {
         "minecraft": {
+            "dummy": State.Environment == Environment.TEST ? {
+                default: null,
+                schema: joi.binary()
+            } : undefined,
             "serverIp": {
                 default: "0.0.0.0",
                 schema: joi.string().ip()
@@ -157,18 +163,18 @@ export class Settings {
             const val: ConfigModel = removed ? config.old_val : config.new_val;
 
             // Check if the normalized config path exists
-            const valid = val.namespace in this._schema && val.name in this._schema[val.namespace];
+            const valid = val.namespace in Settings._schema && val.name in Settings._schema[val.namespace];
 
             // Update or delete the cache to the received value
             if (valid) {
                 if (removed) {
                     Logging.Trace("Unsetting config value", `${val.namespace}:${val.name}`.green, "from database");
 
-                    delete this._schema[val.namespace][val.name].cache;
+                    delete Settings._schema[val.namespace][val.name].cache;
                 } else {
                     Logging.Trace("Received config value", `${val.namespace}:${val.name}`.green, "from database");
 
-                    this._schema[val.namespace][val.name].cache = val.value;
+                    Settings._schema[val.namespace][val.name].cache = val.value;
                 }
             } else
                 Logging.Error("Rejected config sync due to invalid namespace or name", `${val.namespace}:${val.name}`.green);
@@ -196,13 +202,13 @@ export class Settings {
         }
 
         // Require the configuration to exist in the schema
-        if (!(namespaceOrName in this._schema) || !(name in this._schema[namespaceOrName])) {
+        if (!(namespaceOrName in Settings._schema) || !(name in Settings._schema[namespaceOrName])) {
             Logging.Error("Invalid config", `${namespaceOrName}:${name}`.green);
             return null;
         }
 
         // Attempt to load the value from the cache
-        const config = this._schema[namespaceOrName][name].cache;
+        const config = Settings._schema[namespaceOrName][name].cache;
 
         // Return the loaded value or the default
         if (config != null) {
@@ -212,7 +218,7 @@ export class Settings {
         } else {
             Logging.Trace("Cache miss for", `${namespaceOrName}:${name}`.green);
 
-            return this._schema[namespaceOrName][name].default;
+            return Settings._schema[namespaceOrName][name].default;
         }
     }
 
@@ -238,23 +244,38 @@ export class Settings {
         }
 
         // Require the configuration to exist in the schema
-        if (!(namespaceOrName in this._schema) || !(nameOrValue in this._schema[namespaceOrName]))
+        if (!(namespaceOrName in Settings._schema) || !(nameOrValue in Settings._schema[namespaceOrName]))
             return Logging.Error("Invalid config", `${namespaceOrName}:${nameOrValue}`.green);
 
         // Test the config against the validation schema
-        const test = this._schema[namespaceOrName][nameOrValue].schema.validate(value, { presence: "required" });
+        const test = Settings._schema[namespaceOrName][nameOrValue].schema.validate(value, { presence: "required" });
         if (test.error)
             return Logging.Error("Invalid config value", test.error.message.red);
 
+        // Set the config locally (this will also be written by the changestream)
+        Settings._schema[namespaceOrName][nameOrValue].cache = value;
+
         // Asynchronously update or insert the configuration value
         r.table<ConfigModel>("config")
-            .insert({
-                namespace: namespaceOrName,
-                name: nameOrValue,
-                value
-            }, {
-                conflict: "update"
+            .getAll([ namespaceOrName, nameOrValue ], {
+                index: "namespaced_config"
             })
+            .limit(1)
+            .replace((doc: RDatum<ConfigModel>) => doc.merge({
+                value
+            }), {
+                returnChanges: true
+            })
+            .do((res: RDatum<WriteResult<ConfigModel>>) => res("replaced").eq(1).branch(
+                res,
+                r.table<ConfigModel>("config").insert({
+                    namespace: namespaceOrName,
+                    name: nameOrValue,
+                    value
+                }, {
+                    returnChanges: true
+                })
+            ))
             .run();
     }
 }
