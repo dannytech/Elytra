@@ -1,7 +1,10 @@
+import { r, RDatum, WriteResult } from "rethinkdb-ts";
 import { State } from "../State";
 import { PlayerModelMapper } from "../database/mappers/PlayerModelMapper";
+import { PlayerModel } from "../database/models/PlayerModel";
 import { ChunkPosition } from "./Chunklet";
 import { Entity, EntityPositionAndLook } from "./Entity";
+import { Logging } from "./Logging";
 import { UUID } from "./UUID";
 
 export enum Gamemode {
@@ -68,5 +71,28 @@ export class Player extends Entity {
             uuid: uuid,
             properties: []
         };
+    }
+
+    /**
+     * Save the player to the database
+     */
+    public Save() {
+        // Export the player to a database document
+        const playerDoc: PlayerModel = Player.Mapper.save(this);
+        Logging.Trace("Saving player");
+
+        // Upsert the player document
+        r.table<PlayerModel>("player")
+            .get(this.Metadata.uuid.Format())
+            .replace(playerDoc, {
+                returnChanges: true
+            })
+            .do((res: RDatum<WriteResult<PlayerModel>>) => res("replaced").eq(1).branch(
+                res,
+                r.table<PlayerModel>("player").insert(playerDoc, {
+                    returnChanges: true
+                })
+            ))
+            .run();
     }
 }

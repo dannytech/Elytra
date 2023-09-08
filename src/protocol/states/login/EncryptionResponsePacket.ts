@@ -101,8 +101,15 @@ export class EncryptionResponsePacket extends ServerboundPacket {
 
                 // Deserialize or create the player object
                 if (player)
-                    this._Client.Player = Player.Mapper.load(player);
-                else this._Client.Player = new Player(this._Client.Player.Metadata.username, new UUID(res.data.id));
+                    this._Client.Player = Player.Mapper.load(player, true);
+                else {
+                    // Update the player UUID and immediately save the player to the database
+                    this._Client.Player.Metadata.uuid = new UUID(res.data.id);
+
+                    // Set up proxy to save values on change
+                    this._Client.Player.Save();
+                    this._Client.Player = Player.Mapper.proxy(this._Client.Player);
+                }
 
                 // Configure metadata received from Mojang servers
                 this._Client.Player.Metadata.properties = res.data.properties;

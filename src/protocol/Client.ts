@@ -12,8 +12,6 @@ import { Player } from "../game/Player";
 import { Logging } from "../game/Logging";
 import { PlayerInfoActions, PlayerInfoPacket } from "./states/play/PlayerInfoPacket";
 import { PacketDirection, PacketFactory } from "./PacketFactory";
-import { r } from "rethinkdb-ts";
-import { PlayerModel } from "../database/models/PlayerModel";
 import { Constants } from "../Constants";
 import { MinecraftConfigs, Settings } from "../Configuration";
 
@@ -252,11 +250,8 @@ export class Client extends EventEmitter {
             });
 
             // Save the player if they fully loaded
-            if (this.Protocol.state === ClientState.Play) {
-                r.table<PlayerModel>("player")
-                    .insert(Player.Mapper.save(this.Player), { conflict: "update" })
-                    .run();
-            }
+            if (this.Protocol.state === ClientState.Play)
+                this.Player.Save();
         }
 
         this.emit("disconnected");

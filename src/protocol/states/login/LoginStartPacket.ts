@@ -39,6 +39,10 @@ export class LoginStartPacket extends ServerboundPacket {
             const hash: Buffer = crypto.createHash("sha256").update(this._Client.Player.Metadata.username).digest();
             this._Client.Player.Metadata.uuid = new UUID(hash.slice(0, 16));
 
+            // Set up proxy to save values on change
+            this._Client.Player.Save();
+            this._Client.Player = Player.Mapper.proxy(this._Client.Player);
+
             Logging.DebugPacket(this, "Offline player", this._Client.Player.Metadata.username, "logging in with UUID", this._Client.Player.Metadata.uuid);
             this._Client.Queue(new LoginSuccessPacket(this._Client));
         }
