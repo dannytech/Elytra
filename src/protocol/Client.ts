@@ -15,6 +15,7 @@ import { PacketDirection, PacketFactory } from "./PacketFactory";
 import { r } from "rethinkdb-ts";
 import { PlayerModel } from "../database/models/PlayerModel";
 import { Constants } from "../Constants";
+import { MinecraftConfigs, Settings } from "../Configuration";
 
 export enum ClientState {
     Handshaking = "handshaking",
@@ -198,7 +199,8 @@ export class Client extends EventEmitter {
                 let uncompressedLength: number = payload.Buffer.length;
 
                 // Only compress over the threshold
-                if (uncompressedLength > Constants.CompressionThreshold) {
+                const compressionThreshold: number = Settings.Get(MinecraftConfigs.CompressionThreshold);
+                if (uncompressedLength >= compressionThreshold) {
                     const compressed: Buffer = await Zlib.Deflate(payload.Buffer);
 
                     // Write the compressed data to a new buffer

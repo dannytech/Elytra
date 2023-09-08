@@ -1,8 +1,8 @@
-import { Constants } from "../../../Constants";
 import { ClientboundPacket } from "../../Packet";
 import { WritableBuffer } from "../../WritableBuffer";
 import { CompressionState } from "../../Client";
 import { Logging } from "../../../game/Logging";
+import { MinecraftConfigs, Settings } from "../../../Configuration";
 
 export class SetCompressionPacket extends ClientboundPacket {
     /**
@@ -17,7 +17,8 @@ export class SetCompressionPacket extends ClientboundPacket {
         this._Client.Protocol.compression = CompressionState.Enabling;
 
         // Threshold to compress packets
-        buf.WriteVarInt(Constants.CompressionThreshold, "Compression Threshold");
+        const compressionThreshold: number = Settings.Get(MinecraftConfigs.CompressionThreshold);
+        buf.WriteVarInt(compressionThreshold, "Compression Threshold");
     }
 
     /**

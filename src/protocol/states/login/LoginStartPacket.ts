@@ -30,8 +30,8 @@ export class LoginStartPacket extends ServerboundPacket {
             Logging.Warn("Online mode is off, allowing alleged player", this._Client.Player.Metadata.username.green, "to connect");
 
             // Prepare the player to join
-            const allowCompression: boolean = Settings.Get(MinecraftConfigs.AllowCompression);
-            if (allowCompression)
+            const compressionThreshold: number = Settings.Get(MinecraftConfigs.CompressionThreshold);
+            if (compressionThreshold > -1)
                 this._Client.Queue(new SetCompressionPacket(this._Client));
 
             // Generate a random UUID to utilize for this session

@@ -4,7 +4,6 @@ export class Constants {
     public static ServerName = "Elytra";
     public static ConfigNamespace = "minecraft";
     public static ProtocolVersion = 578;
-    public static CompressionThreshold = 64;
     public static KeyLength = 1024;
     public static VerificationTokenLength = 8;
     public static MaximumPacketLength = 2 * 1024 * 1024;

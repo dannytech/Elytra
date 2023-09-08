@@ -110,8 +110,8 @@ export class EncryptionResponsePacket extends ServerboundPacket {
                 Logging.Info(this._Client.Player.Metadata.username.green, "authenticated successfully with UUID", this._Client.Player.Metadata.uuid.Format(true).blue);
 
                 // Finish the handshake and proceed to the play state
-                const allowCompression: boolean = Settings.Get(MinecraftConfigs.AllowCompression);
-                if (allowCompression)
+                const compressionThreshold: number = Settings.Get(MinecraftConfigs.CompressionThreshold);
+                if (compressionThreshold > -1)
                     this._Client.Queue(new SetCompressionPacket(this._Client));
 
                 Logging.DebugPacket(this, "Switching to encrypted channel");
