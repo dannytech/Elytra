@@ -43,7 +43,7 @@ export class LoginStartPacket extends ServerboundPacket {
             this._Client.Player.Save();
             this._Client.Player = Player.Mapper.proxy(this._Client.Player);
 
-            Logging.DebugPacket(this, "Offline player", this._Client.Player.Metadata.username, "logging in with UUID", this._Client.Player.Metadata.uuid);
+            Logging.DebugPacket(this, "Offline player", this._Client.Player.Metadata.username.green, "logging in with UUID", this._Client.Player.Metadata.uuid.Format(true).blue);
             this._Client.Queue(new LoginSuccessPacket(this._Client));
         }
     }
