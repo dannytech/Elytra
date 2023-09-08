@@ -7,6 +7,7 @@ import { EncryptionRequestPacket } from "./EncryptionRequestPacket";
 import { Settings, MinecraftConfigs } from "../../../Configuration";
 import { Logging } from "../../../game/Logging";
 import { UUID } from "../../../game/UUID";
+import * as crypto from "crypto";
 
 export class LoginStartPacket extends ServerboundPacket {
     /**
@@ -34,10 +35,11 @@ export class LoginStartPacket extends ServerboundPacket {
             if (compressionThreshold > -1)
                 this._Client.Queue(new SetCompressionPacket(this._Client));
 
-            // Generate a random UUID to utilize for this session
-            this._Client.Player.Metadata.uuid = UUID.Generate();
+            // Calculate and truncate the SHA-256 hash of the username to determine the player UUID
+            const hash: Buffer = crypto.createHash("sha256").update(this._Client.Player.Metadata.username).digest();
+            this._Client.Player.Metadata.uuid = new UUID(hash.slice(0, 16));
 
-            Logging.DebugPacket(this, "Bypassing login due to offline mode");
+            Logging.DebugPacket(this, "Offline player", this._Client.Player.Metadata.username, "logging in with UUID", this._Client.Player.Metadata.uuid);
             this._Client.Queue(new LoginSuccessPacket(this._Client));
         }
     }
