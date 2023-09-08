@@ -19,7 +19,8 @@ export enum MinecraftConfigs {
     RespawnScreen = "respawnScreen",
     MOTD = "motd",
     EULA = "eula",
-    Filter = "filter"
+    Filter = "filter",
+    FilterMode = "filterMode"
 }
 
 export enum ElytraConfigs {
@@ -40,15 +41,15 @@ type SettingsSchema = {
 export class Settings {
     private static _schema: SettingsSchema = {
         "minecraft": {
-            "serverIp": {
+            [MinecraftConfigs.ServerIP]: {
                 default: "0.0.0.0",
                 schema: joi.string().ip()
             },
-            "serverPort": {
+            [MinecraftConfigs.ServerPort]: {
                 default: 25565,
                 schema: joi.number().integer().min(1024).max(65535)
             },
-            "serverVersionSpec": {
+            [MinecraftConfigs.ServerVersion]: {
                 default: [versionSpec("578")],
                 schema: joi.array().items(joi.object({
                     start: joi.number().integer(),
@@ -65,57 +66,57 @@ export class Settings {
                     else return true;
                 }))
             },
-            "online": {
+            [MinecraftConfigs.Online]: {
                 default: true,
                 schema: joi.boolean()
             },
-            "preventProxy": {
+            [MinecraftConfigs.PreventProxy]: {
                 default: true,
                 schema: joi.boolean()
             },
-            "allowCompression": {
+            [MinecraftConfigs.AllowCompression]: {
                 default: true,
                 schema: joi.boolean()
             },
-            "maximumPlayers": {
+            [MinecraftConfigs.MaximumPlayers]: {
                 default: 20,
                 schema: joi.number().integer().min(1)
             },
-            "renderDistance": {
+            [MinecraftConfigs.RenderDistance]: {
                 default: 20,
                 schema: joi.number().integer().min(2)
             },
-            "reducedDebug": {
+            [MinecraftConfigs.ReducedDebug]: {
                 default: false,
                 schema: joi.boolean()
             },
-            "respawnScreen": {
+            [MinecraftConfigs.RespawnScreen]: {
                 default: true,
                 schema: joi.boolean()
             },
-            "motd": {
+            [MinecraftConfigs.MOTD]: {
                 default: "An Elytra server",
                 schema: joi.string()
             },
-            "eula": {
+            [MinecraftConfigs.EULA]: {
                 default: false,
                 schema: joi.boolean()
             },
-            "filter": {
+            [MinecraftConfigs.Filter]: {
                 default: [],
                 schema: joi.array().items(joi.string().uuid())
             },
-            "filterMode": {
+            [MinecraftConfigs.FilterMode]: {
                 default: "deny",
                 schema: joi.string().allow("allow", "deny")
             }
         },
         elytra: {
-            "apiIp": {
+            [ElytraConfigs.ApiIP]: {
                 default: "127.0.0.1",
                 schema: joi.string().ip()
             },
-            "apiPort": {
+            [ElytraConfigs.ApiPort]: {
                 default: 25575,
                 schema: joi.number().integer().min(1024).max(65535)
             }
