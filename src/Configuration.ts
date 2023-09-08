@@ -3,9 +3,8 @@ import { ConfigModel } from "./database/models/ConfigModel";
 import { VersionSpec, versionSpec } from "./Masking";
 import * as joi from "joi";
 import { Logging } from "./game/Logging";
-import { RDatum, RValue, WriteResult, r } from "rethinkdb-ts";
+import { RDatum, WriteResult, r } from "rethinkdb-ts";
 import { Constants } from "./Constants";
-import { Environment, State } from "./State";
 
 export enum MinecraftConfigs {
     ServerIP = "serverIp",
@@ -22,7 +21,6 @@ export enum MinecraftConfigs {
     EULA = "eula",
     Filter = "filter"
 }
-export const DummyMinecraftConfig = "dummy";
 
 export enum ElytraConfigs {
     ApiIP = "apiIp",
@@ -42,10 +40,6 @@ type SettingsSchema = {
 export class Settings {
     private static _schema: SettingsSchema = {
         "minecraft": {
-            "dummy": State.Environment == Environment.TEST ? {
-                default: null,
-                schema: joi.binary()
-            } : undefined,
             "serverIp": {
                 default: "0.0.0.0",
                 schema: joi.string().ip()
