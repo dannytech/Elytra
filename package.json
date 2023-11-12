@@ -24,7 +24,7 @@
     "colors": "^1.4.0",
     "dotenv-extended": "^2.8.0",
     "joi": "^17.9.1",
-    "rethinkdb-ts": "^2.5.4",
+    "rethinkdb-ts": "^2.6.0",
     "uuid": "^8.1.0",
     "yaml": "^2.2.2"
   },
