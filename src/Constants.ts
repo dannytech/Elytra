@@ -3,6 +3,7 @@ import { versionSpec } from "./Masking";
 export class Constants {
     public static ServerName = "Elytra";
     public static ConfigNamespace = "minecraft";
+    public static ElytraConfigNamespace = "elytra";
     public static ProtocolVersion = 578;
     public static KeyLength = 1024;
     public static VerificationTokenLength = 8;
