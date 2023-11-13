@@ -1,0 +1,101 @@
+{
+    const colors = {
+    	"0": "black",
+        "1": "dark_blue",
+        "2": "dark_green",
+        "3": "dark_aqua",
+        "4": "dark_red",
+        "5": "dark_purple",
+        "6": "gold",
+        "7": "gray",
+        "8": "dark_gray",
+        "9": "blue",
+        "a": "green",
+        "b": "aqua",
+        "c": "red",
+        "d": "light_purple",
+        "e": "yellow",
+        "f": "white"
+    }
+}
+
+// Capture series of components, not starting with a reset
+start = !reset components:component* {
+    return components;
+}
+
+// Top-level component loop with reset support
+component = reset:reset? format:format* content:content {
+	// Flatten all formatting options together
+	const formatOptions = format.reduce((result, cur) => {
+    	return { ...result, ...cur };
+    }, {});
+
+	// Merge the reset flag and all component keys together
+    return {
+    	...reset,
+        ...formatOptions,
+        ...content
+    }
+}
+
+// Special formatting codes
+format = control formatting:(color / style) {
+	return formatting;
+}
+
+// Control characters
+control = ctrl !ctrl
+ctrl = "&" / "§"
+
+// Text coloring
+color = color:(code / hex) {
+	return { color: color }
+}
+code = code:[0-9a-f] {
+	return colors[code]
+}
+hex = "#" [0-9a-f]|6| {
+	return text()
+}
+
+// Formatting styles
+style = [k-o] {
+	switch (text().toLowerCase()) {
+    	case "k":
+        	return { obfuscated: true }
+    	case "l":
+        	return { bold: true }
+    	case "m":
+        	return { strikethrough: true }
+    	case "n":
+        	return { underlined: true }
+    	case "o":
+        	return { italic: true }
+    }
+}
+
+// Reset to root-level component
+reset = control "r" {
+	return { reset: true }
+}
+
+// Displayable text
+content = text / translate
+text = (!(control / "{") .)+ {
+    return { text: text() };
+}
+translate = control "t{" translation:([a-zA-Z0-9_.]+) args:argument?  "}" {
+    // Attaches specified argument tuples, if any
+    const withArgs = args != null && options.args?.[args];
+
+	return {
+        translate: translation.join(""),
+    	...(withArgs && { with: withArgs })
+    };
+}
+
+// Common argument slices
+argument = "," number:([0-9]+) {
+	return parseInt(number.join(""));
+}

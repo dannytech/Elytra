@@ -10,6 +10,7 @@ export enum MinecraftConfigs {
     ServerIP = "serverIp",
     ServerPort = "serverPort",
     ServerVersion = "serverVersionSpec",
+    ServerLocale = "serverLocale",
     Online = "online",
     CompressionThreshold = "compressionThreshold",
     PreventProxy = "preventProxy",
@@ -65,6 +66,10 @@ export class Settings {
                         return helper.message({ custom: "Version spec does not include a supported range" });
                     else return true;
                 }))
+            },
+            [MinecraftConfigs.ServerLocale]: {
+                default: "en_US",
+                schema: joi.string()
             },
             [MinecraftConfigs.Online]: {
                 default: true,

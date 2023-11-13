@@ -1,3 +1,6 @@
+# generated parser
+src/game/chat/ChatComponentParser.ts
+
 # module files
 node_modules/
 

@@ -1,9 +1,10 @@
 import { Client } from "../../protocol/Client";
-import { ChatTextComponent, ChatTranslationComponent } from "./ChatComponent";
+import { ChatComponent, ChatTextComponent, ChatTranslationComponent } from "./ChatComponent";
 import { checkVersion } from "../../Masking";
-import { ChatTextComponentFactory } from "./ChatTextComponentFactory";
 import { Logging } from "../Logging";
 import { Locale } from "../Locale";
+import { ChatComponentFactory } from "./ChatComponentFactory";
+import { MinecraftConfigs, Settings } from "../../Configuration";
 
 export class ChatTranslationComponentFactory {
     /**
@@ -46,10 +47,11 @@ export class ChatTranslationComponentFactory {
      * Perform masking on a component to convert it if it would not be understood by the client
      * @param {Client} client The client, used to determine the protocol version and locale
      * @param {ChatTranslationComponent} component A translation component to mask
-     * @returns {ChatTranslationComponent | ChatTextComponent} A translation component if it would be understood by the client, otherwise a translated text component
+     * @returns {ChatComponent} A translation component if it would be understood by the client, otherwise a translated text component
      * @static
+     * @async
      */
-    public static Mask(client: Client, component: ChatTranslationComponent): ChatTranslationComponent | ChatTextComponent {
+    public static async Mask(component: ChatTranslationComponent, client?: Client): Promise<ChatComponent> {
         // Check that the translation key exists
         if (!(component.translate in Locale.Mapping))
             return this._MaskRaw(component);
@@ -57,15 +59,16 @@ export class ChatTranslationComponentFactory {
         const localeMap = Locale.Mapping[component.translate];
 
         // If the translation key is supported by the client, return it as-is
-        if (client.Protocol.version && checkVersion(client.Protocol.version, localeMap.versions))
+        if (client?.Protocol.version && checkVersion(client?.Protocol.version, localeMap.versions))
             return component;
 
         // If the key is not supported in the client locale, return the key itself
-        if (!(client.Locale in localeMap.translations))
+        const locale = client?.Locale || await Settings.Get(MinecraftConfigs.ServerLocale);
+        if (!(locale in localeMap.translations))
             return this._MaskRaw(component);
 
         // Load the requested translation key
-        const translation = localeMap.translations[client.Locale];
+        const translation = localeMap.translations[locale];
 
         // Create an empty argument list if none were provided
         component.with = component.with || [];
@@ -82,8 +85,8 @@ export class ChatTranslationComponentFactory {
             let substitution: string | number | bigint;
 
             switch (arg) {
+                // Allow escaping of parameters
                 case "%":
-                    // Allow escaping of the control character
                     substitution = "%";
                     break;
                 case "s":
@@ -115,6 +118,6 @@ export class ChatTranslationComponentFactory {
         });
 
         // Return a text component representation
-        return ChatTextComponentFactory.FromString(resolved);
+        return ChatComponentFactory.FromString(resolved);
     }
 }

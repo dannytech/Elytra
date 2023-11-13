@@ -27,6 +27,9 @@ jobs:
           name: Check code style
           command: npm run lint:ci > reports/eslint.xml
       - run:
+          name: Build the server
+          command: npm run build:ci
+      - run:
           name: Run tests
           command: npm run test:ci > reports/ava.xml
       - store_artifacts:

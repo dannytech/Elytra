@@ -13,6 +13,7 @@ import { UUID } from "../../../game/UUID";
 import { ChatTextComponentFactory } from "../../../game/chat/ChatTextComponentFactory";
 import { Logging } from "../../../game/Logging";
 import { PlayerModel } from "../../../database/models/PlayerModel";
+import { ChatComponentFactory } from "../../../game/chat/ChatComponentFactory";
 import { r } from "rethinkdb-ts";
 
 type AuthenticationRequestParams = {
@@ -124,12 +125,12 @@ export class EncryptionResponsePacket extends ServerboundPacket {
                 Logging.DebugPacket(this, "Switching to encrypted channel");
                 this._Client.Queue(new LoginSuccessPacket(this._Client));
             } else {
-                this._Client.Queue(new LoginDisconnectPacket(this._Client, ChatTextComponentFactory.FromString("Invalid session")), true);
+                this._Client.Queue(new LoginDisconnectPacket(this._Client, ChatComponentFactory.FromString("&t{disconnect.loginFailedInfo.invalidSession}")), true);
 
                 Logging.Error("Player", this._Client.Player.Metadata.username.green, "has invalid session (might be using a proxy)");
             }
         } else {
-            this._Client.Queue(new LoginDisconnectPacket(this._Client, ChatTextComponentFactory.FromString("Failed to negotiate encrypted channel")), true);
+            this._Client.Queue(new LoginDisconnectPacket(this._Client, ChatComponentFactory.FromString("&t{disconnect.genericReason,0}", [ "Failed to negotiate encrypted channel" ])), true);
 
             Logging.Error("Player", this._Client.Player.Metadata.username.green, "failed to negotiate encrypted channel");
         }
@@ -141,11 +142,11 @@ export class EncryptionResponsePacket extends ServerboundPacket {
         // Determine whether the player is allowed to join
         Logging.DebugPacket(this, "Checking player against filter");
         if (filter?.mode == "deny" && inFilter) {
-            this._Client.Queue(new PlayDisconnectPacket(this._Client, ChatTextComponentFactory.FromString("You have been disallowed from this server")));
+            this._Client.Queue(new PlayDisconnectPacket(this._Client, ChatComponentFactory.FromString("&t{multiplayer.disconnect.not_whitelisted}")));
 
             Logging.Error("Player", this._Client.Player.Metadata.username.green, "is disallowed by filter");
         } else if (filter?.mode == "allow" && !inFilter) {
-            this._Client.Queue(new PlayDisconnectPacket(this._Client, ChatTextComponentFactory.FromString("You have not been allowed on this server")));
+            this._Client.Queue(new PlayDisconnectPacket(this._Client, ChatComponentFactory.FromString("&t{multiplayer.disconnect.not_whitelisted}")));
 
             Logging.Warn("Player", this._Client.Player.Metadata.username.green, "is not allowed by filter");
         }

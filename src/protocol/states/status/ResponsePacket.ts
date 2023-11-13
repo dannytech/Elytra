@@ -2,11 +2,11 @@ import { Settings, MinecraftConfigs } from "../../../Configuration";
 import { State } from "../../../State";
 import { ClientboundPacket } from "../../Packet";
 import { WritableBuffer } from "../../WritableBuffer";
-import { ChatTextComponentFactory } from "../../../game/chat/ChatTextComponentFactory";
 import { Logging } from "../../../game/Logging";
 import { checkVersion, VersionSpec } from "../../../Masking";
 import { Client, ClientState } from "../../Client";
 import { Constants } from "../../../Constants";
+import { ChatComponentFactory } from "../../../game/chat/ChatComponentFactory";
 
 export class ResponsePacket extends ClientboundPacket {
     /**
@@ -48,7 +48,7 @@ export class ResponsePacket extends ClientboundPacket {
                     };
                 })
             },
-            description: ChatTextComponentFactory.FromFormattedString(motd)
+            description: ChatComponentFactory.FromString(motd)
         }, "Server Information");
     }
 }

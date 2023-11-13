@@ -9,12 +9,14 @@
   "scripts": {
     "start": "npm run build && node dist/index.js",
     "dev": "tsc-watch --incremental --noClear --onSuccess 'node dist/index.js'",
-    "build": "tsc",
-    "build:ci": "tsc --sourceMap false",
+    "build": "npm run parser && tsc",
+    "build:ci": "npm run parser:ci && tsc --sourceMap false",
     "test": "c8 ava",
     "test:ci": "c8 --reporter lcov ava --tap | tap-xunit",
     "lint": "eslint .",
-    "lint:ci": "eslint --format junit $(circleci tests glob \"src/**/*.ts\" | circleci tests split)"
+    "lint:ci": "eslint --format junit $(circleci tests glob \"src/**/*.ts\" | circleci tests split)",
+    "parser": "peggy --plugin ./node_modules/ts-pegjs/dist/tspegjs --cache -o src/game/chat/ChatComponentParser.ts src/game/chat/ChatComponentParser.peg",
+    "parser:ci": "peggy --plugin ./node_modules/ts-pegjs/dist/tspegjs -o src/game/chat/ChatComponentParser.ts src/game/chat/ChatComponentParser.peg"
   },
   "engines": {
     "node": ">=10"
@@ -36,8 +38,10 @@
     "ava": "^5.2.0",
     "c8": "^7.13.0",
     "eslint": "^8.17.0",
+    "peggy": "^3.0.2",
     "tap-xunit": "^2.4.1",
     "ts-node": "^8.10.2",
+    "ts-pegjs": "^4.1.1",
     "tsc-watch": "^5.0.3",
     "typescript": "^5.2.2"
   }
