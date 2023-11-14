@@ -4,7 +4,6 @@ import "reflect-metadata";
 import { Server as TCPServer } from "net";
 import { Server as HTTPServer } from "http";
 import * as crypto from "crypto";
-import { createHandler } from "graphql-http/lib/use/http";
 
 import { Settings, MinecraftConfigs, ElytraConfigs } from "./src/Configuration";
 import { State } from "./src/State";
@@ -17,6 +16,7 @@ import { PacketFactory } from "./src/protocol/PacketFactory";
 import { WorldModel } from "./src/database/models/WorldModel";
 import { r } from "rethinkdb-ts";
 import { Locale } from "./src/game/Locale";
+import { API } from "./src/API";
 import { Constants } from "./src/Constants";
 
 /**
@@ -97,30 +97,8 @@ async function startListener() {
  */
 /* eslint-disable-next-line @typescript-eslint/no-empty-function */
 async function startAPI() {
-    // Compile GraphQL schema
-    const schema = await buildSchema({
-        resolvers: [EmptyResolver]
-    });
-
-    // Set up GraphQL handler
-    const handler = createHandler({ schema });
-
-    // Bootstrap a basic HTTP server
-    const server = new HTTPServer((req, res) => {
-        // Basic request logging
-        Logging.Debug(
-            `[${new Date().toISOString()}]`,
-            req.method,
-            req.url,
-            `${req.socket.remoteAddress}:${req.socket.remotePort}`
-        );
-
-        // Server just the GraphQL API endpoint
-        if (req.url.startsWith("/graphql"))
-            handler(req, res);
-        else
-            res.writeHead(404).end();
-    });
+    // Compile the GraphQL schema and build a handler
+    const server: HTTPServer = await API.Bootstrap();
 
     // Retrieve the server settings
     const ip: string = Settings.Get(Constants.ElytraConfigNamespace, ElytraConfigs.ApiIP);
