@@ -25,8 +25,11 @@
     "axios": "^1.6.0",
     "colors": "^1.4.0",
     "dotenv-extended": "^2.8.0",
+    "graphql-http": "^1.22.0",
     "joi": "^17.9.1",
+    "reflect-metadata": "^0.1.13",
     "rethinkdb-ts": "^2.6.0",
+    "type-graphql": "^1.1.1",
     "uuid": "^8.1.0",
     "yaml": "^2.2.2"
   },

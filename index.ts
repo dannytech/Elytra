@@ -1,7 +1,12 @@
-import { Server as TCPServer } from "net";
-import * as crypto from "crypto";
+// Type reflection shim
+import "reflect-metadata";
 
-import { Settings, MinecraftConfigs } from "./src/Configuration";
+import { Server as TCPServer } from "net";
+import { Server as HTTPServer } from "http";
+import * as crypto from "crypto";
+import { createHandler } from "graphql-http/lib/use/http";
+
+import { Settings, MinecraftConfigs, ElytraConfigs } from "./src/Configuration";
 import { State } from "./src/State";
 import { Database } from "./src/database/Database";
 import { Server } from "./src/protocol/Server";
@@ -12,6 +17,7 @@ import { PacketFactory } from "./src/protocol/PacketFactory";
 import { WorldModel } from "./src/database/models/WorldModel";
 import { r } from "rethinkdb-ts";
 import { Locale } from "./src/game/Locale";
+import { Constants } from "./src/Constants";
 
 /**
  * Prepare the server to accept players
@@ -90,7 +96,41 @@ async function startListener() {
  * @async
  */
 /* eslint-disable-next-line @typescript-eslint/no-empty-function */
-async function startAPI() {}
+async function startAPI() {
+    // Compile GraphQL schema
+    const schema = await buildSchema({
+        resolvers: [EmptyResolver]
+    });
+
+    // Set up GraphQL handler
+    const handler = createHandler({ schema });
+
+    // Bootstrap a basic HTTP server
+    const server = new HTTPServer((req, res) => {
+        // Basic request logging
+        Logging.Debug(
+            `[${new Date().toISOString()}]`,
+            req.method,
+            req.url,
+            `${req.socket.remoteAddress}:${req.socket.remotePort}`
+        );
+
+        // Server just the GraphQL API endpoint
+        if (req.url.startsWith("/graphql"))
+            handler(req, res);
+        else
+            res.writeHead(404).end();
+    });
+
+    // Retrieve the server settings
+    const ip: string = Settings.Get(Constants.ElytraConfigNamespace, ElytraConfigs.ApiIP);
+    const port: number = Settings.Get(Constants.ElytraConfigNamespace, ElytraConfigs.ApiPort);
+
+    // Start the server
+    server.listen(port, ip, () => {
+        Logging.Info("API server listening on", `${ip}:${port}/graphql`.green);
+    });
+}
 
 (async () => {
     // Prepare the server to start
