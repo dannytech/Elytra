@@ -1,7 +1,7 @@
-import { Server as HTTPServer } from "http";
-import { ApolloServer } from "@apollo/server";
+import { IncomingMessage, ServerResponse } from "http";
 import { buildSchema, ObjectType, Resolver, Query, Field } from "type-graphql";
 import { Logging } from "./game/Logging";
+import { YogaServerInstance, createYoga } from "graphql-yoga";
 
 @ObjectType()
 class DummyType {
@@ -19,15 +19,18 @@ class EmptyResolver {
   }
 }
 
+// Helper type to describe HTTP server adapter
+export type YogaServerAdapter = YogaServerInstance<typeof IncomingMessage, typeof ServerResponse>;
+
 export class API {
-    public static async Bootstrap(): Promise<ApolloServer> {
+    public static async Bootstrap(): Promise<YogaServerAdapter> {
         // Compile GraphQL schema
         const schema = await buildSchema({
             resolvers: [EmptyResolver]
         });
 
         // Set up GraphQL handler
-        return new ApolloServer({
+        return createYoga({
             schema
         });
     }

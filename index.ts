@@ -4,8 +4,6 @@ import "reflect-metadata";
 import { Server as TCPServer } from "net";
 import { Server as HTTPServer } from "http";
 import * as crypto from "crypto";
-import { ApolloServer } from "@apollo/server";
-import { startStandaloneServer } from "@apollo/server/standalone";
 
 import { Settings, MinecraftConfigs, ElytraConfigs } from "./src/Configuration";
 import { State } from "./src/State";
@@ -18,7 +16,7 @@ import { PacketFactory } from "./src/protocol/PacketFactory";
 import { WorldModel } from "./src/database/models/WorldModel";
 import { r } from "rethinkdb-ts";
 import { Locale } from "./src/game/Locale";
-import { API } from "./src/API";
+import { API, YogaServerAdapter } from "./src/API";
 import { Constants } from "./src/Constants";
 
 /**
@@ -97,23 +95,21 @@ async function startListener() {
  * Start the REST and Websocket APIs to allow for remote management and synchronization
  * @async
  */
-/* eslint-disable-next-line @typescript-eslint/no-empty-function */
 async function startAPI() {
     // Compile the GraphQL schema and build a handler
-    const server: ApolloServer = await API.Bootstrap();
+    const yoga: YogaServerAdapter = await API.Bootstrap();
 
     // Retrieve the server settings
     const ip: string = Settings.Get(Constants.ElytraConfigNamespace, ElytraConfigs.ApiIP);
     const port: number = Settings.Get(Constants.ElytraConfigNamespace, ElytraConfigs.ApiPort);
 
-    // Start the server
-    const { url } = await startStandaloneServer(server, {
-        listen: {
-            host: ip,
-            port
-        }
+    // Create HTTP listener
+    const server = new HTTPServer(yoga);
+
+    // Start the API server
+    server.listen(port, ip, () => {
+        Logging.Info("API server listening on", `${ip}:${port}`.green);
     });
-    Logging.Info("API server listening on", url.green);
 }
 
 (async () => {
