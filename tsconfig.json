@@ -4,11 +4,14 @@
         "noImplicitAny": true,
         "removeComments": true,
         "preserveConstEnums": true,
-        "experimentalDecorators": true,
-        "emitDecoratorMetadata": true,
         "sourceMap": true,
         "outDir": "dist/",
-        "target": "ES6"
+        "target": "ES6",
+
+        // Required to support type-graphql
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true,
+        "skipLibCheck": true
     },
     "files": [
         "index.ts"

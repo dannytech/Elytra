@@ -4,6 +4,8 @@ import "reflect-metadata";
 import { Server as TCPServer } from "net";
 import { Server as HTTPServer } from "http";
 import * as crypto from "crypto";
+import { ApolloServer } from "@apollo/server";
+import { startStandaloneServer } from "@apollo/server/standalone";
 
 import { Settings, MinecraftConfigs, ElytraConfigs } from "./src/Configuration";
 import { State } from "./src/State";
@@ -98,16 +100,20 @@ async function startListener() {
 /* eslint-disable-next-line @typescript-eslint/no-empty-function */
 async function startAPI() {
     // Compile the GraphQL schema and build a handler
-    const server: HTTPServer = await API.Bootstrap();
+    const server: ApolloServer = await API.Bootstrap();
 
     // Retrieve the server settings
     const ip: string = Settings.Get(Constants.ElytraConfigNamespace, ElytraConfigs.ApiIP);
     const port: number = Settings.Get(Constants.ElytraConfigNamespace, ElytraConfigs.ApiPort);
 
     // Start the server
-    server.listen(port, ip, () => {
-        Logging.Info("API server listening on", `${ip}:${port}/graphql`.green);
+    const { url } = await startStandaloneServer(server, {
+        listen: {
+            host: ip,
+            port
+        }
     });
+    Logging.Info("API server listening on", url.green);
 }
 
 (async () => {
