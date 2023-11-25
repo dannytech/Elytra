@@ -20,7 +20,8 @@
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	"forwardPorts": [
-		25565,
+		25565, // Minecraft Server Port
+		25575, // GraphQL API
 		8080 // RethinkDB admin panel
 	],
 
