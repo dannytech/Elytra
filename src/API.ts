@@ -1,22 +1,20 @@
 import { IncomingMessage, ServerResponse } from "http";
 import { buildSchema, ObjectType, Resolver, Query, Field } from "type-graphql";
-import { Logging } from "./game/Logging";
 import { YogaServerInstance, createYoga } from "graphql-yoga";
 
 @ObjectType()
 class DummyType {
-    @Field()
-    booleanValue: boolean;
+    @Field() booleanValue: boolean;
 }
 
 @Resolver()
 class EmptyResolver {
-  @Query(() => DummyType)
-  emptyQuery(): DummyType {
-    return {
-        booleanValue: true
-    };
-  }
+    @Query(() => DummyType)
+    emptyQuery(): DummyType {
+        return {
+            booleanValue: true
+        };
+    }
 }
 
 // Helper type to describe HTTP server adapter
