@@ -3,7 +3,7 @@ import anyTest, { TestFn } from "ava";
 import { ChatTranslationComponentFactory } from "./ChatTranslationComponentFactory";
 import { Client } from "../../protocol/Client";
 import { Locale } from "../Locale";
-import { Database } from "../../Database";
+import { Database } from "../../database/Database";
 import { Settings } from "../../Configuration";
 
 const test = anyTest as TestFn<Client>;
