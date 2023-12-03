@@ -28,7 +28,7 @@ export class Logging {
         }
     }
 
-    private static _Direction(packet: ClientboundPacket | ServerboundPacket) {
+    private static _Direction(packet: ClientboundPacket | ServerboundPacket): string {
         // Determine the packet direction
         const direction: string[] = ["S", "C"];
         if ("Parse" in packet) direction.reverse();
@@ -37,34 +37,57 @@ export class Logging {
     }
 
     /**
+     * Remove all formatting from text
+     * @param {...any} message The message to clean
+     * @returns {string} A combined string with all formatting removed
+     * @private
+     * @static
+     */
+    private static _Strip(...message: any[]): string{
+        return message.join(" ").stripColors;
+    }
+
+    /**
      * Log to the console
      * @param {...any} message The message to write to the console
+     * @returns {string} The logged message, stripped of console formatting
+     * @static
      */
-    public static Log(...message: any[]) {
+    public static Log(...message: any[]): string {
         // Writes messages to the console if it is currently unblocked
         if (State.Environment !== Environment.TEST)
             console.log(...message);
+
+        return this._Strip(...message);
     }
 
-    public static Info(...message: any[]) {
+    public static Info(...message: any[]): string {
         this.Log("[INFO]".black.bgBlue, ...message);
+
+        return this._Strip(...message);
     }
 
-    public static Error(...message: any[]) {
+    public static Error(...message: any[]): string {
         this.Log("[ERROR]".white.bgRed, ...message);
+
+        return this._Strip(...message);
     }
 
-    public static Warn(...message: any[]) {
+    public static Warn(...message: any[]): string {
         this.Log("[WARN]".black.bgYellow, ...message);
+
+        return this._Strip(...message);
     }
 
     /**
      * Logs debug messages to the console if debug mode is enabled
      * @param {...any} message The message to write to the console
      */
-    public static Debug(...message: any[]) {
+    public static Debug(...message: any[]): string {
         if (this.Level() >= LoggingLevel.DEBUG)
             this.Log("[DEBUG]".black.bgGreen, ...message);
+
+        return this._Strip(...message);
     }
 
     /**
@@ -72,19 +95,21 @@ export class Logging {
      * @param {ClientboundPacket|ServerboundPacket} packet The packet which the message is related to
      * @param {...any} message The message to write to the console
      */
-    public static DebugPacket(packet: ClientboundPacket | ServerboundPacket, ...message: any[]) {
+    public static DebugPacket(packet: ClientboundPacket | ServerboundPacket, ...message: any[]): string {
         // Print details about the client and packet, in addition to the message
         const client: Client = packet.Client;
-        this.Debug(`(${client.Protocol.clientId})`.magenta, `[${this._Direction(packet)}]`.blue, `[${packet.constructor.name}]`.cyan, ...message);
+        return this.Debug(`(${client.Protocol.clientId})`.magenta, `[${this._Direction(packet)}]`.blue, `[${packet.constructor.name}]`.cyan, ...message);
     }
 
     /**
      * Print a message to the console if tracing is enabled
      * @param {...any} message The detailed message to write to the console
      */
-    public static Trace(...message: any[]) {
+    public static Trace(...message: any[]): string {
         if (this.Level() >= LoggingLevel.TRACE)
             this.Log("[TRACE]".white.bgBlack, ...message);
+
+        return this._Strip(...message);
     }
 
     /**
@@ -92,9 +117,9 @@ export class Logging {
      * @param {ClientboundPacket|ServerboundPacket} packet The packet which the message is related to
      * @param {...any} message The message to write to the console
      */
-    public static TracePacket(packet: ClientboundPacket | ServerboundPacket, ...message: any[]) {
+    public static TracePacket(packet: ClientboundPacket | ServerboundPacket, ...message: any[]): string {
         // Print details about the client and packet, in addition to the message
         const client: Client = packet.Client;
-        this.Trace(`(${client.Protocol.clientId})`.magenta, `[${this._Direction(packet)}]`.blue, `[${packet.constructor.name}]`.cyan, ...message);
+        return this.Trace(`(${client.Protocol.clientId})`.magenta, `[${this._Direction(packet)}]`.blue, `[${packet.constructor.name}]`.cyan, ...message);
     }
 }

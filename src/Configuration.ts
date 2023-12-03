@@ -227,15 +227,16 @@ export class Settings {
      * @param {string} [namespace=minecraft] The namespace within which the configuration node should reside
      * @param {string} name The name of the configuration node to update
      * @param {any} value The value to enter as the configuration
+     * @returns {string?} An error message if the configuration could not be retrieved
      * @static
      * @async
      */
     /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
-    public static Set(name: string, value: any): void;
+    public static Set(name: string, value: any): string | null;
     /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
-    public static Set(namespace: string, name: string, value: any): void;
+    public static Set(namespace: string, name: string, value: any): string | null;
     /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
-    public static Set(namespaceOrName: string, nameOrValue: any, value?: any): void {
+    public static Set(namespaceOrName: string, nameOrValue: any, value?: any): string | null {
         // Support an overload which assumes the namespace as the first parameter is not necessary
         if (value === undefined) {
             value = nameOrValue;
