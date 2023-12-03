@@ -1,6 +1,6 @@
-import { ReadableBuffer } from "./ReadableBuffer";
-import { WritableBuffer } from "./WritableBuffer";
-import { Client } from "./Client";
+import { ReadableBuffer } from "./ReadableBuffer.js";
+import { WritableBuffer } from "./WritableBuffer.js";
+import { Client } from "./Client.js";
 
 export interface IServerboundConstructor {
     new(client: Client): ServerboundPacket;

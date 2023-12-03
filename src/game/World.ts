@@ -1,10 +1,11 @@
 import * as crypto from "crypto";
 import { r } from "rethinkdb-ts";
-import { WorldModelMapper } from "../database/mappers/WorldModelMapper";
-import { ChunkletModel } from "../database/models/ChunkletModel";
-import { Chunklet, ChunkPosition } from "./Chunklet";
-import { Entity } from "./Entity";
-import { UUID } from "./UUID";
+
+import { WorldModelMapper } from "../database/mappers/WorldModelMapper.js";
+import { ChunkletModel } from "../database/models/ChunkletModel.js";
+import { Chunklet, ChunkPosition } from "./Chunklet.js";
+import { Entity } from "./Entity.js";
+import { UUID } from "./UUID.js";
 
 type EntityArray = {
     entities: Entity[];

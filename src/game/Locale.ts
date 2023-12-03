@@ -1,8 +1,9 @@
 import { readFile } from "fs/promises";
-import { VersionSpec, versionSpec } from "../Masking";
 import { parse } from "yaml";
-import * as joi from "joi";
+import joi from "joi";
 import { Schema } from "joi";
+
+import { VersionSpec, versionSpec } from "../Masking.js";
 
 export interface Translation {
     versions: VersionSpec[];

@@ -1,6 +1,6 @@
-import { Logging } from "../../../game/Logging";
-import { ServerboundPacket } from "../../Packet";
-import { ReadableBuffer } from "../../ReadableBuffer";
+import { Logging } from "../../../game/Logging.js";
+import { ServerboundPacket } from "../../Packet.js";
+import { ReadableBuffer } from "../../ReadableBuffer.js";
 
 export class PlayerPositionAndRotationPacket extends ServerboundPacket {
     /**

@@ -1,7 +1,8 @@
-import { State, Environment } from "../State";
-import { Client } from "../protocol/Client";
-import { ClientboundPacket, ServerboundPacket } from "../protocol/Packet";
 import "colors";
+
+import { State, Environment } from "../State.js";
+import { Client } from "../protocol/Client.js";
+import { ClientboundPacket, ServerboundPacket } from "../protocol/Packet.js";
 
 /*eslint @typescript-eslint/no-explicit-any: ["error", { "ignoreRestArgs": true }]*/
 

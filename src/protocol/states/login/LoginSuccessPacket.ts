@@ -1,17 +1,17 @@
-import { ClientboundPacket } from "../../Packet";
-import { WritableBuffer } from "../../WritableBuffer";
-import { ClientState } from "../../Client";
-import { Logging } from "../../../game/Logging";
-import { JoinGamePacket } from "../play/JoinGamePacket";
-import { Constants } from "../../../Constants";
-import { ServerPluginMessagePacket } from "../play/ServerPluginMessagePacket";
-import { HeldItemChangePacket } from "../play/HeldItemChangePacket";
-import { DeclareRecipesPacket } from "../play/DeclareRecipesPacket";
-import { TagsPacket } from "../play/TagsPacket";
-import { EntityStatus, EntityStatusPacket } from "../play/EntityStatusPacket";
-import { DeclareCommandsPacket } from "../play/DeclareCommandsPacket";
-import { UnlockRecipesAction, UnlockRecipesPacket } from "../play/UnlockRecipesPacket";
-import { PlayerPositionAndLookPacket } from "../play/PlayerPositionAndLookPacket";
+import { ClientboundPacket } from "../../Packet.js";
+import { WritableBuffer } from "../../WritableBuffer.js";
+import { ClientState } from "../../Client.js";
+import { Logging } from "../../../game/Logging.js";
+import { JoinGamePacket } from "../play/JoinGamePacket.js";
+import { Constants } from "../../../Constants.js";
+import { ServerPluginMessagePacket } from "../play/ServerPluginMessagePacket.js";
+import { HeldItemChangePacket } from "../play/HeldItemChangePacket.js";
+import { DeclareRecipesPacket } from "../play/DeclareRecipesPacket.js";
+import { TagsPacket } from "../play/TagsPacket.js";
+import { EntityStatus, EntityStatusPacket } from "../play/EntityStatusPacket.js";
+import { DeclareCommandsPacket } from "../play/DeclareCommandsPacket.js";
+import { UnlockRecipesAction, UnlockRecipesPacket } from "../play/UnlockRecipesPacket.js";
+import { PlayerPositionAndLookPacket } from "../play/PlayerPositionAndLookPacket.js";
 
 export class LoginSuccessPacket extends ClientboundPacket {
     /**

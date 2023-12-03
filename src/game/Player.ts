@@ -1,11 +1,12 @@
 import { r, RDatum, WriteResult } from "rethinkdb-ts";
-import { State } from "../State";
-import { PlayerModelMapper } from "../database/mappers/PlayerModelMapper";
-import { PlayerModel } from "../database/models/PlayerModel";
-import { ChunkPosition } from "./Chunklet";
-import { Entity, EntityPositionAndLook } from "./Entity";
-import { Logging } from "./Logging";
-import { UUID } from "./UUID";
+
+import { State } from "../State.js";
+import { PlayerModelMapper } from "../database/mappers/PlayerModelMapper.js";
+import { PlayerModel } from "../database/models/PlayerModel.js";
+import { ChunkPosition } from "./Chunklet.js";
+import { Entity, EntityPositionAndLook } from "./Entity.js";
+import { Logging } from "./Logging.js";
+import { UUID } from "./UUID.js";
 
 export enum Gamemode {
     Survival = 0b000,

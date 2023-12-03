@@ -6,6 +6,7 @@
   "repository": "git@github.com:dannytech/Elytra.git",
   "author": "Daniel Hellstern <elytra@daniel.hellstern.org>",
   "license": "GPL-3.0-or-later",
+  "type": "module",
   "scripts": {
     "start": "npm run build && node dist/index.js",
     "dev": "tsc-watch --incremental --noClear --onSuccess 'node dist/index.js'",
@@ -31,6 +32,7 @@
     "yaml": "^2.2.2"
   },
   "devDependencies": {
+    "@types/dotenv": "^6.1.1",
     "@types/node": "^20.9.0",
     "@types/uuid": "^8.3.4",
     "@typescript-eslint/eslint-plugin": "^5.62.0",

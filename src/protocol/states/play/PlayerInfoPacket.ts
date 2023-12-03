@@ -1,8 +1,8 @@
-import { Logging } from "../../../game/Logging";
-import { PlayerProperty } from "../../../game/Player";
-import { Client } from "../../Client";
-import { ClientboundPacket } from "../../Packet";
-import { WritableBuffer } from "../../WritableBuffer";
+import { Logging } from "../../../game/Logging.js";
+import { PlayerProperty } from "../../../game/Player.js";
+import { Client } from "../../Client.js";
+import { ClientboundPacket } from "../../Packet.js";
+import { WritableBuffer } from "../../WritableBuffer.js";
 
 export enum PlayerInfoActions {
     AddPlayer = 0,

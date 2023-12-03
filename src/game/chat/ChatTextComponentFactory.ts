@@ -1,4 +1,4 @@
-import { ChatTextComponent } from "./ChatComponent";
+import { ChatTextComponent } from "./ChatComponent.js";
 
 export class ChatTextComponentFactory {
     /**

@@ -1,4 +1,4 @@
-import { State } from "../State";
+import { State } from "../State.js";
 
 export type EntityPosition = {
     x: number;

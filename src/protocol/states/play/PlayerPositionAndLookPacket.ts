@@ -1,8 +1,8 @@
-import { Logging } from "../../../game/Logging";
-import { EntityPositionAndLook } from "../../../game/Entity";
-import { Client } from "../../Client";
-import { ClientboundPacket } from "../../Packet";
-import { WritableBuffer } from "../../WritableBuffer";
+import { Logging } from "../../../game/Logging.js";
+import { EntityPositionAndLook } from "../../../game/Entity.js";
+import { Client } from "../../Client.js";
+import { ClientboundPacket } from "../../Packet.js";
+import { WritableBuffer } from "../../WritableBuffer.js";
 
 export enum PlayerPositionAndLookFlags {
     None = 0x00,

@@ -1,6 +1,6 @@
-import { World } from "./game/World";
-import { Keypair } from "./protocol/Encryption";
-import { Server } from "./protocol/Server";
+import { World } from "./game/World.js";
+import { Keypair } from "./protocol/Encryption.js";
+import { Server } from "./protocol/Server.js";
 
 
 export enum Environment {

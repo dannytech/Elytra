@@ -1,7 +1,8 @@
 import { r } from "rethinkdb-ts";
-import { ModelMapper } from "../Database";
-import { World } from "../../game/World";
-import { WorldModel } from "../models/WorldModel";
+
+import { ModelMapper } from "../Database.js";
+import { World } from "../../game/World.js";
+import { WorldModel } from "../models/WorldModel.js";
 
 export class WorldModelMapper extends ModelMapper<WorldModel, World> {
     /**

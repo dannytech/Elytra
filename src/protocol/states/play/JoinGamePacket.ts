@@ -1,8 +1,8 @@
-import { ClientboundPacket } from "../../Packet";
-import { WritableBuffer } from "../../WritableBuffer";
-import { Settings, MinecraftConfigs } from "../../../Configuration";
-import { State } from "../../../State";
-import { Logging } from "../../../game/Logging";
+import { ClientboundPacket } from "../../Packet.js";
+import { WritableBuffer } from "../../WritableBuffer.js";
+import { Settings, MinecraftConfigs } from "../../../Configuration.js";
+import { State } from "../../../State.js";
+import { Logging } from "../../../game/Logging.js";
 
 export class JoinGamePacket extends ClientboundPacket {
     /**

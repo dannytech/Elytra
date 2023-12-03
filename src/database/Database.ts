@@ -1,8 +1,12 @@
 import { readdir } from "fs/promises";
-import { URL } from "url";
+import { URL, fileURLToPath } from "url";
+import path, { dirname } from "path";
 import { r } from "rethinkdb-ts";
-import { Logging } from "../game/Logging";
-import * as path from "path";
+
+import { Logging } from "../game/Logging.js";
+
+// Add dirname variable to support relative module loading
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 /**
  * Common class to allow identity mapping for database entities

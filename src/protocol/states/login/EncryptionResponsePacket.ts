@@ -1,20 +1,20 @@
 import axios, { AxiosResponse } from "axios";
-import { Settings, MinecraftConfigs } from "../../../Configuration";
-import { State } from "../../../State";
-import { ServerboundPacket } from "../../Packet";
-import { ReadableBuffer } from "../../ReadableBuffer";
-import { SetCompressionPacket } from "./SetCompressionPacket";
-import { LoginSuccessPacket } from "./LoginSuccessPacket";
-import { DisconnectPacket as LoginDisconnectPacket } from "./DisconnectPacket";
-import { DisconnectPacket as PlayDisconnectPacket } from "../play/DisconnectPacket";
-import { digest } from "../../Encryption";
-import { Player } from "../../../game/Player";
-import { UUID } from "../../../game/UUID";
-import { ChatTextComponentFactory } from "../../../game/chat/ChatTextComponentFactory";
-import { Logging } from "../../../game/Logging";
-import { PlayerModel } from "../../../database/models/PlayerModel";
-import { ChatComponentFactory } from "../../../game/chat/ChatComponentFactory";
 import { r } from "rethinkdb-ts";
+
+import { Settings, MinecraftConfigs } from "../../../Configuration.js";
+import { State } from "../../../State.js";
+import { ServerboundPacket } from "../../Packet.js";
+import { ReadableBuffer } from "../../ReadableBuffer.js";
+import { SetCompressionPacket } from "./SetCompressionPacket.js";
+import { LoginSuccessPacket } from "./LoginSuccessPacket.js";
+import { DisconnectPacket as LoginDisconnectPacket } from "./DisconnectPacket.js";
+import { DisconnectPacket as PlayDisconnectPacket } from "../play/DisconnectPacket.js";
+import { digest } from "../../Encryption.js";
+import { Player } from "../../../game/Player.js";
+import { UUID } from "../../../game/UUID.js";
+import { Logging } from "../../../game/Logging.js";
+import { PlayerModel } from "../../../database/models/PlayerModel.js";
+import { ChatComponentFactory } from "../../../game/chat/ChatComponentFactory.js";
 
 type AuthenticationRequestParams = {
     username: string,

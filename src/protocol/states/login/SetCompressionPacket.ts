@@ -1,8 +1,8 @@
-import { ClientboundPacket } from "../../Packet";
-import { WritableBuffer } from "../../WritableBuffer";
-import { CompressionState } from "../../Client";
-import { Logging } from "../../../game/Logging";
-import { MinecraftConfigs, Settings } from "../../../Configuration";
+import { ClientboundPacket } from "../../Packet.js";
+import { WritableBuffer } from "../../WritableBuffer.js";
+import { CompressionState } from "../../Client.js";
+import { Logging } from "../../../game/Logging.js";
+import { MinecraftConfigs, Settings } from "../../../Configuration.js";
 
 export class SetCompressionPacket extends ClientboundPacket {
     /**

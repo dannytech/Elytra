@@ -1,4 +1,4 @@
-import { versionSpec } from "./Masking";
+import { versionSpec } from "./Masking.js";
 
 export class Constants {
     public static ServerName = "Elytra";

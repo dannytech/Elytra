@@ -1,12 +1,12 @@
-import { Settings, MinecraftConfigs } from "../../../Configuration";
-import { State } from "../../../State";
-import { ClientboundPacket } from "../../Packet";
-import { WritableBuffer } from "../../WritableBuffer";
-import { Logging } from "../../../game/Logging";
-import { checkVersion, VersionSpec } from "../../../Masking";
-import { Client, ClientState } from "../../Client";
-import { Constants } from "../../../Constants";
-import { ChatComponentFactory } from "../../../game/chat/ChatComponentFactory";
+import { Settings, MinecraftConfigs } from "../../../Configuration.js";
+import { State } from "../../../State.js";
+import { ClientboundPacket } from "../../Packet.js";
+import { WritableBuffer } from "../../WritableBuffer.js";
+import { Logging } from "../../../game/Logging.js";
+import { checkVersion, VersionSpec } from "../../../Masking.js";
+import { Client, ClientState } from "../../Client.js";
+import { Constants } from "../../../Constants.js";
+import { ChatComponentFactory } from "../../../game/chat/ChatComponentFactory.js";
 
 export class ResponsePacket extends ClientboundPacket {
     /**
@@ -22,7 +22,7 @@ export class ResponsePacket extends ClientboundPacket {
 
         // Either echo the protocol version if supported or tell the client to update to a newer version
         const serverVersionSpec: VersionSpec[] = Settings.Get(MinecraftConfigs.ServerVersion);
-        let protocolVersion: number = this._Client.Protocol.version;
+        let protocolVersion: number | undefined = this._Client.Protocol.version;
         if (!checkVersion(this._Client.Protocol.version, serverVersionSpec)) {
             const lastVersionSpec = serverVersionSpec[serverVersionSpec.length - 1];
 

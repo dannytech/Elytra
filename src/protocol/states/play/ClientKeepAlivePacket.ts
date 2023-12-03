@@ -1,8 +1,8 @@
-import { ChatComponentFactory } from "../../../game/chat/ChatComponentFactory";
-import { Logging } from "../../../game/Logging";
-import { ServerboundPacket } from "../../Packet";
-import { ReadableBuffer } from "../../ReadableBuffer";
-import { DisconnectPacket } from "./DisconnectPacket";
+import { ChatComponentFactory } from "../../../game/chat/ChatComponentFactory.js";
+import { Logging } from "../../../game/Logging.js";
+import { ServerboundPacket } from "../../Packet.js";
+import { ReadableBuffer } from "../../ReadableBuffer.js";
+import { DisconnectPacket } from "./DisconnectPacket.js";
 
 export class ClientKeepAlivePacket extends ServerboundPacket {
     /**

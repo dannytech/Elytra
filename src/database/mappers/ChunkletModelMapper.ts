@@ -1,7 +1,8 @@
 import { r } from "rethinkdb-ts";
-import { ModelMapper } from "../Database";
-import { Chunklet, ChunkletPosition } from "../../game/Chunklet";
-import { ChunkletModel } from "../models/ChunkletModel";
+
+import { ModelMapper } from "../Database.js";
+import { Chunklet, ChunkletPosition } from "../../game/Chunklet.js";
+import { ChunkletModel } from "../models/ChunkletModel.js";
 
 export class ChunkletModelMapper extends ModelMapper<ChunkletModel, Chunklet> {
     // Maps coordinates to an internal ID

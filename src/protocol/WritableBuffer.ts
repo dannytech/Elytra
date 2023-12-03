@@ -1,7 +1,7 @@
-import { Logging, LoggingLevel } from "../game/Logging";
-import { UUID } from "../game/UUID";
-import { ChatComponent } from "../game/chat/ChatComponent";
-import { ReadableBuffer } from "./ReadableBuffer";
+import { Logging, LoggingLevel } from "../game/Logging.js";
+import { UUID } from "../game/UUID.js";
+import { ChatComponent } from "../game/chat/ChatComponent.js";
+import { ReadableBuffer } from "./ReadableBuffer.js";
 
 export class WritableBuffer {
     private _Prepend: boolean;

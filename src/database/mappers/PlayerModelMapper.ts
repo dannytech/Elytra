@@ -1,8 +1,9 @@
 import { r } from "rethinkdb-ts";
-import { ModelMapper } from "../Database";
-import { Player } from "../../game/Player";
-import { UUID } from "../../game/UUID";
-import { PlayerModel } from "../models/PlayerModel";
+
+import { ModelMapper } from "../Database.js";
+import { Player } from "../../game/Player.js";
+import { UUID } from "../../game/UUID.js";
+import { PlayerModel } from "../models/PlayerModel.js";
 
 export class PlayerModelMapper extends ModelMapper<PlayerModel, Player> {
     /**

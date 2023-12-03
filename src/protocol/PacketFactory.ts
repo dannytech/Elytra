@@ -1,12 +1,13 @@
+import { Schema } from "joi";
+import joi from "joi";
 import { parse } from "yaml";
 import { readFile } from "fs/promises";
-import { Client, ClientState } from "./Client";
-import { Logging } from "../game/Logging";
-import { ReadableBuffer } from "./ReadableBuffer";
-import { ServerboundPacket, IServerboundConstructor } from "./Packet";
-import { checkVersion, versionSpec, VersionSpec } from "../Masking";
-import { Schema } from "joi";
-import * as joi from "joi";
+
+import { Client, ClientState } from "./Client.js";
+import { Logging } from "../game/Logging.js";
+import { ReadableBuffer } from "./ReadableBuffer.js";
+import { ServerboundPacket, IServerboundConstructor } from "./Packet.js";
+import { checkVersion, versionSpec, VersionSpec } from "../Masking.js";
 
 export enum PacketDirection {
     Serverbound = "serverbound",
@@ -108,7 +109,7 @@ export class PacketFactory {
                 result = index;
 
                 // Load the packet class
-                const packetClass = await import(`./states/${state}/${packetName}`);
+                const packetClass = await import(`./states/${state}/${packetName}.js`);
 
                 // Cache the packet class for faster loading
                 if (packetName in packetClass)

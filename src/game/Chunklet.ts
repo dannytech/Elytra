@@ -1,4 +1,4 @@
-import { ChunkletModelMapper } from "../database/mappers/ChunkletModelMapper";
+import { ChunkletModelMapper } from "../database/mappers/ChunkletModelMapper.js";
 
 // We can reuse the player position but give it a more familiar name
 export type ChunkPosition = {

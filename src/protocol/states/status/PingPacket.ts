@@ -1,7 +1,7 @@
-import { ServerboundPacket } from "../../Packet";
-import { PongPacket } from "./PongPacket";
-import { ReadableBuffer } from "../../ReadableBuffer";
-import { Logging } from "../../../game/Logging";
+import { ServerboundPacket } from "../../Packet.js";
+import { PongPacket } from "./PongPacket.js";
+import { ReadableBuffer } from "../../ReadableBuffer.js";
+import { Logging } from "../../../game/Logging.js";
 
 export class PingPacket extends ServerboundPacket {
     /**
