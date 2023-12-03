@@ -1,7 +1,6 @@
 import { readFile } from "fs/promises";
 import { parse } from "yaml";
-import joi from "joi";
-import { Schema } from "joi";
+import joi, { Schema } from "joi";
 
 import { VersionSpec, versionSpec } from "../Masking.js";
 

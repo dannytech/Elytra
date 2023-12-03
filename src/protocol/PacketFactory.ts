@@ -1,5 +1,4 @@
-import { Schema } from "joi";
-import joi from "joi";
+import joi, { Schema } from "joi";
 import { parse } from "yaml";
 import { readFile } from "fs/promises";
 
