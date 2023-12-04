@@ -1,6 +1,6 @@
 import { ServerboundPacket } from "../../Packet.js";
-import { ResponsePacket } from "./ResponsePacket.js";
 import { Logging } from "../../../game/Logging.js";
+import { ResponsePacket } from "./ResponsePacket.js";
 
 export class RequestPacket extends ServerboundPacket {
     /**

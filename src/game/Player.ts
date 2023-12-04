@@ -8,7 +8,7 @@ import { Entity, EntityPositionAndLook } from "./Entity.js";
 import { Logging } from "./Logging.js";
 import { UUID } from "./UUID.js";
 
-export enum Gamemode {
+enum Gamemode {
     Survival = 0b000,
     Creative = 0b001,
     Adventure = 0b010,
@@ -17,7 +17,7 @@ export enum Gamemode {
     Hardcore = 0b100
 }
 
-export enum PermissionLevel {
+enum PermissionLevel {
     None = 0,
     Bypass = 1,
     Cheats = 2,
@@ -25,26 +25,26 @@ export enum PermissionLevel {
     Admin = 4
 }
 
-export type PlayerProperty = {
+type PlayerProperty = {
     name: string;
     value: string;
     signature?: string;
 }
 
-export type PlayerState = {
+type PlayerState = {
     gamemode: Gamemode;
     op: PermissionLevel;
     position: EntityPositionAndLook;
     activeChunks: ChunkPosition[];
 };
 
-export type PlayerMetadata = {
+type PlayerMetadata = {
     username: string;
     uuid?: UUID;
     properties: PlayerProperty[];
 };
 
-export class Player extends Entity {
+class Player extends Entity {
     public static Mapper: PlayerModelMapper = new PlayerModelMapper();
 
     public State: PlayerState;
@@ -97,3 +97,12 @@ export class Player extends Entity {
             .run();
     }
 }
+
+export {
+    Gamemode,
+    PermissionLevel,
+    PlayerProperty,
+    PlayerState,
+    PlayerMetadata,
+    Player
+};

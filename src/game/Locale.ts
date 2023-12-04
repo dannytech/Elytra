@@ -4,14 +4,14 @@ import joi, { Schema } from "joi";
 
 import { VersionSpec, versionSpec } from "../Masking.js";
 
-export interface Translation {
+interface Translation {
     versions: VersionSpec[];
     translations: Record<string, string>;
 }
 
-export type TranslationMapping = Record<string, Translation>;
+type TranslationMapping = Record<string, Translation>;
 
-export class Locale {
+class Locale {
     // YAML file schema
     private static _Schema: Schema = joi.object().pattern(/^[a-zA-Z0-9.]+$/, joi.object({
         versions: joi.array().items(joi.alternatives(joi.string(), joi.number())),
@@ -43,3 +43,9 @@ export class Locale {
         this.Mapping = mapping;
     }
 }
+
+export {
+    Translation,
+    TranslationMapping,
+    Locale
+};

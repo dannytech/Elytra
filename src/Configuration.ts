@@ -1,4 +1,4 @@
-import dotenv from "dotenv-extended";
+import * as dotenv from "dotenv-extended";
 import joi from "joi";
 import { RDatum, WriteResult, r } from "rethinkdb-ts";
 
@@ -7,7 +7,7 @@ import { VersionSpec, versionSpec } from "./Masking.js";
 import { Logging } from "./game/Logging.js";
 import { Constants } from "./Constants.js";
 
-export enum MinecraftConfigs {
+enum MinecraftConfigs {
     ServerIP = "serverIp",
     ServerPort = "serverPort",
     ServerVersion = "serverVersionSpec",
@@ -25,7 +25,7 @@ export enum MinecraftConfigs {
     FilterMode = "filterMode"
 }
 
-export enum ElytraConfigs {
+enum ElytraConfigs {
     ApiIP = "apiIp",
     ApiPort = "apiPort"
 }
@@ -40,7 +40,7 @@ type SettingsSchema = {
     }
 };
 
-export class Settings {
+class Settings {
     private static _schema: SettingsSchema = {
         "minecraft": {
             [MinecraftConfigs.ServerIP]: {
@@ -280,3 +280,9 @@ export class Settings {
             .run();
     }
 }
+
+export {
+    MinecraftConfigs,
+    ElytraConfigs,
+    Settings
+};

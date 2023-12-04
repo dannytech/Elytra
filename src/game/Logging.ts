@@ -6,13 +6,13 @@ import { ClientboundPacket, ServerboundPacket } from "../protocol/Packet.js";
 
 /*eslint @typescript-eslint/no-explicit-any: ["error", { "ignoreRestArgs": true }]*/
 
-export enum LoggingLevel {
+enum LoggingLevel {
     DEFAULT = 0,
     DEBUG = 1,
     TRACE = 2
 }
 
-export class Logging {
+class Logging {
     /**
      * Converts the current logging settings to a logging level
      * @returns {LoggingLevel} The currently set logging level
@@ -99,3 +99,8 @@ export class Logging {
         this.Trace(`(${client.Protocol.clientId})`.magenta, `[${this._Direction(packet)}]`.blue, `[${packet.constructor.name}]`.cyan, ...message);
     }
 }
+
+export {
+    LoggingLevel,
+    Logging
+};

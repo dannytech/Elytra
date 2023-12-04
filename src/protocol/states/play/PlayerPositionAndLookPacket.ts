@@ -4,7 +4,7 @@ import { Client } from "../../Client.js";
 import { ClientboundPacket } from "../../Packet.js";
 import { WritableBuffer } from "../../WritableBuffer.js";
 
-export enum PlayerPositionAndLookFlags {
+enum PlayerPositionAndLookFlags {
     None = 0x00,
     XRelative = 0x01,
     YRelative = 0x02,
@@ -13,7 +13,7 @@ export enum PlayerPositionAndLookFlags {
     PitchRelative = 0x10
 }
 
-export class PlayerPositionAndLookPacket extends ClientboundPacket {
+class PlayerPositionAndLookPacket extends ClientboundPacket {
     private _PositionAndLook: EntityPositionAndLook;
     private _Flags: PlayerPositionAndLookFlags;
 
@@ -52,3 +52,8 @@ export class PlayerPositionAndLookPacket extends ClientboundPacket {
         buf.WriteVarInt(0, "Teleport ID (dummy)");
     }
 }
+
+export {
+    PlayerPositionAndLookFlags,
+    PlayerPositionAndLookPacket
+};

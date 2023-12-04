@@ -6,7 +6,7 @@ import { Constants } from "../Constants.js";
 
 const generateKeyPairAsync = promisify(generateKeyPair);
 
-export class Keypair {
+class Keypair {
     public PublicKey: KeyObject;
     public PrivateKey: KeyObject;
 
@@ -46,7 +46,7 @@ export class Keypair {
  * Generates a Minecraft-style hex digest of the given buffer
  * @param {Buffer} buf The buffer to hash
  */
-export function digest(buf: Buffer): string {
+function digest(buf: Buffer): string {
     // Generate a standard SHA-1 hash
     let digest: Buffer = crypto.createHash("sha1")
         .update(buf)
@@ -83,3 +83,8 @@ export function digest(buf: Buffer): string {
 
     return isNegative ? `-${hexDigest}` : hexDigest;
 }
+
+export {
+    Keypair,
+    digest
+};

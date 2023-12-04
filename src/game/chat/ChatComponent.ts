@@ -9,7 +9,7 @@
  * @property {boolean} [obfuscated] Whether to obfuscate the text
  * @property {object[]} [extra] Child text components to inherit from this
  */
-export type ComponentOptions = {
+type ComponentOptions = {
     color?: string;
     font?: "uniform" | "alt" | "default";
     bold?: boolean;
@@ -24,7 +24,7 @@ export type ComponentOptions = {
  * A plaintext component with optional formatting attributes
  * @property {string} text A string containing plain text
  */
-export type ChatTextComponent = ComponentOptions & {
+type ChatTextComponent = ComponentOptions & {
     text: string;
 };
 
@@ -33,7 +33,7 @@ export type ChatTextComponent = ComponentOptions & {
  * @property {string} translate A translation identifier for the client to parse
  * @property {Array<string | number | bigint>} [with] An array of text components to be inserted into translation slots
  */
-export type ChatTranslationComponent = ComponentOptions & {
+type ChatTranslationComponent = ComponentOptions & {
     translate: string;
     with?: Array<string | number | bigint>;
 };
@@ -45,7 +45,7 @@ export type ChatTranslationComponent = ComponentOptions & {
  * @property {string} score.objective The scoreboard objective identifier
  * @property {string} [score.value] A scoreboard value, used to override the actual value, bypassing resolution
  */
-export type ChatScoreComponent = ComponentOptions & {
+type ChatScoreComponent = ComponentOptions & {
     score: {
         name: string;
         objective: string;
@@ -57,7 +57,7 @@ export type ChatScoreComponent = ComponentOptions & {
  * A player selector component
  * @property {string} selector A selector for a collection of player(s)
  */
-export type ChatSelectorComponent = ComponentOptions & {
+type ChatSelectorComponent = ComponentOptions & {
     selector: string;
 };
 
@@ -65,7 +65,7 @@ export type ChatSelectorComponent = ComponentOptions & {
  * A client keybind component
  * @property {string} keybind A client keybind identifier
  */
-export type ChatKeybindComponent = ComponentOptions & {
+type ChatKeybindComponent = ComponentOptions & {
     keybind: string;
 };
 
@@ -77,7 +77,7 @@ export type ChatKeybindComponent = ComponentOptions & {
  * @property {string} [entity] A string containing the target selector for the entity(s) for which to retrieve NBT value(s)
  * @property {string} [storage] A string containing the storage identifier for which to retrieve NBT value(s)
  */
-export type ChatNBTComponent = ComponentOptions & {
+type ChatNBTComponent = ComponentOptions & {
     nbt: string;
     interpret?: boolean;
     block?: string;
@@ -85,4 +85,14 @@ export type ChatNBTComponent = ComponentOptions & {
     storage?: string;
 };
 
-export type ChatComponent = ChatTextComponent | ChatTranslationComponent | ChatScoreComponent | ChatSelectorComponent | ChatKeybindComponent | ChatNBTComponent;
+type ChatComponent = ChatTextComponent | ChatTranslationComponent | ChatScoreComponent | ChatSelectorComponent | ChatKeybindComponent | ChatNBTComponent;
+
+export {
+    ChatTextComponent,
+    ChatTranslationComponent,
+    ChatScoreComponent,
+    ChatSelectorComponent,
+    ChatKeybindComponent,
+    ChatNBTComponent,
+    ChatComponent
+};

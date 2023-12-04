@@ -1,6 +1,6 @@
 import anyTest, { TestFn } from "ava";
-import { ReadableBuffer } from "./ReadableBuffer";
 import { UUID } from "../game/UUID";
+import { ReadableBuffer } from "./ReadableBuffer";
 
 // The context for all tests will be a ReadableBuffer
 const test = anyTest as TestFn<ReadableBuffer>;

@@ -5,9 +5,6 @@ import { Settings, MinecraftConfigs } from "../../../Configuration.js";
 import { State } from "../../../State.js";
 import { ServerboundPacket } from "../../Packet.js";
 import { ReadableBuffer } from "../../ReadableBuffer.js";
-import { SetCompressionPacket } from "./SetCompressionPacket.js";
-import { LoginSuccessPacket } from "./LoginSuccessPacket.js";
-import { DisconnectPacket as LoginDisconnectPacket } from "./DisconnectPacket.js";
 import { DisconnectPacket as PlayDisconnectPacket } from "../play/DisconnectPacket.js";
 import { digest } from "../../Encryption.js";
 import { Player } from "../../../game/Player.js";
@@ -15,6 +12,9 @@ import { UUID } from "../../../game/UUID.js";
 import { Logging } from "../../../game/Logging.js";
 import { PlayerModel } from "../../../database/models/PlayerModel.js";
 import { ChatComponentFactory } from "../../../game/chat/ChatComponentFactory.js";
+import { DisconnectPacket as LoginDisconnectPacket } from "./DisconnectPacket.js";
+import { LoginSuccessPacket } from "./LoginSuccessPacket.js";
+import { SetCompressionPacket } from "./SetCompressionPacket.js";
 
 type AuthenticationRequestParams = {
     username: string,

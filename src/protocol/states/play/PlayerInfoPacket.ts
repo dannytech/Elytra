@@ -4,7 +4,7 @@ import { Client } from "../../Client.js";
 import { ClientboundPacket } from "../../Packet.js";
 import { WritableBuffer } from "../../WritableBuffer.js";
 
-export enum PlayerInfoActions {
+enum PlayerInfoActions {
     AddPlayer = 0,
     UpdateGamemode = 1,
     UpdateLatency = 2,
@@ -12,7 +12,7 @@ export enum PlayerInfoActions {
     RemovePlayer = 4
 }
 
-export class PlayerInfoPacket extends ClientboundPacket {
+class PlayerInfoPacket extends ClientboundPacket {
     private _Action: PlayerInfoActions;
     private _Clients: Client[];
 
@@ -85,3 +85,8 @@ export class PlayerInfoPacket extends ClientboundPacket {
         });
     }
 }
+
+export {
+    PlayerInfoActions,
+    PlayerInfoPacket
+};

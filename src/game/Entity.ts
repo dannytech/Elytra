@@ -1,24 +1,24 @@
 import { State } from "../State.js";
 
-export type EntityPosition = {
+type EntityPosition = {
     x: number;
     y: number;
     z: number;
     world: string;
 }
 
-export type EntityLook = {
+type EntityLook = {
     yaw: number;
     pitch: number;
 }
 
-export type EntityPositionAndLook = EntityPosition & EntityLook;
+type EntityPositionAndLook = EntityPosition & EntityLook;
 
-export type EntityState = {
+type EntityState = {
     position: EntityPositionAndLook;
 }
 
-export class Entity {
+class Entity {
     public EntityID: number;
     public State: EntityState;
 
@@ -31,3 +31,11 @@ export class Entity {
         this.EntityID = State.Worlds.get(position.world).RegisterEntity(this);
     }
 }
+
+export {
+    EntityPosition,
+    EntityLook,
+    EntityPositionAndLook,
+    EntityState,
+    Entity
+};

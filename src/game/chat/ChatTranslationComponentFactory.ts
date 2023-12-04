@@ -1,10 +1,10 @@
 import { Client } from "../../protocol/Client.js";
-import { ChatComponent, ChatTextComponent, ChatTranslationComponent } from "./ChatComponent.js";
 import { checkVersion } from "../../Masking.js";
 import { Logging } from "../Logging.js";
 import { Locale } from "../Locale.js";
-import { ChatComponentFactory } from "./ChatComponentFactory.js";
 import { MinecraftConfigs, Settings } from "../../Configuration.js";
+import { ChatComponentFactory } from "./ChatComponentFactory.js";
+import { ChatComponent, ChatTextComponent, ChatTranslationComponent } from "./ChatComponent.js";
 
 export class ChatTranslationComponentFactory {
     /**

@@ -2,13 +2,13 @@ import * as crypto from "crypto";
 
 import { ServerboundPacket } from "../../Packet.js";
 import { ReadableBuffer } from "../../ReadableBuffer.js";
-import { SetCompressionPacket } from "./SetCompressionPacket.js";
 import { Player } from "../../../game/Player.js";
-import { LoginSuccessPacket } from "./LoginSuccessPacket.js";
-import { EncryptionRequestPacket } from "./EncryptionRequestPacket.js";
 import { Settings, MinecraftConfigs } from "../../../Configuration.js";
 import { Logging } from "../../../game/Logging.js";
 import { UUID } from "../../../game/UUID.js";
+import { EncryptionRequestPacket } from "./EncryptionRequestPacket.js";
+import { LoginSuccessPacket } from "./LoginSuccessPacket.js";
+import { SetCompressionPacket } from "./SetCompressionPacket.js";
 
 export class LoginStartPacket extends ServerboundPacket {
     /**
