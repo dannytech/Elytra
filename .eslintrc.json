@@ -42,8 +42,18 @@
             "error",
             "always"
         ],
-        "import/order": [
-            "error"
-        ]
+        "import/no-amd": [ "error" ],
+        "import/no-commonjs": [ "error" ],
+        "import/newline-after-import": [
+            "error",
+            {
+                "count": 1,
+                "exactCount": true,
+                "considerComments": true
+            }
+        ],
+        "import/order": [ "error" ],
+        "import/first": [ "warn" ],
+        "import/exports-last": [ "warn" ]
     }
 }
