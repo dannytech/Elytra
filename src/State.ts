@@ -1,15 +1,14 @@
-import { World } from "./game/World";
-import { Keypair } from "./protocol/Encryption";
-import { Server } from "./protocol/Server";
+import { World } from "./game/World.js";
+import { Keypair } from "./protocol/Encryption.js";
+import { Server } from "./protocol/Server.js";
 
-
-export enum Environment {
+enum Environment {
     PRODUCTION,
     DEVELOPMENT,
     TEST
 }
 
-export class State {
+class State {
     public static Keypair: Keypair;
     public static Server: Server;
     public static Worlds: Map<string, World>;
@@ -30,3 +29,8 @@ export class State {
         }
     }
 }
+
+export {
+    Environment,
+    State
+};

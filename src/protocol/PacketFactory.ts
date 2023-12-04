@@ -1,14 +1,14 @@
-import { parse } from "yaml";
 import { readFile } from "fs/promises";
-import { Client, ClientState } from "./Client";
-import { Logging } from "../game/Logging";
-import { ReadableBuffer } from "./ReadableBuffer";
-import { ServerboundPacket, IServerboundConstructor } from "./Packet";
-import { checkVersion, versionSpec, VersionSpec } from "../Masking";
-import { Schema } from "joi";
-import * as joi from "joi";
+import joi, { Schema } from "joi";
+import { parse } from "yaml";
 
-export enum PacketDirection {
+import { Logging } from "../game/Logging.js";
+import { checkVersion, versionSpec, VersionSpec } from "../Masking.js";
+import { Client, ClientState } from "./Client.js";
+import { ReadableBuffer } from "./ReadableBuffer.js";
+import { ServerboundPacket, IServerboundConstructor } from "./Packet.js";
+
+enum PacketDirection {
     Serverbound = "serverbound",
     Clientbound = "clientbound"
 }
@@ -45,7 +45,7 @@ const SourcePacketMappingSchema = joi.object().pattern(/^[a-zA-Z]+$/, joi.altern
 ));
 const SourceStateMappingSchema = joi.object().pattern(/^(handshaking|status|login|play)$/, SourcePacketMappingSchema.min(1));
 
-export class PacketFactory {
+class PacketFactory {
     private static _Schema: Schema = joi.object({
         serverbound: SourceStateMappingSchema,
         clientbound: SourceStateMappingSchema
@@ -108,7 +108,7 @@ export class PacketFactory {
                 result = index;
 
                 // Load the packet class
-                const packetClass = await import(`./states/${state}/${packetName}`);
+                const packetClass = await import(`./states/${state}/${packetName}.js`);
 
                 // Cache the packet class for faster loading
                 if (packetName in packetClass)
@@ -265,3 +265,8 @@ export class PacketFactory {
                 `0x${packetId.toString(16).padStart(2, "0")}`.blue, buf.Buffer.toString("hex").yellow);
     }
 }
+
+export {
+    PacketDirection,
+    PacketFactory
+};

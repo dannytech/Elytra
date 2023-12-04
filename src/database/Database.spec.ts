@@ -1,6 +1,6 @@
 import test from "ava";
-import { Database } from "./Database";
 import { Settings } from "../Configuration";
+import { Database } from "./Database";
 
 test.before(() => {
     Settings.Load();

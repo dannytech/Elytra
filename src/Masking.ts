@@ -1,22 +1,6 @@
-export type VersionSpec = {
+type VersionSpec = {
     start: number;
     end?: number;
-}
-
-/**
- * Determines whether the given protocol version falls into the provided version specification
- * @param {number} version The protocol version to check
- * @param {VersionSpec[]} ranges The version specification to check against
- * @returns {boolean} Whether the version is compatible with the specification
- */
-export function checkVersion(version: number, ranges: VersionSpec[]): boolean {
-    for (const range of ranges)
-        if (version >= range.start) {
-            if (range.end) return version <= range.end;
-            else return true;
-        }
-
-    return false;
 }
 
 /**
@@ -28,7 +12,7 @@ export function checkVersion(version: number, ranges: VersionSpec[]): boolean {
  * @param {number} [ceiling] Used as a ceiling if no end is specified
  * @returns {VersionSpec} The version specification
  */
-export function versionSpec(spec: string | number, ceiling?: number): VersionSpec {
+function versionSpec(spec: string | number, ceiling?: number): VersionSpec {
     let parts: number[];
 
     // Allow a number to be passed as the start and endpoint
@@ -57,3 +41,25 @@ export function versionSpec(spec: string | number, ceiling?: number): VersionSpe
         };
     }
 }
+
+/**
+ * Determines whether the given protocol version falls into the provided version specification
+ * @param {number} version The protocol version to check
+ * @param {VersionSpec[]} ranges The version specification to check against
+ * @returns {boolean} Whether the version is compatible with the specification
+ */
+function checkVersion(version: number, ranges: VersionSpec[]): boolean {
+    for (const range of ranges)
+        if (version >= range.start) {
+            if (range.end) return version <= range.end;
+            else return true;
+        }
+
+    return false;
+}
+
+export {
+    VersionSpec,
+    versionSpec,
+    checkVersion
+};

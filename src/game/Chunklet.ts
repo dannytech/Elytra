@@ -1,20 +1,20 @@
-import { ChunkletModelMapper } from "../database/mappers/ChunkletModelMapper";
+import { ChunkletModelMapper } from "../database/mappers/ChunkletModelMapper.js";
 
 // We can reuse the player position but give it a more familiar name
-export type ChunkPosition = {
+type ChunkPosition = {
     x: number;
     y: number;
     world: string;
 };
 
-export type ChunkletPosition = {
+type ChunkletPosition = {
     x: number;
     y: number;
     z: number;
     world: string;
 };
 
-export class Chunklet {
+class Chunklet {
     public static Mapper: ChunkletModelMapper = new ChunkletModelMapper();
 
     public Position: ChunkletPosition;
@@ -38,3 +38,9 @@ export class Chunklet {
             this.Blocks.fill(1);
     }
 }
+
+export {
+    ChunkPosition,
+    ChunkletPosition,
+    Chunklet
+};

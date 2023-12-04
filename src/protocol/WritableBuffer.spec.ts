@@ -1,6 +1,6 @@
 import anyTest, { TestFn } from "ava";
-import { WritableBuffer } from "./WritableBuffer";
 import { UUID } from "../game/UUID";
+import { WritableBuffer } from "./WritableBuffer";
 
 // The context for all tests will be a WritableBuffer
 const test = anyTest as TestFn<WritableBuffer>;

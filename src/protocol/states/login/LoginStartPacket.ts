@@ -1,13 +1,14 @@
-import { ServerboundPacket } from "../../Packet";
-import { ReadableBuffer } from "../../ReadableBuffer";
-import { SetCompressionPacket } from "./SetCompressionPacket";
-import { Player } from "../../../game/Player";
-import { LoginSuccessPacket } from "./LoginSuccessPacket";
-import { EncryptionRequestPacket } from "./EncryptionRequestPacket";
-import { Settings, MinecraftConfigs } from "../../../Configuration";
-import { Logging } from "../../../game/Logging";
-import { UUID } from "../../../game/UUID";
 import * as crypto from "crypto";
+
+import { ServerboundPacket } from "../../Packet.js";
+import { ReadableBuffer } from "../../ReadableBuffer.js";
+import { Player } from "../../../game/Player.js";
+import { Settings, MinecraftConfigs } from "../../../Configuration.js";
+import { Logging } from "../../../game/Logging.js";
+import { UUID } from "../../../game/UUID.js";
+import { EncryptionRequestPacket } from "./EncryptionRequestPacket.js";
+import { LoginSuccessPacket } from "./LoginSuccessPacket.js";
+import { SetCompressionPacket } from "./SetCompressionPacket.js";
 
 export class LoginStartPacket extends ServerboundPacket {
     /**

@@ -1,11 +1,11 @@
-import { State } from "../../../State";
-import { Logging } from "../../../game/Logging";
-import { Client, ClientState } from "../../Client";
-import { ServerboundPacket } from "../../Packet";
-import { ReadableBuffer } from "../../ReadableBuffer";
-import { PlayerInfoActions, PlayerInfoPacket } from "./PlayerInfoPacket";
-import { UpdateLightPacket } from "./UpdateLightPacket";
-import { UpdateViewPositionPacket } from "./UpdateViewPositionPacket";
+import { State } from "../../../State.js";
+import { Logging } from "../../../game/Logging.js";
+import { Client, ClientState } from "../../Client.js";
+import { ServerboundPacket } from "../../Packet.js";
+import { ReadableBuffer } from "../../ReadableBuffer.js";
+import { PlayerInfoActions, PlayerInfoPacket } from "./PlayerInfoPacket.js";
+import { UpdateLightPacket } from "./UpdateLightPacket.js";
+import { UpdateViewPositionPacket } from "./UpdateViewPositionPacket.js";
 
 export class TeleportConfirmPacket extends ServerboundPacket {
     private _TeleportId: number;

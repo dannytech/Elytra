@@ -1,6 +1,6 @@
-import { ChatComponent, ChatTextComponent } from "./ChatComponent";
-import { Start, parse as chatParser } from "./ChatComponentParser";
-import { ChatTranslationComponentFactory } from "./ChatTranslationComponentFactory";
+import { ChatComponent, ChatTextComponent } from "./ChatComponent.js";
+import { Start, parse as chatParser } from "./ChatComponentParser.js";
+import { ChatTranslationComponentFactory } from "./ChatTranslationComponentFactory.js";
 
 export class ChatComponentFactory {
     /**

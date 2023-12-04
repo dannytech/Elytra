@@ -1,15 +1,15 @@
-import { Logging } from "../../../game/Logging";
-import { Client } from "../../Client";
-import { ClientboundPacket } from "../../Packet";
-import { WritableBuffer } from "../../WritableBuffer";
+import { Logging } from "../../../game/Logging.js";
+import { Client } from "../../Client.js";
+import { ClientboundPacket } from "../../Packet.js";
+import { WritableBuffer } from "../../WritableBuffer.js";
 
-export enum UnlockRecipesAction {
+enum UnlockRecipesAction {
     Init = 0,
     Add = 1,
     Remove = 2
 }
 
-export class UnlockRecipesPacket extends ClientboundPacket {
+class UnlockRecipesPacket extends ClientboundPacket {
     private _Action: UnlockRecipesAction;
     private _Displayed: string[] = [];
 
@@ -63,3 +63,8 @@ export class UnlockRecipesPacket extends ClientboundPacket {
         }
     }
 }
+
+export {
+    UnlockRecipesAction,
+    UnlockRecipesPacket
+};

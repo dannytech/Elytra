@@ -1,9 +1,9 @@
-import { ClientboundPacket } from "../../Packet";
-import { WritableBuffer } from "../../WritableBuffer";
-import { ChatComponent } from "../../../game/chat/ChatComponent";
-import { Client } from "../../Client";
-import { Logging } from "../../../game/Logging";
-import { ChatComponentFactory } from "../../../game/chat/ChatComponentFactory";
+import { ClientboundPacket } from "../../Packet.js";
+import { WritableBuffer } from "../../WritableBuffer.js";
+import { ChatComponent } from "../../../game/chat/ChatComponent.js";
+import { Client } from "../../Client.js";
+import { Logging } from "../../../game/Logging.js";
+import { ChatComponentFactory } from "../../../game/chat/ChatComponentFactory.js";
 
 export class DisconnectPacket extends ClientboundPacket {
     private _Reason: ChatComponent;

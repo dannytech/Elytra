@@ -1,6 +1,6 @@
-import { Client } from "../../Client";
-import { ClientboundPacket } from "../../Packet";
-import { WritableBuffer } from "../../WritableBuffer";
+import { Client } from "../../Client.js";
+import { ClientboundPacket } from "../../Packet.js";
+import { WritableBuffer } from "../../WritableBuffer.js";
 
 export class ServerKeepAlivePacket extends ClientboundPacket {
     private _KeepAliveId: bigint;

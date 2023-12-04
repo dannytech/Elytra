@@ -1,6 +1,6 @@
-import { Logging } from "../../../game/Logging";
-import { ClientboundPacket } from "../../Packet";
-import { WritableBuffer } from "../../WritableBuffer";
+import { Logging } from "../../../game/Logging.js";
+import { ClientboundPacket } from "../../Packet.js";
+import { WritableBuffer } from "../../WritableBuffer.js";
 
 export class DeclareRecipesPacket extends ClientboundPacket {
     /**

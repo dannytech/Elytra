@@ -2,39 +2,40 @@ import { Socket } from "net";
 import * as crypto from "crypto";
 import { Decipher, Cipher } from "crypto";
 import { EventEmitter } from "events";
-import { State } from "../State";
-import { ClientboundPacket } from "./Packet";
-import { ReadableBuffer } from "./ReadableBuffer";
-import { WritableBuffer } from "./WritableBuffer";
-import { ProtocolStub } from "./ProtocolStub";
-import { Zlib } from "./Zlib";
-import { Player } from "../game/Player";
-import { Logging } from "../game/Logging";
-import { PlayerInfoActions, PlayerInfoPacket } from "./states/play/PlayerInfoPacket";
-import { PacketDirection, PacketFactory } from "./PacketFactory";
-import { Constants } from "../Constants";
-import { MinecraftConfigs, Settings } from "../Configuration";
 
-export enum ClientState {
+import { State } from "../State.js";
+import { Player } from "../game/Player.js";
+import { Logging } from "../game/Logging.js";
+import { Constants } from "../Constants.js";
+import { MinecraftConfigs, Settings } from "../Configuration.js";
+import { ClientboundPacket } from "./Packet.js";
+import { ReadableBuffer } from "./ReadableBuffer.js";
+import { WritableBuffer } from "./WritableBuffer.js";
+import { ProtocolStub } from "./ProtocolStub.js";
+import { Zlib } from "./Zlib.js";
+import { PlayerInfoActions, PlayerInfoPacket } from "./states/play/PlayerInfoPacket.js";
+import { PacketDirection, PacketFactory } from "./PacketFactory.js";
+
+enum ClientState {
     Handshaking = "handshaking",
     Status = "status",
     Login = "login",
     Play = "play"
 }
 
-export enum CompressionState {
+enum CompressionState {
     Disabled,
     Enabling,
     Enabled
 }
 
-export type EncryptionState = {
+type EncryptionState = {
     enabled: boolean;
     verificationToken?: Buffer;
     sharedSecret?: Buffer;
 };
 
-export type ProtocolState = {
+type ProtocolState = {
     clientId: number;
     ip: string;
     port: number;
@@ -45,13 +46,13 @@ export type ProtocolState = {
     version?: number;
 };
 
-export type KeepAliveState = {
+type KeepAliveState = {
     id?: bigint;
     sent?: number;
     last?: number;
 };
 
-export class Client extends EventEmitter {
+class Client extends EventEmitter {
     private _Socket: Socket;
     private _ClientboundQueue: ClientboundPacket[];
     private _Decipher: Decipher;
@@ -267,3 +268,12 @@ export class Client extends EventEmitter {
         else this._ClientboundQueue.push(packet);
     }
 }
+
+export {
+    ClientState,
+    CompressionState,
+    EncryptionState,
+    ProtocolState,
+    KeepAliveState,
+    Client
+};

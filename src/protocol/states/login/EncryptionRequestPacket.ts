@@ -1,10 +1,11 @@
 import { promisify } from "util";
 import * as crypto from "crypto";
-import { ClientboundPacket } from "../../Packet";
-import { WritableBuffer } from "../../WritableBuffer";
-import { State } from "../../../State";
-import { Logging } from "../../../game/Logging";
-import { Constants } from "../../../Constants";
+
+import { ClientboundPacket } from "../../Packet.js";
+import { WritableBuffer } from "../../WritableBuffer.js";
+import { State } from "../../../State.js";
+import { Logging } from "../../../game/Logging.js";
+import { Constants } from "../../../Constants.js";
 
 const randomBytesAsync = promisify(crypto.randomBytes);
 

@@ -1,7 +1,7 @@
-import { Logging, LoggingLevel } from "../game/Logging";
-import { UUID } from "../game/UUID";
-import { ChatComponent } from "../game/chat/ChatComponent";
-import { WritableBuffer } from "./WritableBuffer";
+import { Logging, LoggingLevel } from "../game/Logging.js";
+import { UUID } from "../game/UUID.js";
+import { ChatComponent } from "../game/chat/ChatComponent.js";
+import { WritableBuffer } from "./WritableBuffer.js";
 
 export class ReadableBuffer {
     private _Buffer: Buffer;

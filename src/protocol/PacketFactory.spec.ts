@@ -1,7 +1,7 @@
+import { Socket } from "net";
 import anyTest, { TestFn } from "ava";
 import { PacketDirection, PacketFactory } from "./PacketFactory";
 import { Client, ClientState } from "./Client";
-import { Socket } from "net";
 
 const test = anyTest as TestFn<Client>;
 

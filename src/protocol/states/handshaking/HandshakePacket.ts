@@ -1,7 +1,7 @@
-import { ServerboundPacket } from "../../Packet";
-import { ReadableBuffer } from "../../ReadableBuffer";
-import { ClientState } from "../../Client";
-import { Logging } from "../../../game/Logging";
+import { ServerboundPacket } from "../../Packet.js";
+import { ReadableBuffer } from "../../ReadableBuffer.js";
+import { ClientState } from "../../Client.js";
+import { Logging } from "../../../game/Logging.js";
 
 export class HandshakePacket extends ServerboundPacket {
     /**

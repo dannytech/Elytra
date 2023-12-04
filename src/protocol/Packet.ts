@@ -1,12 +1,12 @@
-import { ReadableBuffer } from "./ReadableBuffer";
-import { WritableBuffer } from "./WritableBuffer";
-import { Client } from "./Client";
+import { ReadableBuffer } from "./ReadableBuffer.js";
+import { WritableBuffer } from "./WritableBuffer.js";
+import { Client } from "./Client.js";
 
-export interface IServerboundConstructor {
+interface IServerboundConstructor {
     new(client: Client): ServerboundPacket;
 }
 
-export abstract class ServerboundPacket {
+abstract class ServerboundPacket {
     protected _Client: Client;
 
     /**
@@ -35,7 +35,7 @@ export abstract class ServerboundPacket {
     public AfterReceive?(): Promise<void>;
 }
 
-export abstract class ClientboundPacket {
+abstract class ClientboundPacket {
     protected _Client: Client;
 
     /**
@@ -63,3 +63,9 @@ export abstract class ClientboundPacket {
      */
     public AfterSend?(): Promise<void>;
 }
+
+export {
+    IServerboundConstructor,
+    ServerboundPacket,
+    ClientboundPacket
+};

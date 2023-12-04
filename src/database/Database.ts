@@ -1,20 +1,24 @@
 import { readdir } from "fs/promises";
-import { URL } from "url";
+import { URL, fileURLToPath } from "url";
+import path, { dirname } from "path";
 import { r } from "rethinkdb-ts";
-import { Logging } from "../game/Logging";
-import * as path from "path";
+
+import { Logging } from "../game/Logging.js";
+
+// Add dirname variable to support relative module loading
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 /**
  * Common class to allow identity mapping for database entities
 */
-export interface MappableModel {
+interface MappableModel {
     id?: string;
 }
 
 /**
  * Model mapper using the identity mapper pattern to serialize and deserialize objects
  */
-export abstract class ModelMapper<T extends MappableModel, K> {
+abstract class ModelMapper<T extends MappableModel, K> {
     protected _identityMap: Map<string, K>;
 
     constructor() {
@@ -26,7 +30,7 @@ export abstract class ModelMapper<T extends MappableModel, K> {
     abstract save(entity: K): T;
 }
 
-export class Database {
+class Database {
     public static Connected = false;
 
     /**
@@ -88,3 +92,9 @@ export class Database {
         Database.Connected = true;
     }
 }
+
+export {
+    MappableModel,
+    ModelMapper,
+    Database
+};

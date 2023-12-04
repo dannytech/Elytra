@@ -1,10 +1,12 @@
 import { Socket } from "net";
+
 import anyTest, { TestFn } from "ava";
-import { ChatTranslationComponentFactory } from "./ChatTranslationComponentFactory";
+
 import { Client } from "../../protocol/Client";
 import { Locale } from "../Locale";
 import { Database } from "../../database/Database";
 import { Settings } from "../../Configuration";
+import { ChatTranslationComponentFactory } from "./ChatTranslationComponentFactory";
 
 const test = anyTest as TestFn<Client>;
 

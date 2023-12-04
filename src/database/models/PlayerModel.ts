@@ -1,6 +1,7 @@
 import { r, RDatum } from "rethinkdb-ts";
-import { EntityPositionAndLook } from "../../game/Entity";
-import { PermissionLevel } from "../../game/Player";
+
+import { EntityPositionAndLook } from "../../game/Entity.js";
+import { PermissionLevel } from "../../game/Player.js";
 
 // TypeScript Interface for handling data going to and from the database
 export interface PlayerModel {

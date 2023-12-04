@@ -1,9 +1,10 @@
 import { Socket, Server as TCPServer } from "net";
-import { Constants } from "../Constants";
-import { Client, ClientState } from "./Client";
-import { ServerKeepAlivePacket } from "./states/play/ServerKeepAlivePacket";
-import { PlayerInfoActions, PlayerInfoPacket } from "./states/play/PlayerInfoPacket";
-import { ProtocolStub } from "./ProtocolStub";
+
+import { Constants } from "../Constants.js";
+import { Client, ClientState } from "./Client.js";
+import { ServerKeepAlivePacket } from "./states/play/ServerKeepAlivePacket.js";
+import { PlayerInfoActions, PlayerInfoPacket } from "./states/play/PlayerInfoPacket.js";
+import { ProtocolStub } from "./ProtocolStub.js";
 
 type ClientArray = {
     clients: Client[];

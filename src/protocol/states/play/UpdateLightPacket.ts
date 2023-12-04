@@ -1,8 +1,8 @@
-import { State } from "../../../State";
-import { Chunklet, ChunkPosition } from "../../../game/Chunklet";
-import { Client } from "../../Client";
-import { ClientboundPacket } from "../../Packet";
-import { WritableBuffer } from "../../WritableBuffer";
+import { State } from "../../../State.js";
+import { Chunklet, ChunkPosition } from "../../../game/Chunklet.js";
+import { Client } from "../../Client.js";
+import { ClientboundPacket } from "../../Packet.js";
+import { WritableBuffer } from "../../WritableBuffer.js";
 
 export class UpdateLightPacket extends ClientboundPacket {
     private _Position: ChunkPosition;

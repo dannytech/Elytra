@@ -1,10 +1,10 @@
-import { Client } from "../../protocol/Client";
-import { ChatComponent, ChatTextComponent, ChatTranslationComponent } from "./ChatComponent";
-import { checkVersion } from "../../Masking";
-import { Logging } from "../Logging";
-import { Locale } from "../Locale";
-import { ChatComponentFactory } from "./ChatComponentFactory";
-import { MinecraftConfigs, Settings } from "../../Configuration";
+import { Client } from "../../protocol/Client.js";
+import { checkVersion } from "../../Masking.js";
+import { Logging } from "../Logging.js";
+import { Locale } from "../Locale.js";
+import { MinecraftConfigs, Settings } from "../../Configuration.js";
+import { ChatComponentFactory } from "./ChatComponentFactory.js";
+import { ChatComponent, ChatTextComponent, ChatTranslationComponent } from "./ChatComponent.js";
 
 export class ChatTranslationComponentFactory {
     /**

@@ -1,9 +1,9 @@
-import { Logging } from "../../../game/Logging";
-import { Client } from "../../Client";
-import { ClientboundPacket } from "../../Packet";
-import { WritableBuffer } from "../../WritableBuffer";
+import { Logging } from "../../../game/Logging.js";
+import { Client } from "../../Client.js";
+import { ClientboundPacket } from "../../Packet.js";
+import { WritableBuffer } from "../../WritableBuffer.js";
 
-export enum EntityStatus {
+enum EntityStatus {
     PlayerItemUseFinished = 9,
     PlayerEnableReducedDebug = 22,
     PlayerDisableReducedDebug = 23,
@@ -14,7 +14,7 @@ export enum EntityStatus {
     PlayerPermissionsLevel4 = 28
 }
 
-export class EntityStatusPacket extends ClientboundPacket {
+class EntityStatusPacket extends ClientboundPacket {
     private _EntityId: number;
     private _Status: number;
 
@@ -37,3 +37,8 @@ export class EntityStatusPacket extends ClientboundPacket {
         buf.WriteByte(this._Status, "Entity Status");
     }
 }
+
+export {
+    EntityStatus,
+    EntityStatusPacket
+};

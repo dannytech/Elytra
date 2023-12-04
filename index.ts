@@ -1,23 +1,24 @@
 // Type reflection shim
-import "reflect-metadata";
 
 import { Server as TCPServer } from "net";
 import { Server as HTTPServer } from "http";
 import * as crypto from "crypto";
 
-import { Settings, MinecraftConfigs, ElytraConfigs } from "./src/Configuration";
-import { State } from "./src/State";
-import { Database } from "./src/database/Database";
-import { Server } from "./src/protocol/Server";
-import { Keypair } from "./src/protocol/Encryption";
-import { World } from "./src/game/World";
-import { Logging } from "./src/game/Logging";
-import { PacketFactory } from "./src/protocol/PacketFactory";
-import { WorldModel } from "./src/database/models/WorldModel";
+import "reflect-metadata";
 import { r } from "rethinkdb-ts";
-import { Locale } from "./src/game/Locale";
-import { API, YogaServerAdapter } from "./src/API";
-import { Constants } from "./src/Constants";
+
+import { Settings, MinecraftConfigs, ElytraConfigs } from "./src/Configuration.js";
+import { State } from "./src/State.js";
+import { Database } from "./src/database/Database.js";
+import { Server } from "./src/protocol/Server.js";
+import { Keypair } from "./src/protocol/Encryption.js";
+import { World } from "./src/game/World.js";
+import { Logging } from "./src/game/Logging.js";
+import { PacketFactory } from "./src/protocol/PacketFactory.js";
+import { WorldModel } from "./src/database/models/WorldModel.js";
+import { Locale } from "./src/game/Locale.js";
+import { API, YogaServerAdapter } from "./src/API.js";
+import { Constants } from "./src/Constants.js";
 
 /**
  * Prepare the server to accept players

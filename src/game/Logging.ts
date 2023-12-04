@@ -1,17 +1,18 @@
-import { State, Environment } from "../State";
-import { Client } from "../protocol/Client";
-import { ClientboundPacket, ServerboundPacket } from "../protocol/Packet";
 import "colors";
+
+import { State, Environment } from "../State.js";
+import { Client } from "../protocol/Client.js";
+import { ClientboundPacket, ServerboundPacket } from "../protocol/Packet.js";
 
 /*eslint @typescript-eslint/no-explicit-any: ["error", { "ignoreRestArgs": true }]*/
 
-export enum LoggingLevel {
+enum LoggingLevel {
     DEFAULT = 0,
     DEBUG = 1,
     TRACE = 2
 }
 
-export class Logging {
+class Logging {
     /**
      * Converts the current logging settings to a logging level
      * @returns {LoggingLevel} The currently set logging level
@@ -123,3 +124,8 @@ export class Logging {
         return this.Trace(`(${client.Protocol.clientId})`.magenta, `[${this._Direction(packet)}]`.blue, `[${packet.constructor.name}]`.cyan, ...message);
     }
 }
+
+export {
+    LoggingLevel,
+    Logging
+};

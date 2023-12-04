@@ -1,7 +1,7 @@
-import { Logging } from "../../../game/Logging";
-import { EntityPosition } from "../../../game/Entity";
-import { ClientboundPacket } from "../../Packet";
-import { WritableBuffer } from "../../WritableBuffer";
+import { Logging } from "../../../game/Logging.js";
+import { EntityPosition } from "../../../game/Entity.js";
+import { ClientboundPacket } from "../../Packet.js";
+import { WritableBuffer } from "../../WritableBuffer.js";
 
 export class UpdateViewPositionPacket extends ClientboundPacket {
     /**
