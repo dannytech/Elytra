@@ -17,7 +17,7 @@ import { Logging } from "./src/game/Logging.js";
 import { PacketFactory } from "./src/protocol/PacketFactory.js";
 import { WorldModel } from "./src/database/models/WorldModel.js";
 import { Locale } from "./src/game/Locale.js";
-import { API, YogaServerAdapter } from "./src/API.js";
+import { API } from "./src/API.js";
 import { Constants } from "./src/Constants.js";
 
 /**
@@ -98,16 +98,11 @@ async function startListener() {
  */
 async function startAPI() {
     // Compile the GraphQL schema and build a handler
-    const yoga: YogaServerAdapter = await API.Bootstrap();
-
-    // Retrieve the server settings
-    const ip: string = Settings.Get(Constants.ElytraConfigNamespace, ElytraConfigs.ApiIP);
-    const port: number = Settings.Get(Constants.ElytraConfigNamespace, ElytraConfigs.ApiPort);
-
-    // Create HTTP listener
-    const server = new HTTPServer(yoga);
+    const server: HTTPServer = await API.Bootstrap();
 
     // Start the API server
+    const port: number = Settings.Get(Constants.ElytraConfigNamespace, ElytraConfigs.ApiPort);
+    const ip: string = Settings.Get(Constants.ElytraConfigNamespace, ElytraConfigs.ApiIP);
     server.listen(port, ip, () => {
         Logging.Info("API server listening on", `${ip}:${port}`.green);
     });

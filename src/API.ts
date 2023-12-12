@@ -1,35 +1,40 @@
-import { IncomingMessage, ServerResponse } from "http";
-import { buildSchema, ObjectType, Resolver, Query, Field } from "type-graphql";
+import { Server as HTTPServer, IncomingMessage, ServerResponse } from "http";
+import { Field, ObjectType, buildSchema } from "type-graphql";
 import { YogaServerInstance, createYoga } from "graphql-yoga";
+import { GraphQLSchema } from "graphql";
+
+import { SettingsResolver } from "./ConfigurationResolver.js";
 
 @ObjectType()
-class DummyType {
-    @Field() booleanValue: boolean;
+class BinaryData {
+    @Field() encoding: "hex" | "base64";
+    @Field() data: string;
 }
 
-@Resolver()
-class EmptyResolver {
-    @Query(() => DummyType)
-    emptyQuery(): DummyType {
-        return {
-            booleanValue: true
-        };
-    }
-}
-
-// Helper type to describe HTTP server adapter
-export type YogaServerAdapter = YogaServerInstance<typeof IncomingMessage, typeof ServerResponse>;
-
-export class API {
-    public static async Bootstrap(): Promise<YogaServerAdapter> {
+class API {
+    public static async Bootstrap(): Promise<HTTPServer> {
         // Compile GraphQL schema
-        const schema = await buildSchema({
-            resolvers: [EmptyResolver]
+        const schema: GraphQLSchema = await buildSchema({
+            resolvers: [
+                SettingsResolver
+            ]
         });
 
         // Set up GraphQL handler
-        return createYoga({
-            schema
+        const yoga: YogaServerInstance<IncomingMessage, ServerResponse> = createYoga({
+            schema,
+            multipart: true,
+            graphiql: true,
+            landingPage: false,
+            logging: "debug"
         });
+
+        // Create HTTP listener
+        return new HTTPServer(yoga);
     }
 }
+
+export {
+    BinaryData,
+    API
+};
