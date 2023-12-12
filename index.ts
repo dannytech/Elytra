@@ -25,6 +25,9 @@ import { Constants } from "./src/Constants.js";
  * @async
  */
 async function bootstrap() {
+    // Log the server start time
+    const start: number = performance.now();
+
     // Load settings from the config file
     Settings.Load();
     Logging.Info("Loaded database configuration");
@@ -37,6 +40,9 @@ async function bootstrap() {
 
     // Generate a keypair for protocol encryption
     State.Keypair = await Keypair.Generate();
+
+    // Set up a packet factory
+    await PacketFactory.Load();
 
     // Print out the key fingerprint for debugging purposes
     const publicKey: Buffer = State.Keypair.PublicKey.export({ format: "der", type: "spki" });
@@ -69,6 +75,10 @@ async function bootstrap() {
         // Proxy and map the world
         State.Worlds.set(newWorld.Metadata.id, World.Mapper.proxy(newWorld));
     }
+
+    // Log the bootstrap time
+    const end: number = performance.now();
+    Logging.Info("Server ready after", `${Math.round(end - start)}`.green, "milliseconds");
 }
 
 /**
@@ -80,9 +90,6 @@ async function startListener() {
 
     // Attach a connection handler
     State.Server = new Server(server);
-
-    // Set up a packet factory
-    await PacketFactory.Load();
 
     // Start the server
     const port: number = Settings.Get(MinecraftConfigs.ServerPort);
