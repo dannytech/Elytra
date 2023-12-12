@@ -20,6 +20,7 @@ enum MinecraftConfigs {
     ReducedDebug = "reducedDebug",
     RespawnScreen = "respawnScreen",
     MOTD = "motd",
+    Icon = "icon",
     EULA = "eula",
     Filter = "filter",
     FilterMode = "filterMode"
@@ -103,6 +104,20 @@ class Settings {
             [MinecraftConfigs.MOTD]: {
                 default: "An Elytra server",
                 schema: joi.string()
+            },
+            [MinecraftConfigs.Icon]: {
+                default: null,
+                schema: joi.binary().min(8).custom((value: Buffer, helper) => {
+                    const PNG_HEADER = Buffer.from([ 0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A ]);
+
+                    // Check if the input buffer starts with a PNG header
+                    if (!value.subarray(0, 8).equals(PNG_HEADER))
+                        return helper.message({ custom: "Image missing PNG header" });
+
+                    // TODO Check if the image is 64x64
+
+                    return true;
+                })
             },
             [MinecraftConfigs.EULA]: {
                 default: false,

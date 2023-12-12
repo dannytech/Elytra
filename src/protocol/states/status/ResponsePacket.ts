@@ -7,6 +7,25 @@ import { checkVersion, VersionSpec } from "../../../Masking.js";
 import { Client, ClientState } from "../../Client.js";
 import { Constants } from "../../../Constants.js";
 import { ChatComponentFactory } from "../../../game/chat/ChatComponentFactory.js";
+import { ChatComponent } from "../../../game/chat/ChatComponent.js";
+import { UUID } from "../../../game/UUID.js";
+
+type ResponseJSON = {
+    version: {
+        name: string,
+        protocol: number
+    },
+    players: {
+        max: number,
+        online: number,
+        sample?: {
+            name: string,
+            id: UUID
+        }[]
+    },
+    description?: ChatComponent,
+    favicon?: string
+};
 
 export class ResponsePacket extends ClientboundPacket {
     /**
@@ -31,9 +50,8 @@ export class ResponsePacket extends ClientboundPacket {
             else protocolVersion = Constants.ProtocolVersion;
         }
 
-        // Send back server information
-        Logging.DebugPacket(this, "Sending server information");
-        buf.WriteJSON({
+        // Compile server information
+        const status: ResponseJSON = {
             version: {
                 name: Constants.ServerName,
                 protocol: protocolVersion
@@ -49,6 +67,15 @@ export class ResponsePacket extends ClientboundPacket {
                 })
             },
             description: ChatComponentFactory.FromString(motd)
-        }, "Server Information");
+        };
+
+        // Set an optional favicon
+        const favicon: Buffer = Settings.Get(MinecraftConfigs.Icon);
+        if (favicon)
+            status.favicon = "data:image/png;base64," + favicon.toString("base64");
+
+        // Send back server information
+        Logging.DebugPacket(this, "Sending server information");
+        buf.WriteJSON(status, "Server Information");
     }
 }
